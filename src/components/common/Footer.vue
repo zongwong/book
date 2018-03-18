@@ -5,18 +5,25 @@
         <img src="../../assets/icon/logo_grey.png" class="logo">
       </div>
       <div class="common-right">
-        <div class="userInfo">
-          <!-- <span class="select">选择校区</span> -->
-
-          <span>用户名</span>
-          <span>中</span>
+        <div class="footer_search">
+            <span class="footer_link footer_link-fb"></span>
+            <span class="footer_link footer_link-gmail"></span>
+            <div class="footer_input-wrap">
+              <el-input
+                class="footer-search"
+                size="mini"
+                placeholder="请输入内容"
+                suffix-icon="el-icon-search"
+                v-model="input9">
+              </el-input>
+            </div>
         </div>
         <nav class="nav">
-          <a class="nav_item" href="">首页</a>
-          <a class="nav_item" href="">二手书籍</a>
-          <a class="nav_item" href="">二手笔记</a>
-          <a class="nav_item" href="">房屋租赁</a>
-          <a class="nav_item" href="">社团交流</a>
+          <router-link to="/"><a class="nav_item">首页</a></router-link>
+          <router-link to="/"><a class="nav_item">二手书籍</a></router-link>
+          <router-link to="/"><a class="nav_item">二手笔记</a></router-link>
+          <router-link to="/"><a class="nav_item">房屋租赁</a></router-link>
+          <router-link to="/"><a class="nav_item">社团交流</a></router-link>
         </nav>
       </div>
     </div>
@@ -34,23 +41,40 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .footer{
   background: #373737;
+  .logo{
+    margin-top: 29.5px;
+  }
+  .nav{
+    .nav_item{
+      color: #fff;
+    }
+  }
+  .footer_search{
+    margin-top: 20px;
+  }
+  .footer_link{
+    width: 22px;
+    height: 22px;
+    background: center / 100% no-repeat;
+    display: inline-block;
+    vertical-align: top;
+    &.footer_link-fb{
+      background-image: url(../../assets/icon/icon_facebook.png);
+      margin-right: 28px;
+    }
+    &.footer_link-gmail{
+      background-image: url(../../assets/icon/icon_gmail.png);
+      margin-right: 40px;
+    }
+  }
+  .footer_input-wrap{
+    vertical-align: top;
+    display: inline-block;
+    width: 135px;
+  }
 }
-.common{
-  height: 120px;
-}
-.common-left{
-  float: left;
-  width: 210px;
-}
-.common-right{
-  float: right;
-  width: 980px;
-  text-align: right;
-}
-.logo{
-  margin-top: 17.5px;
-}
+
 </style>

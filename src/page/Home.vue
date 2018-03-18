@@ -1,9 +1,8 @@
 <template>
   <div>
-    <my-header></my-header>
-    <router-view/>
-
-    <!-- <div class="container">
+    <my-banner></my-banner>
+    <my-search></my-search>
+    <div class="container">
 
       <div class="index_title">
         <div class="index_title-en"><span>P</span>OPULAR BOOKS</div>
@@ -137,23 +136,19 @@
           </div>
         </div>
       </div>
-    </div> -->
-
-
-    <my-footer></my-footer>
+    </div>
   </div>
 </template>
 
 <script>
 
-import Header from '../components/common/Header';
-import Footer from '../components/common/Footer';
-
+import Search from '../components/common/Search';
+import Banner from '../components/common/Banner';
 export default {
-  name: 'Index',
+  name: 'Home',
   components: {
-    'my-header': Header,
-    'my-footer': Footer
+    'my-search': Search,
+    'my-banner': Banner
   },
   data() {
     return {
@@ -165,5 +160,173 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  
+  .index_title{
+    text-align: center;
+    font-size: 17px;
+    padding: 80px 0 50px;
+  }
+  .index_title-en{
+    font-weight: bold;
+    font-size: 45px;
+    span{
+      color:#7cd958;
+    }
+  }
+  .index_title-zh{
+    letter-spacing: 10px;
+    margin-bottom: 34px;
+  }
+  .index_title-more{
+    color: #d3d3d3;
+  }
+  .good_card{
+    width: 270px;
+    font-size: 20px;
+    margin-right: 40px;
+    &:nth-child(4n){
+      margin-right: 0;
+    }
+    .good_card-img{
+      width: 100%;
+      height: 350px;
+      overflow: hidden;
+      img{
+        display: block;
+        width: 100%;
+      }
+    }
+    .good_card-title{
+      margin: 10px 0 8px;
+    }
+    .good_card-price{
+      
+    }
+  }
+  .house_card{
+    background: #f8f8f8;
+    padding: 20px;
+    margin-bottom: 30px;
+    .house_card-imgWrap{
+      width: 155px;
+      height: 155px;
+      margin-right: 32px;
+      overflow: hidden;
+      img{
+        display: block;
+        width: 100%;
+      }
+    }
+    .house_card-info{
+      height: 155px;
+      .house_card-title{
+        font-size: 20px;
+        color: #000;
+        margin-bottom: 16px;
+        max-width: 970px;
+      }
+      .house_card-desc{
+        font-size: 17px;
+        color: #7d7d7d;
+      }
+      .house_card-other{
+        font-size: 15px;
+        display: flex;
+        color: #7d7d7d;
+        margin-top: 25px;
+        .from{
+          margin-left: 48px;
+          flex: 1;
+        }
+        .zan{
+
+        }
+        .hr{
+          margin: 0 28px;
+        }
+        .comment{
+
+        }
+      }
+    }
+  }
+  .club_card{
+    border: 1px solid #eee;
+    padding: 20px;
+    margin-bottom: 30px;
+    height: 206px;
+  }
+  .club_card-left{
+    width: 50%;
+    height: 100%;
+    float: left;
+    .imgbox{
+      width: 206px;
+      height: 206px;
+      overflow: hidden;
+      margin-right: 20px;
+      img{
+        display: block;
+        width: 100%;
+      }
+    }
+    .club_card-info{
+      height: 204px;
+      padding-right: 20px;
+      overflow: hidden;
+    }
+    .club_card-title{
+      font-size: 20px;
+      max-width: 352px;
+      margin-bottom: 15px;
+    }
+    .club_card-desc{
+      color: #7d7d7d;
+      font-size: 15px;
+    }
+  }
+  .club_card-right{
+    width: 50%;
+    height: 100%;
+    float: right;
+    box-sizing: border-box;
+    border-left: 1px solid #eee;
+    padding-left: 20px;
+  }
+  .club_post{
+    background: #f8f8f8;
+    &:first-child{
+      margin-bottom: 14px;
+    }
+    .imgbox{
+      width: 96px;
+      height: 96px;
+      overflow: hidden;
+      margin-right: 20px;
+      img{
+        display: block;
+        width: 100%;
+      }
+    }
+    .club_post-info{
+      padding-right: 20px;
+      .club_post-title{
+        max-width: 352px;
+        margin-right: 6px;
+        font-size: 15px;
+      }
+      .icon_new{
+        height: 13px;
+        background:url(../assets/icon/icon_new.png) 0 center / 51px 13px no-repeat;
+      }
+      .club_post-desc{
+        margin-top: 10px;
+        font-size: 12px;
+        color: #7d7d7d;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+      }
+    }
+  }
 </style>

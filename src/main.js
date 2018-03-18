@@ -5,7 +5,9 @@ import App from './App';
 import router from './router';
 import ElementUI from 'element-ui';
 import VueI18n from 'vue-i18n';
-import 'element-ui/lib/theme-chalk/index.css';
+// import 'element-ui/lib/theme-chalk/index.css';
+import './assets/css/el-variables.scss';
+import './assets/css/public.scss';
 import enLocale from 'element-ui/lib/locale/lang/en'
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
 
