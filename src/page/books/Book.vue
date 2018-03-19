@@ -56,7 +56,7 @@
 import Search from '../../components/common/Search';
 
 export default {
-  name: 'Notes',
+  name: 'Book',
   components: {
     'my-search': Search
   },
