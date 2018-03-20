@@ -7,8 +7,9 @@ import Book from '@/page/books/Book';
 import BookDetail from '@/page/books/Detail';
 import Notes from '@/page/notes/Notes';
 import House from '@/page/house/House';
+import HouseDetail from '@/page/house/Detail';
 import Community from '@/page/community/Community';
-
+import CommunityDetail from '@/page/community/Detail';
 
 Vue.use(Router);
 
@@ -31,7 +32,7 @@ export default new Router({
         path: '/book/:id',
         name: 'BookDetail',
         component: BookDetail,
-      },{
+      }, {
         path: '/notes',
         name: 'Notes',
         component: Notes,
@@ -40,9 +41,17 @@ export default new Router({
         name: 'House',
         component: House,
       }, {
+        path: '/house/:id',
+        name: 'HouseDetail',
+        component: HouseDetail,
+      }, {
         path: '/community',
         name: 'Community',
         component: Community,
+      }, {
+        path: '/community/:id',
+        name: 'CommunityDetail',
+        component: CommunityDetail,
       }]
     }, {
       path: '/login',

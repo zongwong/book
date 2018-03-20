@@ -424,3 +424,129 @@ p {
   font-size: 20px;
   margin-bottom: 70px;
 }
+// 帖子详情
+.topic_info{
+  padding: 60px 0;
+}
+.topic_header{
+  .topic_avatar{
+    width: 230px;
+    border:1px solid #eee;
+    box-sizing: border-box;
+    padding: 15px;
+    font-size: 17px;
+  }
+  .topic_avatar_wrap{
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    margin-right: 15px;
+    img{
+      display: block;
+      width: 100%;
+    }
+  }
+  .nickname{
+    color: #373737;
+    span{
+      display: inline-block;
+      vertical-align: middle;
+      margin-right:4px;
+    }
+  }
+  .icon_sex{
+    background:url(../icon/sex_w.png) center / 100% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 11px;
+    height: 16px;
+  }
+  .school{
+    color: #7d7d7d;
+  }
+  .topic_title{
+    font-size: 25px;
+    margin: 10px 0;
+  }
+  .topic_time{
+    font-size: 15px;
+    color: #7d7d7d;
+  }
+}
+
+.reply_box{
+  text-align: right;
+}
+.reply_textarea{
+  width: 100%;
+  display: block;
+  padding: 16px;
+  box-sizing: border-box;
+  height: 110px;
+  margin-bottom: 14px;
+  border-color: #eee;
+}
+.topic_btn{
+  text-align: right;
+  font-size: 15px;
+  color: #7d7d7d;
+  margin: 60px 0 36px;
+  .zan{
+    padding-left: 25px;
+    background: url(../icon/zan.png) 0 center / 20px 16px no-repeat; 
+    cursor: pointer;
+  }
+  .hr{
+    margin: 0 24px;
+  }
+  .comment{
+
+  }
+}
+
+.comment_item{
+  background: #f8f8f8;
+  padding: 30px 24px;
+  margin-bottom: 24px;
+  align-items: normal;
+  font-size: 17px;
+}
+.comment_avatar{
+  width: 70px;
+  height: 70px;
+  margin-right: 20px;
+  overflow: hidden;
+  img{
+    display: block;
+    width: 100%;
+  }
+}
+.comment_info{
+  margin: 10px auto;
+  .time{
+    color: #7d7d7d;
+    font-size: 12px;
+    margin-left: 10px;
+  }
+}
+.comment_data{
+  padding-right: 40px;
+  color: #7d7d7d;
+  position: relative;
+  .reply_btn{
+    color: #7cd958;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+  }
+}
+.reply_comment{
+  margin-top: 30px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  color: #7d7d7d;
+  &>div{
+    margin-bottom: 14px;
+  }
+}
