@@ -610,3 +610,38 @@ p {
 .reply_comment > div {
   margin-bottom: 14px;
 }
+
+.userInfoBox {
+  padding: 30px 0 0;
+  text-align: center;
+  font-size: 17px;
+  color: #7d7d7d;
+}
+
+.userInfoBox .name {
+  margin: 8px 0;
+  color: #000;
+}
+
+.userInfoBox .avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.userInfoBox .avatar img {
+  border-radius: 50%;
+  display: block;
+  width: 80px;
+  height: 80px;
+}
+
+.userInfoBox .avatar .icon_sex {
+  position: absolute;
+  bottom: 0;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  background: url(../icon/sex_woman.png) center/100% no-repeat;
+}

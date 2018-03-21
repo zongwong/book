@@ -10,6 +10,9 @@ import House from '@/page/house/House';
 import HouseDetail from '@/page/house/Detail';
 import Community from '@/page/community/Community';
 import CommunityDetail from '@/page/community/Detail';
+import Buy from '@/page/Buy';
+import User from '@/page/user/Index';
+import Center from '@/page/user/Center';
 
 Vue.use(Router);
 
@@ -52,6 +55,18 @@ export default new Router({
         path: '/community/:id',
         name: 'CommunityDetail',
         component: CommunityDetail,
+      }, {
+        path: '/buy',
+        name: 'Buy',
+        component: Buy,
+      }, {
+        path: '/user/:id',
+        name: 'User',
+        component: User,
+      },{
+        path: '/center',
+        name: 'Center',
+        component: Center,
       }]
     }, {
       path: '/login',
