@@ -1,9 +1,11 @@
 <template>
 <div>
     <my-search></my-search>
-    <div class="box1000 flex_row center_box"> 
+    <div class="box1000 flex_row myinfo"> 
         <my-aside></my-aside>
-        <div class="row_bd"></div>
+        <div class="row_bd">
+          <router-view></router-view>
+        </div>
     </div>
 </div>
 </template>
@@ -28,7 +30,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.center_box{
+.myinfo{
     padding-top: 50px;
+    align-items: start;
 }
 </style>

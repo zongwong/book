@@ -1,7 +1,7 @@
 <template>
   <div class="banner">
     <div class="block">
-        <el-carousel interval="5000" trigger="click" height="500px">
+        <el-carousel  trigger="click" height="500px">
             <el-carousel-item v-for="item in 4" :key="item">
                 <div class="banner_info">
                     <div class="container banner_info-wrap">
@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div>
-                    <img src="../../assets/image/banner.png" alt="幻灯片">
+                    <img class="bannerImg" src="../../assets/image/banner.png" alt="幻灯片">
                 </div>
             </el-carousel-item>
         </el-carousel>
@@ -29,6 +29,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.bannerImg{
+  width: 100%;
+}
 .banner_info {
   position: absolute;
   top: 0;

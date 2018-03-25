@@ -14,16 +14,16 @@
                 size="mini"
                 placeholder="请输入内容"
                 suffix-icon="el-icon-search"
-                v-model="input9">
+               >
               </el-input>
             </div>
         </div>
         <nav class="nav">
-          <router-link to="/"><a class="nav_item">首页</a></router-link>
-          <router-link to="/"><a class="nav_item">二手书籍</a></router-link>
-          <router-link to="/"><a class="nav_item">二手笔记</a></router-link>
-          <router-link to="/"><a class="nav_item">房屋租赁</a></router-link>
-          <router-link to="/"><a class="nav_item">社团交流</a></router-link>
+          <router-link to="/home"><span class="nav_item">{{$t("navs.index")}}</span></router-link>
+          <router-link to="/book"><span class="nav_item">{{$t("navs.book")}}</span></router-link>
+          <router-link to="/notes"><span class="nav_item">{{$t("navs.notes")}}</span></router-link>
+          <router-link to="/house"><span class="nav_item">{{$t("navs.house")}}</span></router-link>
+          <router-link to="/community"><span class="nav_item">{{$t("navs.community")}}</span></router-link>
         </nav>
       </div>
     </div>
@@ -38,6 +38,7 @@ export default {
       
     };
   },
+  
 };
 </script>
 

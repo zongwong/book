@@ -7,50 +7,40 @@
       <div class="index_title">
         <div class="index_title-en"><span>P</span>OPULAR BOOKS</div>
         <P class="index_title-zh">热门书籍</P>
-        <router-link to="/"><span class="index_title-more">MORE ></span></router-link>
+        <router-link to="/book"><span class="index_title-more">MORE ></span></router-link>
       </div>
 
       <div class="flex_box">
         <div class="good_card">
-          <div class="good_card-img">
-            <img src="../assets/image/book.png" alt="">
-          </div>
-          <p class="good_card-title">数码兽的</p>
-          <p class="good_card-price">￥20</p>
+          <router-link to="/book/1">
+            <div class="good_card-img">
+              <img src="../assets/image/book.png" alt="">
+            </div>
+            <p class="good_card-title">数码兽的</p>
+            <p class="good_card-price">￥20</p>
+          </router-link>
         </div>
         <div class="good_card">
-          <div class="good_card-img">
-            <img src="../assets/image/book.png" alt="">
-          </div>
-          <p class="good_card-title">数码兽的</p>
-          <p class="good_card-price">￥20</p>
-        </div>
-        <div class="good_card">
-          <div class="good_card-img">
-            <img src="../assets/image/book.png" alt="">
-          </div>
-          <p class="good_card-title">数码兽的</p>
-          <p class="good_card-price">￥20</p>
-        </div>
-        <div class="good_card">
-          <div class="good_card-img">
-            <img src="../assets/image/book.png" alt="">
-          </div>
-          <p class="good_card-title">数码兽的</p>
-          <p class="good_card-price">￥20</p>
+          <router-link to="/book/1">
+            <div class="good_card-img">
+              <img src="../assets/image/book.png" alt="">
+            </div>
+            <p class="good_card-title">数码兽的</p>
+            <p class="good_card-price">￥20</p>
+          </router-link>
         </div>
       </div>
 
       <div class="index_title">
         <div class="index_title-en"><span>S</span>ECOND-HAND NOTES</div>
         <P class="index_title-zh">二手笔记</P>
-        <router-link to="/"><span class="index_title-more">MORE ></span></router-link>
+        <router-link to="/notes"><span class="index_title-more">MORE ></span></router-link>
       </div>
 
       <div class="index_title">
         <div class="index_title-en"><span>H</span>OUSE LEASE</div>
         <P class="index_title-zh">房屋租赁</P>
-        <router-link to="/"><span class="index_title-more">MORE ></span></router-link>
+        <router-link to="/house"><span class="index_title-more">MORE ></span></router-link>
       </div>
       <div class="house_box">
         <div class="flex_row house_card">
@@ -89,7 +79,7 @@
       <div class="index_title">
         <div class="index_title-en"><span>C</span>OMMUNITY</div>
         <P class="index_title-zh">社团交流</P>
-        <router-link to="/"><span class="index_title-more">MORE ></span></router-link>
+        <router-link to="/community"><span class="index_title-more">MORE ></span></router-link>
       </div>
       <div class="club_box">
         <div class="club_card clearfix">

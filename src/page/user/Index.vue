@@ -30,6 +30,40 @@
 
         </div>
     </div>
+    <div class="box1000 nopadding">
+        <div class="history_item">
+            <div class="goods_info">
+                <div class="goods_imgs">
+                    <img src="../../assets/image/book.png" alt="">
+                </div>
+                <div class="goods_data">
+                    <p class="title">请问请问亲我额去</p>
+                    <p class="desc">1231231223qweqweqweqweqwe</p>
+                    <p class="price">￥20.00</p>
+                </div>
+            </div>
+        </div>
+        <div class="history_item">
+            <div class="post_item">
+            <div class="post_user">
+                <img src="../../assets/image/book.png" alt="">
+            </div>
+            <div class="post_data">
+                <p class="post_title oneHide">12312312323</p>
+                <div class="post_detail">
+                <p class="moreHide">qweqweqweqwe空气环境为偶好环境为偶好几千胸围环境为偶好几千胸围环境为偶好几千胸围环境为偶好几千胸围环境为偶好几千胸围环境为偶好几千胸围几千胸围和其吻合器未</p>
+                </div>
+                <div class="post_other">
+                <span>2018-1-12 13:22</span>
+                <span class="from"></span>
+                <span class="zan">点赞 23</span>
+                <span class="hr">丨</span>
+                <span class="comment">评论 345</span>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 

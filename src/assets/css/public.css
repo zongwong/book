@@ -37,6 +37,18 @@ p {
   width: 100%;
 }
 
+.my_order .el-tabs__active-bar.is-right {
+  height: 0 !important;
+}
+
+.my_order .el-tabs__nav-wrap.is-right::after {
+  display: none;
+}
+
+.aside .el-menu {
+  border-right: none;
+}
+
 .container {
   width: 1200px;
   margin: 0 auto;
@@ -339,7 +351,7 @@ p {
 }
 
 .post_user img {
-  display: blockl;
+  display: block;
   height: 70px;
   width: 70px;
 }
@@ -385,12 +397,9 @@ p {
   padding-bottom: 50px;
 }
 
-.goods_info > div {
-  height: 215px;
-}
-
 .goods_imgs {
   width: 215px;
+  height: 215px;
   overflow: hidden;
   margin-right: 45px;
 }
@@ -644,4 +653,128 @@ p {
   width: 20px;
   height: 20px;
   background: url(../icon/sex_woman.png) center/100% no-repeat;
+}
+
+.history_item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 40px;
+  margin-bottom: 40px;
+}
+
+.history_item .goods_info {
+  padding: 0 0 30px;
+}
+
+.history_item .goods_info .goods_imgs {
+  width: 150px;
+  height: 150px;
+  margin-right: 30px;
+}
+
+.history_item .goods_info .goods_data .title {
+  font-size: 20px;
+}
+
+.history_item .goods_info .goods_data .desc {
+  font-size: 17px;
+  color: #7d7d7d;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-all;
+  margin: 20px 0;
+}
+
+.history_item .post_item {
+  position: relative;
+  padding: 0;
+  border-bottom: none;
+}
+
+.history_item .post_detail {
+  padding: 0;
+  background: #fff;
+}
+
+.history_item .post_user {
+  margin-right: 30px;
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+}
+
+.history_item .post_user img {
+  width: 100%;
+  display: block;
+  height: auto;
+}
+
+.evaluate_box {
+  background: #f9f9f9;
+  font-size: 15px;
+  padding: 20px;
+  position: relative;
+}
+
+.evaluate_box.evaluate_top:after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid #f9f9f9;
+  top: -12px;
+  left: 50px;
+}
+
+.evaluate_box .evaluate_rate {
+  margin-top: -3px;
+}
+
+.evaluate_box .evaluate_word_row {
+  margin-top: 20px;
+  align-items: start;
+}
+
+.evaluate_box .evaluate_word {
+  font-size: 13px;
+  color: #7d7d7d;
+}
+
+.nopadding .goods_info {
+  padding-bottom: 0;
+  position: relative;
+}
+
+.publish .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url(../icon/close.png) center/100% no-repeat;
+  width: 16px;
+  height: 16px;
+}
+
+.publish .btn_edit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #7cd958;
+  border-radius: 50px;
+  padding-left: 20px;
+  background: url(../icon/icon_edit.png) 0 center/15px 14px no-repeat;
+}
+
+.pbbtn_box {
+  text-align: right;
+  margin-bottom: 30px;
+}
+
+.pbbtn_box span {
+  background: #7cd958;
+  color: #fff;
+  border-radius: 30px;
+  padding: 6px 10px;
 }

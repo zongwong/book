@@ -2,7 +2,7 @@
   <div class="search_bar">
     <div class="search_wrap clearfix">
       <div class="search_left">
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+        <el-input placeholder="请输入内容"></el-input>
       </div>
       <div class="search_right">
         <el-button class="auto-width" type="success" icon="el-icon-search">搜索</el-button>

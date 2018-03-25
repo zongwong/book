@@ -5,9 +5,9 @@
     </div>
     <div class="common-right">
       <div class="userInfo">
-        <el-dropdown>
+        <el-dropdown >
           <span class="el-dropdown-link select">
-            选择校区<i class="el-icon-arrow-down el-icon--right green_arrow"></i>
+            {{$t("navs.school")}}<i class="el-icon-arrow-down el-icon--right green_arrow"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>黄金糕</el-dropdown-item>
@@ -18,36 +18,44 @@
           </el-dropdown-menu>
         </el-dropdown>
         <span>丨</span>
-        <router-link to="/login"><span class="user name">用户名</span></router-link>
-        <router-link to="/login"><span class="user">登录</span></router-link>
+        <router-link to="/center"><span class="user name">用户名</span></router-link>
+        <router-link to="/login"><span class="user">{{$t("navs.login")}}</span></router-link>
         <span>丨</span>
-        <el-dropdown>
+        <el-dropdown @command="changeLanguage">
           <span class="el-dropdown-link select">
             中<i class="el-icon--right icon_china"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>EN</el-dropdown-item>
+            <el-dropdown-item command="zh">Chinese</el-dropdown-item>
+            <el-dropdown-item command="en">English</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
       <nav class="nav">
-        <router-link to="/home"><a class="nav_item active">首页</a></router-link>
-        <router-link to="/book"><a class="nav_item">二手书籍</a></router-link>
-        <router-link to="/notes"><a class="nav_item">二手笔记</a></router-link>
-        <router-link to="/house"><a class="nav_item">房屋租赁</a></router-link>
-        <router-link to="/community"><a class="nav_item">社团交流</a></router-link>
+        <router-link to="/home"><span class="nav_item">{{$t("navs.index")}}</span></router-link>
+        <router-link to="/book"><span class="nav_item">{{$t("navs.book")}}</span></router-link>
+        <router-link to="/notes"><span class="nav_item">{{$t("navs.notes")}}</span></router-link>
+        <router-link to="/house"><span class="nav_item">{{$t("navs.house")}}</span></router-link>
+        <router-link to="/community"><span class="nav_item">{{$t("navs.community")}}</span></router-link>
       </nav>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
+
 export default {
   name: 'Header',
   data() {
     return {
     };
   },
+  methods:{
+    changeLanguage(lang){
+      Vue.config.lang = lang
+    }
+  }
 };
 </script>
 
@@ -82,7 +90,7 @@ export default {
 .nav_item:last-child{
   margin-right: 0;
 }
-.nav_item.active{
+.router-link-active{
   color: #7cd958;
 }
 .select{

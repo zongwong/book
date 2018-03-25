@@ -13,10 +13,23 @@ import CommunityDetail from '@/page/community/Detail';
 import Buy from '@/page/Buy';
 import User from '@/page/user/Index';
 import Center from '@/page/user/Center';
+import history from '@/page/user/History';
+import order from '@/page/user/Order';
+import info from '@/page/user/UserInfo';
+import Pbbook from '@/page/user/book';
+import Pbnote from '@/page/user/note';
+import Pbhouse from '@/page/user/house';
+import Pbcommunity from '@/page/user/community';
+import publishbook from '@/page/user/BookFrom';
+import publishnote from '@/page/user/NoteFrom';
+import publishhouse from '@/page/user/HouseFrom';
+import publishpost from '@/page/user/CommunityFrom';
+import page404 from '@/page/page404';
 
 Vue.use(Router);
 
 export default new Router({
+  mode:"history",
   routes: [
     {
       path: '/',
@@ -67,11 +80,61 @@ export default new Router({
         path: '/center',
         name: 'Center',
         component: Center,
+        redirect: '/center/info',
+        meta: { requiresAuth: true },
+        children:[{
+          path: '/center/history',
+          name: 'history',
+          component: history,
+        }, {
+          path: '/center/order',
+          name: 'order',
+          component: order,
+        }, {
+          path: '/center/info',
+          name: 'info',
+          component: info,
+        }, {
+          path: '/center/book',
+          name: 'Pbbook',
+          component: Pbbook,
+        }, {
+          path: '/center/note',
+          name: 'Pbnote',
+          component: Pbnote,
+        }, {
+          path: '/center/house',
+          name: 'Pbhouse',
+          component: Pbhouse,
+        }, {
+          path: '/center/community',
+          name: 'Pbcommunity',
+          component: Pbcommunity,
+        },{
+          path: '/center/publishbook',
+          name: 'publishbook',
+          component: publishbook,
+        }, {
+          path: '/center/publishnote',
+          name: 'publishnote',
+          component: publishnote,
+        }, {
+          path: '/center/publishhouse',
+          name: 'publishhouse',
+          component: publishhouse,
+        }, {
+          path: '/center/publishpost',
+          name: 'publishpost',
+          component: publishpost,
+        }]
       }]
     }, {
       path: '/login',
       name: 'Login',
       component: Login,
+    }, { 
+      path: '*', 
+      component: page404 
     }
   ],
 });
