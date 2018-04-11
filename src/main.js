@@ -12,6 +12,9 @@ import './assets/css/public.scss';
 // import zhLocale from 'element-ui/lib/locale/lang/zh-CN';
 import LangEn from "../static/lang/en";
 import LangZhCN from "../static/lang/zh";
+
+import store from "./store/index";
+
 Vue.use(VueI18n);
 Vue.use(ElementUI);
 
@@ -19,7 +22,6 @@ Vue.use(ElementUI);
 Vue.locale('zh', LangZhCN);
 Vue.locale('en', LangEn);
 Vue.config.lang = 'zh';
-
 Vue.config.productionTip = false;
 
 
@@ -39,6 +41,7 @@ router.beforeEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>',
 });

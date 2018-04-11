@@ -26,13 +26,13 @@
           <div class="form_row">
             <span class="row_ft">手机号：</span>
             <div class="row_bd">
-              <el-input class="bordercolor"  placeholder="请输入内容"></el-input>
+              <el-input v-model="phone" class="bordercolor"  placeholder="请输入内容"></el-input>
             </div>
           </div>
           <div class="form_row">
             <span class="row_ft">验证码：</span>
             <div class="row_bd mr18">
-              <el-input class="bordercolor"  placeholder="请输入内容"></el-input>
+              <el-input v-model="code" class="bordercolor"  placeholder="请输入内容"></el-input>
             </div>
             <div>
               <el-button type="success" plain>发送验证码</el-button>
@@ -41,7 +41,7 @@
           <div class="form_row">
             <span class="row_ft" style="opacity:0;">去登录：</span>
             <div class="row_bd">
-              <el-button class="login_btn" type="success">成功按钮</el-button>
+              <el-button class="login_btn" type="success" @click="loginEvent">登录</el-button>
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@
 
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
-
+import { getCaptcha,getCode,toLogin } from '../api/api';
 export default {
   name: 'Login',
   components: {
@@ -64,9 +64,18 @@ export default {
   },
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
+      phone:'',
+      code:'',
+      captcha: '',
     };
   },
+  methods: {
+    loginEvent() {
+      getCaptcha().then(res=>{
+        console.log(res)
+      })
+    }
+  }
 };
 
 </script>

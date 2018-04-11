@@ -11,6 +11,7 @@
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 
+
 export default {
   name: 'Index',
   components: {
@@ -22,6 +23,11 @@ export default {
       msg: 'Welcome to Your Vue.js App',
     };
   },
+  created(){
+
+
+  }
+
 };
 
 </script>
