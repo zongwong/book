@@ -18,7 +18,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <span>丨</span>
-        <router-link to="/center"><span class="user name">用户名</span></router-link>
+        <router-link to="/center"><span class="user name">{{userInfo.name}}</span></router-link>
         <router-link to="/login"><span class="user">{{$t("navs.login")}}</span></router-link>
         <span>丨</span>
         <el-dropdown @command="changeLanguage">
@@ -44,12 +44,17 @@
 
 <script>
 import Vue from 'vue';
-
+import { mapState } from 'vuex';
 export default {
   name: 'Header',
   data() {
     return {
     };
+  },
+  computed:{
+    ...mapState({
+      userInfo: 'userInfo'
+    })
   },
   methods:{
     changeLanguage(lang){

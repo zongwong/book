@@ -35,7 +35,7 @@ export default {
   post(url, params = {}, config = {}) {
     return new Promise((resolve, reject) => {
       Axios.post(url, params, config).then(response => {
-          resolve(response);
+          resolve(response.data);
         }, err => {
           reject(err);
         })
@@ -52,7 +52,7 @@ export default {
       Axios.get(url, {
           params: params
         }).then(response => {
-          resolve(response);
+          resolve(response.data);
         }, err => {
           reject(err);
         })

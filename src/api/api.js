@@ -20,6 +20,7 @@ export const setassociation = params => Axios.post('/set/association', params);
 // export const aa = params => Axios.get('/mall/goods/getlist', params);
 
 // 二手商品
+export const getGoodsList = params => Axios.get('/mall/goods/getlist', params);
 
 // 租赁
 

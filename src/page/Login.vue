@@ -4,7 +4,7 @@
     <div class="login_box">
       <div class="center_box">
         <p class="login_title">- 请选择登录方式 -</p>
-        <div class="login_type">
+        <div class="login_type" v-if="!phoneType">
           <div class="login_item login_wx">
             <i></i>
             <p>WeChat</p>
@@ -17,12 +17,12 @@
             <i></i>
             <p>Gmail</p>
           </div>
-          <div class="login_item login_phone">
+          <div class="login_item login_phone" @click="phoneLogin">
             <i></i>
             <p>Telephone</p>
           </div>
         </div>
-        <div class="form">
+        <div class="form" v-if="phoneType">
           <div class="form_row">
             <span class="row_ft">手机号：</span>
             <div class="row_bd">
@@ -32,10 +32,19 @@
           <div class="form_row">
             <span class="row_ft">验证码：</span>
             <div class="row_bd mr18">
+              <el-input v-model="captcha" class="bordercolor"  placeholder="请输入内容"></el-input>
+            </div>
+            <div>
+              <img src="http://api.dedele.net/token/captcha" alt="图形验证码">
+            </div>
+          </div>
+          <div class="form_row">
+            <span class="row_ft">短信验证码：</span>
+            <div class="row_bd mr18">
               <el-input v-model="code" class="bordercolor"  placeholder="请输入内容"></el-input>
             </div>
             <div>
-              <el-button type="success" plain>发送验证码</el-button>
+              <el-button type="success" plain @click="">发送验证码</el-button>
             </div>
           </div>
           <div class="form_row">
@@ -67,6 +76,7 @@ export default {
       phone:'',
       code:'',
       captcha: '',
+      phoneType:false,
     };
   },
   methods: {
@@ -74,6 +84,9 @@ export default {
       getCaptcha().then(res=>{
         console.log(res)
       })
+    },
+    phoneLogin:function(){
+      this.phoneType = true
     }
   }
 };
@@ -99,14 +112,15 @@ export default {
   .login_box{
     background: url(../assets/icon/bg_login.png) 0 0 no-repeat;
     background-size: cover;
-    height: 600px;
+    // height: 600px;
+    overflow: hidden;
   }
   .center_box{
     width: 555px;
     background: rgba(255,255,255,.7);
     border-radius: 18px;
-    margin: auto;
     overflow: hidden;
+    margin: 200px auto 220px;
   }
   /* 登录方式 */
   .login_title{
