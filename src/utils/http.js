@@ -1,8 +1,8 @@
 import axios from 'axios';
-axios.defaults.headers.post['Content-Type'] = 'application/x-www=form-urlencoded';
-
+axios.defaults.headers.post['content-Type'] = 'application/x-www=form-urlencoded';
+axios.defaults.withCredentials = true;
 const Axios = axios.create({
-  baseURL: 'http://api.dedele.net',
+  baseURL: '/api',
   timeout: 10000,
 });
 
@@ -48,6 +48,7 @@ export default {
 
   //GET 请求方式
   get(url, params = {}) {
+    console.log(params)
     return new Promise((resolve, reject) => {
       Axios.get(url, {
           params: params

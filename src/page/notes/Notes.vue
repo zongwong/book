@@ -19,33 +19,14 @@
       </div>
       <div class="container container1000">
         <div class="flex_box">
-          <div class="good_card">
-            <div class="good_card-img">
-              <img src="../../assets/image/book.png" alt="">
-            </div>
-            <p class="good_card-title">数码兽的</p>
-            <p class="good_card-price">￥20</p>
-          </div>
-          <div class="good_card">
-            <div class="good_card-img">
-              <img src="../../assets/image/book.png" alt="">
-            </div>
-            <p class="good_card-title">数码兽的</p>
-            <p class="good_card-price">￥20</p>
-          </div>
-          <div class="good_card">
-            <div class="good_card-img">
-              <img src="../../assets/image/book.png" alt="">
-            </div>
-            <p class="good_card-title">数码兽的</p>
-            <p class="good_card-price">￥20</p>
-          </div>
-          <div class="good_card">
-            <div class="good_card-img">
-              <img src="../../assets/image/book.png" alt="">
-            </div>
-            <p class="good_card-title">数码兽的</p>
-            <p class="good_card-price">￥20</p>
+          <div class="good_card" v-for="item in list" :key="item.goods_id">
+            <router-link :to="'/goods/'+item.goods_id">
+              <div class="good_card-img">
+                <img :src="'http://api.dedele.net'+item.post" alt="">
+              </div>
+              <p class="good_card-title">{{item.title}}</p>
+              <p class="good_card-price">￥{{item.shop_price}}</p>
+            </router-link>
           </div>
         </div>
       </div>
@@ -54,7 +35,7 @@
 
 <script>
 import Search from '../../components/common/Search';
-
+import { getGoodsList } from '../../api/api';
 export default {
   name: 'Notes',
   components: {
@@ -62,9 +43,19 @@ export default {
   },
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
+      list: []
     };
   },
+  created(){
+    getGoodsList({
+      category_id:2
+    }).then(res=>{
+      res.data.goodslist.forEach(item => {
+        item.post = item.images
+      })
+      this.list = res.data.goodslist
+    })
+  }
 };
 
 </script>

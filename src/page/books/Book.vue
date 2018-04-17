@@ -19,13 +19,15 @@
       </div>
       <div class="container container1000">
         <div class="flex_box">
-
+          
           <div class="good_card" v-for="item in list" :key="item.goods_id">
-            <div class="good_card-img">
-              <img :src="'http://api.dedele.net'+item.images[0]" alt="">
-            </div>
-            <p class="good_card-title">{{item.title}}</p>
-            <p class="good_card-price">￥{{item.shop_price}}</p>
+            <router-link :to="'/goods/'+item.goods_id">
+              <div class="good_card-img">
+                <img :src="'http://api.dedele.net'+item.post" alt="">
+              </div>
+              <p class="good_card-title">{{item.title}}</p>
+              <p class="good_card-price">￥{{item.shop_price}}</p>
+            </router-link>
           </div>
 
         </div>
@@ -41,6 +43,9 @@ export default {
   components: {
     'my-search': Search
   },
+  computed:{
+
+  },
   data() {
     return {
       list:[]
@@ -50,6 +55,9 @@ export default {
     getGoodsList({
       category_id:1
     }).then(res=>{
+      res.data.goodslist.forEach(item => {
+        item.post = item.images
+      })
       this.list = res.data.goodslist
     })
   }

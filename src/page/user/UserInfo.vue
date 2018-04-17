@@ -5,30 +5,28 @@
         <span class="hr row_bd"></span>
         <span class="btn_save">保存</span>
     </div>
-    <el-form ref="form"  :model="form" label-width="80px">
+    <el-form ref="form"  :model="userInfoForm" label-width="80px">
         <el-form-item label="姓名">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="userInfoForm.name"></el-input>
         </el-form-item>
         <el-form-item label="性别">
-            <el-radio-group v-model="form.resource">
+            <el-radio-group v-model="userInfoForm.sex">
             <el-radio label="男"></el-radio>
             <el-radio label="女"></el-radio>
             </el-radio-group>
         </el-form-item>
         <el-form-item label="国籍">
-            <el-select v-model="form.region" placeholder="请选择活动区域">
+            <el-select v-model="userInfoForm.region" placeholder="请选择活动区域">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="电话">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="userInfoForm.phone"></el-input>
         </el-form-item>
         <el-form-item label="收货地址">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="userInfoForm.address"></el-input>
         </el-form-item>
-
-
     </el-form>
 
     <div class="form_title flex_row">
@@ -53,15 +51,12 @@ export default {
   },
   data() {
     return {
-        form: {
+        userInfoForm: {
           name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          phone: '',
+          address: '',
+          sex: '',
+          country:[]
         }
       };
   },

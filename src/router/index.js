@@ -45,14 +45,14 @@ export default new Router({
         name: 'Book',
         component: Book,
       }, {
-        path: '/book/:id',
+        path: '/goods/:id',
         name: 'BookDetail',
         component: BookDetail,
       }, {
         path: '/notes',
         name: 'Notes',
         component: Notes,
-      }, {
+      },{
         path: '/house',
         name: 'House',
         component: House,

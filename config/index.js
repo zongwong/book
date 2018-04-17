@@ -10,7 +10,15 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {  // 需要 proxyTable 代理的接口（可跨域）
+      '/api': {
+          target: 'http://api.dedele.net',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api': ''
+          }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

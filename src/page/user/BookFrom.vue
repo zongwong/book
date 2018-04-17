@@ -2,24 +2,21 @@
 <div class="publish">
 <el-form ref="form" :model="form" label-width="80px">
   <el-form-item label="书名">
-    <el-input v-model="form.name"></el-input>
+    <el-input v-model="form.title"></el-input>
   </el-form-item>
   <el-form-item label="图片">
    <el-upload
     class="avatar-uploader"
-    action=""
-    :show-file-list="false"
-    :on-success="handleAvatarSuccess"
-    :before-upload="beforeAvatarUpload">
+    action="" >
     <img v-if="imageUrl" :src="imageUrl" class="avatar">
     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
   </el-form-item>
   <el-form-item label="书的简介">
-    <el-input type="textarea" v-model="form.desc"></el-input>
+    <el-input type="textarea" v-model="form.summary"></el-input>
   </el-form-item>
   <el-form-item label="价格">
-    <el-input v-model="form.name"></el-input>
+    <el-input v-model="form.shop_price"></el-input>
   </el-form-item>
   <el-form-item>
     <el-button type="primary" @click="onSubmit">立即发布</el-button>
@@ -38,14 +35,9 @@ export default {
   data() {
     return {
         form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          title:'',
+          summary:'',
+          shop_price:'',
         }
       };
   },

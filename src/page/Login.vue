@@ -40,7 +40,7 @@
                   <el-input v-model="regForm.captcha" class="bordercolor"  placeholder="请输入内容"></el-input>
                 </el-col>
                 <el-col :span="10">
-                  <img class="captchaImg" src="http://api.dedele.net/token/captcha" alt="图形验证码">
+                  <img class="captchaImg" @click="reflash" :src="src" alt="图形验证码">
                 </el-col>
               </el-row>
               
@@ -102,6 +102,7 @@ export default {
   },
   data() {
     return {
+      src:'http://api.dedele.net/token/captcha',
       regForm: {
         phone:'',
         code:'',
@@ -127,10 +128,20 @@ export default {
         console.log(res)
       })
     },
+    reflash(){
+      this.src = 'http://api.dedele.net/token/captcha?'+new Date().getTime()
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          toLogin({
+            mobilephone:this.regForm.phone,
+            code:this.regForm.code
+          }).then(res=>{
+            console.log(res)
+          })
+
+
         } else {
           console.log('error submit!!');
           return false;
@@ -139,6 +150,12 @@ export default {
     },
     sendSmsCode(){
       // this.regForm.code
+      getCode({
+        mobilephone:this.regForm.phone,
+        captcha:this.regForm.captcha,
+      }).then(res => {
+        console.log(res);
+      })
     },
     phoneLogin:function(){
       this.phoneType = true

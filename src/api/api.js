@@ -21,8 +21,12 @@ export const setassociation = params => Axios.post('/set/association', params);
 
 // 二手商品
 export const getGoodsList = params => Axios.get('/mall/goods/getlist', params);
+export const getGoodsInfo = params => Axios.get('/mall/goods/info', params);
+export const publishGoods = params => Axios.get('/mall/goods/publish', params);
 
 // 租赁
 
+export const getLeaseList = params => Axios.get('/lease/getlist', params);
+export const getLeaseInfo = params => Axios.get('/lease/info', params);
 // 社团
 
