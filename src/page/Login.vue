@@ -23,36 +23,65 @@
           </div>
         </div>
         <div class="form" v-if="phoneType">
-          <div class="form_row">
-            <span class="row_ft">手机号：</span>
-            <div class="row_bd">
-              <el-input v-model="phone" class="bordercolor"  placeholder="请输入内容"></el-input>
+          <el-form :model="regForm" :rules="rules" ref="regForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="手机号" prop="phone">
+         
+                <!-- <div class="form_row">
+                  <span class="row_ft">手机号：</span>
+                  <div class="row_bd"> -->
+                    <el-input v-model="regForm.phone" class="bordercolor"  placeholder="请输入内容"></el-input>
+                  <!-- </div>
+                </div> -->
+    
+            </el-form-item>
+            <el-form-item label="验证码" prop="captcha">
+              <el-row>
+                <el-col :span="14">
+                  <el-input v-model="regForm.captcha" class="bordercolor"  placeholder="请输入内容"></el-input>
+                </el-col>
+                <el-col :span="10">
+                  <img class="captchaImg" src="http://api.dedele.net/token/captcha" alt="图形验证码">
+                </el-col>
+              </el-row>
+              
+              
+            </el-form-item>
+            <el-form-item label="短信验证码" prop="code">
+              <el-row>
+                <el-col :span="14">
+                  <el-input v-model="regForm.code" class="bordercolor"  placeholder="请输入内容"></el-input>
+                </el-col>
+                <el-col :span="10">
+                  <el-button type="success" plain @click="sendSmsCode">发送验证码</el-button>
+                </el-col>
+              </el-row>
+            </el-form-item>
+
+            <!-- <div class="form_row">
+              <span class="row_ft">验证码：</span>
+              <div class="row_bd mr18">
+                <el-input v-model="regForm.captcha" class="bordercolor"  placeholder="请输入内容"></el-input>
+              </div>
+              <div>
+                <img src="http://api.dedele.net/token/captcha" alt="图形验证码">
+              </div>
             </div>
-          </div>
-          <div class="form_row">
-            <span class="row_ft">验证码：</span>
-            <div class="row_bd mr18">
-              <el-input v-model="captcha" class="bordercolor"  placeholder="请输入内容"></el-input>
+            <div class="form_row">
+              <span class="row_ft">短信验证码：</span>
+              <div class="row_bd mr18">
+                <el-input v-model="regForm.code" class="bordercolor"  placeholder="请输入内容"></el-input>
+              </div>
+              <div>
+                <el-button type="success" plain @click="">发送验证码</el-button>
+              </div>
+            </div> -->
+            <div class="form_row">
+              <span class="row_ft" style="opacity:0;">去登录：</span>
+              <div class="row_bd">
+                <el-button class="login_btn" type="success"  @click="submitForm('regForm')">登录</el-button>
+              </div>
             </div>
-            <div>
-              <img src="http://api.dedele.net/token/captcha" alt="图形验证码">
-            </div>
-          </div>
-          <div class="form_row">
-            <span class="row_ft">短信验证码：</span>
-            <div class="row_bd mr18">
-              <el-input v-model="code" class="bordercolor"  placeholder="请输入内容"></el-input>
-            </div>
-            <div>
-              <el-button type="success" plain @click="">发送验证码</el-button>
-            </div>
-          </div>
-          <div class="form_row">
-            <span class="row_ft" style="opacity:0;">去登录：</span>
-            <div class="row_bd">
-              <el-button class="login_btn" type="success" @click="loginEvent">登录</el-button>
-            </div>
-          </div>
+          </el-form>
         </div>
       </div>
     </div>
@@ -73,9 +102,22 @@ export default {
   },
   data() {
     return {
-      phone:'',
-      code:'',
-      captcha: '',
+      regForm: {
+        phone:'',
+        code:'',
+        captcha: '',
+      },
+      rules: {
+          phone: [
+            { required: true, message: '请输入手机号', trigger: 'blur' },
+          ],
+          code: [
+            { required: true, message: '请输入短信验证码', trigger: 'blur' },
+          ],
+          captcha: [
+            { required: true, message: '请输入图形验证码', trigger: 'blur' },
+          ],
+      },
       phoneType:false,
     };
   },
@@ -84,6 +126,19 @@ export default {
       getCaptcha().then(res=>{
         console.log(res)
       })
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    sendSmsCode(){
+      // this.regForm.code
     },
     phoneLogin:function(){
       this.phoneType = true
@@ -94,6 +149,10 @@ export default {
 </script>
 
 <style lang="scss">
+  .captchaImg{
+    width: 100%;
+    height: 38px;
+  }
   .el-carousel__item h3 {
     color: #475669;
     font-size: 14px;
