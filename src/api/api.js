@@ -30,3 +30,7 @@ export const getLeaseList = params => Axios.get('/lease/getlist', params);
 export const getLeaseInfo = params => Axios.get('/lease/info', params);
 // 社团
 
+
+
+// 个人中心
+export const getMyGoods = params => Axios.get('/mall/goods/mylist', params);

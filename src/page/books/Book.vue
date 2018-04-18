@@ -37,6 +37,7 @@
 
 <script>
 import Search from '../../components/common/Search';
+import { mapMutations } from 'vuex';
 import { getGoodsList } from '../../api/api';
 export default {
   name: 'Book',
@@ -51,14 +52,24 @@ export default {
       list:[]
     };
   },
+  methods:{
+    ...mapMutations([
+      'Login_MUTATION'
+    ])
+  },
   created(){
     getGoodsList({
       category_id:1
     }).then(res=>{
       res.data.goodslist.forEach(item => {
-        item.post = item.images
+        item.post = item.images;
       })
-      this.list = res.data.goodslist
+      this.list = res.data.goodslist;
+      // this.Login_MUTATION({
+      //   user_id: 99,
+      //   name:'王宗荣123',
+      //   nickname: '123',
+      // })
     })
   }
 };
