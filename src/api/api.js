@@ -8,6 +8,11 @@ export const getCode = params => Axios.get('/token/getcode', params);
 // 登录
 export const toLogin = params => Axios.post('/token/create', params);
 
+//校区列表
+export const getCampus = params => Axios.get('/campus/getlist', params);
+
+// 货币列表
+export const getCurrency = params => Axios.get('/currency/getlist', params);
 
 //个人资料
 
@@ -22,7 +27,7 @@ export const setassociation = params => Axios.post('/set/association', params);
 // 二手商品
 export const getGoodsList = params => Axios.get('/mall/goods/getlist', params);
 export const getGoodsInfo = params => Axios.get('/mall/goods/info', params);
-export const publishGoods = params => Axios.get('/mall/goods/publish', params);
+export const publishGoods = (params,config) => Axios.post('/mall/goods/publish', params, config);
 
 // 租赁
 

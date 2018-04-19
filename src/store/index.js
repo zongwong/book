@@ -5,7 +5,7 @@ import mutations from './mutations';
 Vue.use(Vuex);
 
 const state = {
-    token:'58782b0d8802bcb29da7cbafc8f99bab',
+    token:'9ac02a5f03dbab1127c707694e01e36e',
     school:'',
     userInfo:{
         user_id: 3,
@@ -21,6 +21,9 @@ const state = {
         updated_at: 1523966552,
         deleted_at: null
     },
+    campuList:[],
+    nowCampu:{},
+    Currency:[]
 }
 
 const getters = {

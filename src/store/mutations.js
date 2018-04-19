@@ -18,10 +18,15 @@ export default {
     [types.EditCard](state, payload){
         
     },
-    [types.EditGroup](state, payload){
-
+    [types.CampuList](state, payload){
+        state.campuList = payload.list
     },
-
+    [types.NowCampu](state, payload){
+        state.nowCampu = payload.nowCampu
+    },
+    [types.Currency](state, payload){
+        state.Currency = payload.list
+    },
 
 
 

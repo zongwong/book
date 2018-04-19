@@ -11,13 +11,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {  // 需要 proxyTable 代理的接口（可跨域）
-      '/api': {
-          target: 'http://api.dedele.net',
-          changeOrigin: true,
-          pathRewrite: {
-            '^/api': ''
-          }
-      }
+      // '/api': {
+      //     target: 'http://api.dedele.net',
+      //     changeOrigin: true,
+      //     pathRewrite: {
+      //       '^/api': ''
+      //     }
+      // }
     },
 
     // Various Dev Server settings

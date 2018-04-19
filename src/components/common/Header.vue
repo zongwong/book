@@ -5,16 +5,17 @@
     </div>
     <div class="common-right">
       <div class="userInfo">
-        <el-dropdown >
+        <el-dropdown 
+          trigger="click"
+          @command="handleCommand"
+        >
           <span class="el-dropdown-link select">
-            {{$t("navs.school")}}<i class="el-icon-arrow-down el-icon--right green_arrow"></i>
+            {{$t("navs.school")}}: {{nowCampu.campus_name}}<i class="el-icon-arrow-down el-icon--right green_arrow"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-            <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+            <template v-for="item in campuList" >
+              <el-dropdown-item :command="item" :key="item.campus_id">{{item.campus_name}}</el-dropdown-item>
+            </template>
           </el-dropdown-menu>
         </el-dropdown>
         <span>丨</span>
@@ -44,22 +45,45 @@
 
 <script>
 import Vue from 'vue';
-import { mapState } from 'vuex';
+import { mapState,mapActions,mapMutations  } from 'vuex';
 export default {
   name: 'Header',
   data() {
     return {
+      // campuList:this.$store.state.campuList
     };
   },
+  // watch:{
+  //   list(){
+  //     return this.$store.state.campuList
+  //   }
+  // },
   computed:{
     ...mapState({
-      userInfo: 'userInfo'
+      userInfo: 'userInfo',
+      campuList: 'campuList',
+      nowCampu: 'nowCampu'
     })
   },
   methods:{
     changeLanguage(lang){
       Vue.config.lang = lang
+    },
+    ...mapActions([
+      'campusAction'
+    ]),
+    ...mapMutations([
+      'NowCampu_MUTATION'
+    ]),
+    handleCommand(command){
+      // this.$message('click on item ' + command);
+      this.NowCampu_MUTATION({
+        nowCampu: command
+      })
     }
+  },
+  created() {
+    this.$store.dispatch('campusAction')
   }
 };
 </script>
