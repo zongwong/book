@@ -15,9 +15,27 @@
     <el-form-item label="书的简介" prop="summary">
       <el-input type="textarea" v-model="ruleForm.summary"></el-input>
     </el-form-item>
-
+    <el-form-item label="所在校区">
+      <el-select v-model="ruleForm.campus" placeholder="请选择所在校区">
+        <template v-for="item in campuList">
+          <el-option :key="item.campus_id" :label="item.campus_name" :value="item.campus_name"></el-option>
+        </template>
+      </el-select>
+    </el-form-item>
     <el-form-item label="价格" prop="shop_price">
-      <el-input type="number" v-model="ruleForm.shop_price"></el-input>
+      <el-row :gutter="10"> 
+        <el-col :span="4">
+          <el-select v-model="ruleForm.currency" placeholder="货币">
+            <template v-for="item in currency">
+              <el-option :key="item.currency_id" :label="item.currency_symbol" :value="item.currency_code"></el-option>
+            </template>
+          </el-select>
+        </el-col>
+        <el-col :span="8">
+          <el-input type="number" v-model="ruleForm.shop_price"></el-input>
+        </el-col>
+      </el-row>
+      
     </el-form-item>
 
     <el-form-item>
@@ -31,6 +49,7 @@
 <script>
 import Upload from '../../components/upload';
 import { publishGoods } from '../../api/api';
+import { mapState } from 'vuex';
 export default {
   name: 'BookFrom',
   components: {
@@ -41,7 +60,9 @@ export default {
         ruleForm: {
           title: '',
           summary: '',
-          shop_price: ''
+          shop_price: '',
+          campus: '',
+          currency: '',
         },
         rules: {
           title: [
@@ -56,6 +77,12 @@ export default {
         },
         files:[]
       };
+  },
+  computed: {
+    ...mapState({
+      campuList:'campuList',
+      currency: 'Currency'
+    })
   },
   methods: {
     uploadFileEvent(ret) {
@@ -76,15 +103,15 @@ export default {
             category_id:1,
             title:this.ruleForm.title,
             summary:this.ruleForm.title,
-            shop_price:this.ruleForm.title,
+            shop_price:this.ruleForm.shop_price,
             currency_code:'USD'||this.ruleForm.title,
             currency_symbol:'$'||this.ruleForm.title,
             campus_id:2,
             images:this.files
           },{
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+            // headers: {
+            //     'Content-Type': 'multipart/form-data'
+            // }
           }).then(res=>{
             console.log(res)
           })

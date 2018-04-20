@@ -5,7 +5,7 @@ import mutations from './mutations';
 Vue.use(Vuex);
 
 const state = {
-    token:'9ac02a5f03dbab1127c707694e01e36e',
+    token:'c2cf19827f84348c3f65e75325f37ddc',
     school:'',
     userInfo:{
         user_id: 3,

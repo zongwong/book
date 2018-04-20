@@ -2,8 +2,8 @@ import axios from 'axios';
 axios.defaults.headers.post['content-Type'] = 'application/x-www=form-urlencoded';
 axios.defaults.withCredentials = true;
 const Axios = axios.create({
-  baseURL: 'http://api.dedele.net',
-  // baseURL: '/api',
+  // baseURL: 'http://api.dedele.net',
+  baseURL: '/api',
   timeout: 10000,
 });
 
