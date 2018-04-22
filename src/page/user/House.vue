@@ -1,20 +1,20 @@
 <template>
 <div class="publish">
-    <div class="pbbtn_box"><span>发布社团交流</span></div>
-    <div class="history_item">
+    <div class="pbbtn_box"><router-link to="/center/publishhouse"><span>发布租赁</span></router-link></div>
+    <div class="history_item" v-for="item in list" :key="item.lease_id">
         <div class="post_item">
           <div class="post_user">
             <img src="../../assets/image/book.png" alt="">
           </div>
           <div class="post_data">
-            <p class="post_title oneHide">12312312323</p>
+            <p class="post_title oneHide">{{item.address}}</p>
             <div class="post_detail">
-              <p class="moreHide">qweqweqweqwe空气环境为偶好环境为偶好几千胸围环境为偶好几千胸围环境为偶好几千胸围环境为偶好几千胸围环境为偶好几千胸围环境为偶好几千胸围几千胸围和其吻合器未</p>
+              <p class="moreHide">{{item.content}}</p>
             </div>
             <div class="post_other">
-              <span>2018-1-12 13:22</span>
+              <span>{{item.created_at}}</span>
               <span class="from"></span>
-              <span class="zan">点赞 23</span>
+              <span class="zan">点赞 {{item.comment}}</span>
               <span class="hr">丨</span>
               <span class="comment">评论 345</span>
             </div>
@@ -23,30 +23,54 @@
           <!-- <div class="btn_edit">编辑</div> -->
         </div>
     </div>
+
+    <my-pagination
+      :total="total"
+      :current-page.sync="pageno"
+      @page-change="onPageChange"
+    ></my-pagination>
 </div>
 </template>
 
 <script>
 
-
+import { myLeaseList } from '../../api/api';
+import pagination from '../../components/pagination';
 export default {
   name: 'Pbhouse',
   components: {
+    'my-pagination':pagination
   },
   data() {
     return {
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        }
+        list:[],
+        total:1,
+        pageno:1
       };
   },
+  methods:{
+    getListData(){
+        return new Promise((resolve,reject)=>{
+          myLeaseList({
+            pageno:this.pageno
+          }).then(res=>{
+              if(res.code==200){
+                  this.list = res.data.leaseList;
+                  this.total = res.data.maxpage
+              }else{
+                  reject(res)
+              }
+          })
+        })
+    },
+    onPageChange(pageno){
+      this.pageno = pageno;
+      this.getListData()
+    }
+  },
+  created(){
+    this.getListData()
+  }
 };
 
 </script>

@@ -5,8 +5,8 @@
           <div class="topic_info">
               <div class="topic_header flex_row">
                 <div class="row_bd">
-                    <h3 class="topic_title">qweqweqwe请问请问亲</h3>
-                    <p class="topic_time">2012-12-12-12-12</p>
+                    <h3 class="topic_title">{{postInfo.title}}</h3>
+                    <p class="topic_time">{{postInfo.created_at}}</p>
                 </div>
                 <div class="topic_avatar flex_row">
                     <div class="topic_avatar_wrap">
@@ -19,12 +19,12 @@
                 </div>
               </div>
               <div class="topic_content">
-
+                  {{postInfo.content}}
               </div>
               <div class="topic_btn">
-                  <span class="zan">点赞 1232</span>
+                  <span class="zan" @click="postZan">点赞 {{postInfo.thumbup}}</span>
                   <span class="hr">丨</span>
-                  <span class="comment">评论 3244</span>
+                  <span class="comment">评论 {{postInfo.comment}}</span>
               </div>
               <div class="topic_comment">
                   <div class="comment_item flex_box" v-for="item in commentList" :key="item.comment_id">
@@ -41,7 +41,7 @@
                               {{item.content}}
                           </div>
                           <div class="reply_comment">
-                              <!-- <div  v-for="son in item" :key="son.comment_id">请问立刻就气我而去请问请问</div> -->
+                              <div  v-for="son in item.sonComments" :key="son.comment_id">{{son.nickname}}：{{son.content}}</div>
                           </div>
                       </div>
                   </div>
@@ -57,10 +57,10 @@
 
 <script>
 import Search from '../../components/common/Search';
-import { getLeaseInfo,leaseCommentList,leaseCommentCreate } from '../../api/api';
+import { groupCommentList,groupCommentCreate,getPostInfo,groupPostZan,groupPostUnZan } from '../../api/api';
 import { mapState } from 'vuex';
 export default {
-  name: 'HouseDetail',
+  name: 'PostDetail',
   components: {
     'my-search': Search
   },
@@ -68,12 +68,14 @@ export default {
     return {
       userinfo:{},
       userinfo:{},
-      lease_id:'',
+      post_id:'',
       last_id:'',
       comment:'',
       commentList:[],
       placeholder:'评论',
-      comment_id:''
+      comment_id:'',
+      postInfo:{},
+      hasThumbuped:0
     };
   },
   computed:{
@@ -84,9 +86,9 @@ export default {
   methods:{
       toReply(){
           if(!this.comment) return;
-          leaseCommentCreate({
+          groupCommentCreate({
               comment_id:this.comment_id,
-              lease_id:this.lease_id,
+              post_id:this.post_id,
               content:this.comment 
           }).then(res=>{
               if(res.code==200){
@@ -100,18 +102,39 @@ export default {
         this.comment = '';
         this.comment_id = id;
         this.placeholder = `回复 ${name}：`;
+      },
+      postZan(){
+          if(this.hasThumbuped==1){
+              groupPostZan({
+                  post_id:this.post_id
+              }).then(res=>{
+                  if(res.code==200){
+                      this.postInfo.thumbup = res.data.thumbup;
+                      this.hasThumbuped = res.data.hasThumbuped;
+                  };
+              })
+          }else{
+              groupPostUnZan({
+                  post_id:this.post_id
+              }).then(res=>{
+                  if(res.code==200){
+                      this.postInfo.thumbup = res.data.thumbup;
+                      this.hasThumbuped = res.data.hasThumbuped;
+                  };
+              })
+          }
       }
   },
   created(){
-      this.lease_id = this.$route.params.id;
-    //   getLeaseInfo({
-    //       lease_id:this.$route.params.id,
-    //   }).then(res=>{
-    //     this.leaseInfo = res.data.leaseInfo
-    //     this.userinfo = res.data.leaseInfo.userinfo
-    //   })
-      leaseCommentList({
-          lease_id:this.lease_id,
+      this.post_id = this.$route.params.id;
+      getPostInfo({
+          post_id:this.$route.params.id,
+      }).then(res=>{
+        this.postInfo = res.data.postInfo
+        this.userinfo = res.data.postInfo.userinfo
+      })
+      groupCommentList({
+          post_id:this.post_id,
           last_id:this.last_id
       }).then(res=>{
         this.commentList = res.data.comments

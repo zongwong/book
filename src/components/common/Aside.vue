@@ -2,11 +2,11 @@
   <div class="aside">
     <div class="userInfoBox">
         <div class="avatar">
-            <img src="../../assets/image/book.png" alt="">
+            <img :src="userInfo.headimgurl" alt="头像">
             <i class="icon_sex"></i>
         </div>
-        <p class="name">打打</p>
-        <p>气温气温</p>
+        <p class="name">{{userInfo.nickname}}</p>
+        <p>{{userInfo.nickname}}</p>
     </div>
     <div class="aside_nav">
         <el-menu
@@ -16,6 +16,10 @@
             <el-menu-item index="/center/info">
                 <i class="el-icon-info"></i>
                 <span slot="title">个人资料</span>
+            </el-menu-item>
+            <el-menu-item index="/center/address">
+                <i class="el-icon-info"></i>
+                <span slot="title">收货地址</span>
             </el-menu-item>
             <el-submenu index="/center/info">
                 <template slot="title">
@@ -58,6 +62,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: 'Aside',
   data() {
@@ -65,6 +70,13 @@ export default {
         activeIndex:this.$route.path
     };
   },
+  computed:{
+      ...mapState([
+          'host',
+          'userInfo'
+      ])
+  },
+  methods:{}
 };
 </script>
 

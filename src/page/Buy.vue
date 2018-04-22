@@ -5,31 +5,31 @@
       <div class="box1000">
           <div class="goods_info">
               <div class="goods_imgs">
-                  <img src="../assets/image/book.png" alt="">
+                  <img src="../assets/image/book.png" alt="封面">
               </div>
               <div class="goods_data">
-                  <p class="title">请问请问亲我额去</p>
-                  <p class="desc">asdasdasdasd</p>
-                  <p class="price">￥20.00</p>
+                  <p class="title">{{goodsInfo.title}}</p>
+                  <p class="desc">{{goodsInfo.summary}}</p>
+                  <p class="price">￥{{goodsInfo.shop_price}}</p>
               </div>
           </div>
       </div>
   </div>
   <div class="box1000">
     <div class="address">
-        <p>气温气温</p>
-        <p>请问请问</p>
-        <p>请问驱蚊器我</p>
+        <p>收件人：{{defaultAddress.recipients}}</p>
+        <p>手机：{{defaultAddress.mobilephone}}</p>
+        <p>详细地址：{{defaultAddress.detail}} / {{defaultAddress.city}} / {{defaultAddress.province}} / {{defaultAddress.country}}</p>
     </div>
     <p class="pay_title">付款方式</p>
     <div class="pay_box">
-        <span class="on"><i class="icon icon_zfb"></i>支付宝</span>
-        <span><i class="icon icon_wx"></i>微信</span>
-        <span><i class="icon icon_card"></i>银行卡</span>
+        <span @click="selectPayType('zfb')" :class="{on:payType=='zfb'}"><i class="icon icon_zfb"></i>支付宝</span>
+        <span @click="selectPayType('wx')" :class="{on:payType=='wx'}"><i class="icon icon_wx"></i>微信</span>
+        <span @click="selectPayType('paypal')" :class="{on:payType=='paypal'}"><i class="icon icon_card"></i>PayPal</span>
     </div>
     <div class="btns">
         <el-button size="small" round>取消订单</el-button>
-        <el-button size="small" type="success" round>立即付款</el-button>
+        <el-button size="small" type="success" round @click="makeOrder">立即付款</el-button>
     </div>
   </div>
 </div>
@@ -37,7 +37,8 @@
 
 <script>
 import Search from '../components/common/Search';
-
+import { getGoodsInfo,createOrder,deleteOrder,payPal,addressList } from '../api/api';
+import { mapState } from 'vuex';
 export default {
   name: 'Buy',
   components: {
@@ -45,9 +46,58 @@ export default {
   },
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
-    };
+      goodsInfo:{},
+      userinfo:{},
+      orderInfo:{},
+      defaultAddress:{},
+      payType:'paypal',
+    }
   },
+  computed:{
+    ...mapState([
+        'host'
+    ])
+  },
+  methods:{
+      selectPayType(type){
+          this.payType = type;
+      },
+      makeOrder(){
+          createOrder({
+              address_id:this.defaultAddress.address_id,
+              goods_id:this.goodsInfo.goods_id
+          }).then(res=>{
+              if(res.code==200){
+                  console.log(res.data)
+              }else{
+                  this.$alert(res.message, {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                        // this.$message({
+                        // type: 'info',
+                        // message: `action: ${ action }`
+                        // });
+                    }
+                });
+              }
+          })
+      }
+  },
+  created(){
+      getGoodsInfo({
+          goods_id:this.$route.params.id,
+      }).then(res=>{
+        this.goodsInfo = res.data.goodsInfo
+        this.userinfo = res.data.goodsInfo.userinfo
+      });
+      addressList(this.pas).then(res=>{
+        if(res.code==200){
+            this.defaultAddress = res.data.addresslist.filter(item=>{
+                return item.is_default == 1
+            })[0];
+        }
+      })
+  }
 };
 
 </script>

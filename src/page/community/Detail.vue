@@ -6,18 +6,18 @@
             <div class="topic_info cm_info">
                 <div class="topic_header flex_row">
                     <div class="row_bd flex_row cm_data">
-                        <img src="../../assets/image/book.png">
+                        <img :src="host+info.headimgurl">
                         <div class="row_bd cm_content">
-                            <p class="title oneHide">1231231</p>
-                            <p class="desc moreHide">12312312312312adasda请问请问亲</p>
+                            <p class="title oneHide">{{info.title}}</p>
+                            <p class="desc moreHide">{{info.summary}}</p>
                         </div>
                     </div>
                     <div class="topic_avatar flex_row">
                         <div class="topic_avatar_wrap">
-                            <img src="../../assets/image/book.png" alt="">
+                            <img :src="host+userinfo.headimgurl" alt="头像">
                         </div>
                         <div class="">
-                            <p class="nickname"><span>姓名</span><i class="icon_sex"></i></p>
+                            <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
                             <p class="manger">管理员</p>
                         </div>
                     </div>
@@ -27,46 +27,100 @@
       </div>
       <div class="box1000">
           <div style="margin-bottom:70px;">
-            <div class="post_item">
+              
+            <div class="post_item" v-for="item in postList" :key="item.post_id">
                 <div class="post_user">
                     <img src="../../assets/image/book.png" alt="">
                     <p class="name oneHide">气温气温</p>
                 </div>
+                
                 <div class="post_data">
-                    <p class="post_title oneHide">12312312323</p>
-                    <div class="post_detail">
-                    <img src="../../assets/image/book.png" alt="">
-                    <p class="moreHide">qweqweqweqwe空气环境为偶好几千胸围和其吻合器未</p>
-                    </div>
-                    <div class="post_other">
-                    <span>2018-1-12 13:22</span>
-                    <span class="from">来自 陈琳达</span>
-                    <span class="zan">点赞 23</span>
-                    <span class="hr">丨</span>
-                    <span class="comment">评论 345</span>
-                    </div>
+                    <router-link :to="'/community/post/'+item.post_id">
+                        <p class="post_title oneHide">{{item.title}}</p>
+                        <div class="post_detail">
+                        <img src="../../assets/image/book.png" alt="">
+                        <p class="moreHide">{{item.content}}</p>
+                        </div>
+                        <div class="post_other">
+                        <span>{{item.created_at}}</span>
+                        <span class="from">来自 陈琳达</span>
+                        <span class="zan">点赞 {{item.thumbup}}</span>
+                        <span class="hr">丨</span>
+                        <span class="comment">评论 {{item.comment}}</span>
+                        </div>
+                    </router-link>
                 </div>
+                
             </div>
           </div>
 
 
       </div>
+
+      <my-pagination
+        :total="total"
+        :current-page.sync="pageno"
+        @page-change="onPageChange"
+      ></my-pagination>
   </div>
 </template>
 
 <script>
 import Search from '../../components/common/Search';
-
+import pagination from '../../components/pagination';
+import { getgroupInfo,groupPostList } from '../../api/api';
+import { mapState } from 'vuex';
 export default {
   name: 'CommunityDetail',
   components: {
-    'my-search': Search
+    'my-search': Search,
+    'my-pagination':pagination
   },
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
+      info: {},
+      userinfo:{},
+      id:'',
+      postList:[],
+      total:1,
+      pageno:1,
     };
   },
+  computed:{
+      ...mapState([
+          'host'
+      ])
+  },
+  methods:{
+      onPageChange(){
+        this.pageno = currentPage;
+        this.getListData();
+      },
+      getListData(){
+        groupPostList({
+            association_id:this.id,
+            pageno:this.pageno
+        }).then(res=>{
+            if(res.code==200){
+                this.postList = res.data.postlist;
+                this.total = res.data.maxpage;
+            }
+        })
+      }
+  },
+  created(){
+      this.id = this.$route.params.id;
+      getgroupInfo({
+          association_id:this.id
+      }).then(res=>{
+          if(res.code==200){
+              this.info = res.data.associationInfo;
+              this.userinfo = res.data.associationInfo.userinfo;
+          }
+      })
+
+      this.getListData();
+  }
 };
 
 </script>

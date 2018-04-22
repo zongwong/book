@@ -9,6 +9,11 @@ export default {
   name: 'App',
   created() {
     this.$store.dispatch('currencyAction');
+    
+    this.$store.dispatch('userInfoAction');
+    this.$store.dispatch('campusAction').then(res=>{
+      console.log(res)
+    })
   }
 };
 </script>

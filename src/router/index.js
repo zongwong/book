@@ -21,9 +21,12 @@ import Pbnote from '@/page/user/note';
 import Pbhouse from '@/page/user/house';
 import Pbcommunity from '@/page/user/community';
 import publishbook from '@/page/user/BookFrom';
-import publishnote from '@/page/user/NoteFrom';
+// import publishnote from '@/page/user/NoteFrom';
 import publishhouse from '@/page/user/HouseFrom';
 import publishpost from '@/page/user/CommunityFrom';
+import Post from '@/page/community/Post';
+import address from '@/page/address/address';
+import SetNick from '@/page/setnick';
 import page404 from '@/page/page404';
 
 Vue.use(Router);
@@ -69,7 +72,11 @@ export default new Router({
         name: 'CommunityDetail',
         component: CommunityDetail,
       }, {
-        path: '/buy',
+        path: '/community/post/:id',
+        name: 'post',
+        component: Post,
+      }, {
+        path: '/buy/:id',
         name: 'Buy',
         component: Buy,
       }, {
@@ -111,13 +118,9 @@ export default new Router({
           name: 'Pbcommunity',
           component: Pbcommunity,
         },{
-          path: '/center/publishbook',
+          path: '/center/publish',
           name: 'publishbook',
           component: publishbook,
-        }, {
-          path: '/center/publishnote',
-          name: 'publishnote',
-          component: publishnote,
         }, {
           path: '/center/publishhouse',
           name: 'publishhouse',
@@ -126,13 +129,21 @@ export default new Router({
           path: '/center/publishpost',
           name: 'publishpost',
           component: publishpost,
+        },{
+          path: '/center/address',
+          name: 'address',
+          component: address,
         }]
       }]
     }, {
       path: '/login',
       name: 'Login',
       component: Login,
-    }, { 
+    }, {
+      path: '/setnick',
+      name: 'SetNick',
+      component: SetNick,
+    },{ 
       path: '*', 
       component: page404 
     }

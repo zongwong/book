@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from '../store/index';
 axios.defaults.headers.post['content-Type'] = 'application/x-www=form-urlencoded';
 axios.defaults.withCredentials = true;
 const Axios = axios.create({
@@ -8,27 +9,42 @@ const Axios = axios.create({
 });
 
 
-// Axios.interceptors.request.use(
-//   config => {
-
-
-//   },
-//   error => {
-
-
-//   }
-// );
+Axios.interceptors.request.use(
+  config => {
+    console.log( config)
+    let token = store.state.token||'';
+    if(config.method=='get'){
+      config.params.token = token;
+    }else if(config.method=='post'){
+      config.data.token = token;
+    }
+    
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
 // //返回状态判断(添加响应拦截器)
-// Axios.interceptors.response.use(
-//   res => {
-
-
-//   },
-//   error => {
-
-//   }
-// );
+Axios.interceptors.response.use(
+  res => {
+    // token 失效处理
+    // if(0){
+    //   store.commit(types.LOGOUT);
+    //   router.replace({
+    //     path: 'login',
+    //     query: {
+    //       redirect: router.currentRoute.fullPath
+    //     }
+    //   })
+    // }
+    return res;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
 export default {
 

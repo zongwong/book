@@ -17,13 +17,15 @@
         <i class="el-icon-plus"></i>
     </el-upload> -->
     <el-upload
-        action=""
+        action="/api/uploader/image"
+        :data="{token:token}"
+        name="image"
         :auto-upload="true"
         list-type="picture-card"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
         :before-upload="beforeUpload"
-        :http-request="httpRequest"
+        :on-success="onSuccess"
         :file-list="fileList"
     >
         <i class="el-icon-plus"></i>
@@ -35,7 +37,7 @@
 </template>
 
 <script>
-
+    import { mapState } from 'vuex';
     export default {
         name: "upload",
         props: {
@@ -50,14 +52,16 @@
         data () {
             return {
                 dialogImageUrl: '',
-                dialogVisible: false
+                dialogVisible: false,
             };
         },
         created: function () {
             
         },
         computed: {
-            
+            ...mapState({
+                token:'token'
+            })
         },
         methods: {
             handleRemove(file, fileList) {
@@ -71,14 +75,17 @@
                 
             },
             beforeUpload(file) {
-                this.$emit('uploadfile',{file:file});
+                // this.$emit('uploadfile',{file:file});
+            },
+            onSuccess(response, file, fileList){
+                this.$emit('uploadfile',{file:response.data.imageurl});
             },
             onUpload() {
-                this.$refs.upload.submit();
+                // this.$refs.upload.submit();
             },
-            httpRequest() {
+            // httpRequest() {
 
-            }
+            // }
             
         }
     };

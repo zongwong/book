@@ -6,3 +6,5 @@ export const EditGroup = 'EditGroup_MUTATION';
 export const CampuList = 'CampuList_MUTATION';
 export const NowCampu = 'NowCampu_MUTATION';
 export const Currency = 'Currency_MUTATION';
+export const LoginOut = 'LoginOut_MUTATION';
+export const getUserInfo = 'getUserInfo_MUTATION';

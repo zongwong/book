@@ -18,12 +18,9 @@
     <div class="box1000">
         <div class="select_box">
             <el-select v-model="value" placeholder="请选择">
-                <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
+                <el-option label="二手书籍" value="二手书籍"></el-option>
+                <el-option label="二手笔记" value="二手笔记"></el-option>
+                <el-option label="房屋租赁" value="房屋租赁"></el-option>
             </el-select>
         </div>
         <div class="list">
@@ -69,17 +66,27 @@
 
 <script>
 import Search from '../../components/common/Search';
-
+import { getInfo } from '../../api/api';
+import pagination from '../../components/pagination';
 export default {
   name: 'UserIndex',
   components: {
-    'my-search': Search
+    'my-search': Search,
+    'my-pagination': pagination
   },
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
+      userinfo: {},
     };
   },
+  methods:{
+
+  },
+  created(){
+    //   getInfo().then(res=>{
+
+    //   })
+  }
 };
 
 </script>

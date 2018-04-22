@@ -5,7 +5,8 @@ import mutations from './mutations';
 Vue.use(Vuex);
 
 const state = {
-    token:'c2cf19827f84348c3f65e75325f37ddc',
+    host:'http://api.dedele.net',
+    token: localStorage.getItem('token')||'',
     school:'',
     userInfo:{
         user_id: 3,
@@ -21,8 +22,14 @@ const state = {
         updated_at: 1523966552,
         deleted_at: null
     },
+    cardInfo:{
+
+    },
+    associationInfo:{
+
+    },
     campuList:[],
-    nowCampu:{},
+    nowCampu:JSON.parse(localStorage.getItem('nowCampu'))||'',
     Currency:[]
 }
 

@@ -2,17 +2,21 @@
   <div class="">
     <my-search></my-search>
     <div class="club_box community_box">
-      <div class="club_card clearfix">
+      <div class="club_card clearfix" v-for="item in list" :key="item.association_id">
         <div class="club_card-left">
           <div class="flex_row">
             <div class="imgbox">
-              <img src="../../assets/image/book.png" alt="">
+              <router-link :to="'/community/'+item.association_id">
+                <img :src="host+item.headimgurl" alt="封面">
+              </router-link>
             </div>
           </div>
         </div>
         <div class="club_card-right">
-          <p class="title oneHide">请问请问亲我而且请问请问</p>
-          <p class="desc">爱得起无多群无切完而且委屈</p>
+          <!-- <router-link :to="'/community/'+item.association_id"> -->
+            <p class="title oneHide">{{item.title}}</p>
+            <p class="desc">{{item.summary}}</p>
+          <!-- </router-link> -->
           <div class="club_post">
             <div class="flex_row">
               <div class="imgbox">
@@ -44,22 +48,56 @@
         </div>
       </div>
     </div>
+    <my-pagination
+        :total="total"
+        :current-page.sync="pageno"
+        @page-change="onPageChange"
+    ></my-pagination>
   </div>
 </template>
 
 <script>
 import Search from '../../components/common/Search';
-
+import { getgroupList } from '../../api/api';
+import { mapState } from 'vuex';
+import pagination from '../../components/pagination';
 export default {
   name: 'Community',
   components: {
-    'my-search': Search
+    'my-search': Search,
+    'my-pagination':pagination
   },
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
+      list:[],
+      total:1,
+      pageno:1,
     };
   },
+  computed:{
+    ...mapState([
+      'host'
+    ])
+  },
+  methods:{
+    onPageChange(currentPage){
+      this.pageno = currentPage;
+      this.getListData();
+    },
+    getListData(){
+      getgroupList({
+        pageno:this.pageno
+      }).then(res=>{
+        if(res.code==200){
+          this.list = res.data.associations;
+          this.total = res.data.maxpage;
+        }
+      })
+    }
+  },
+  created(){
+    this.getListData();
+  }
 };
 
 </script>

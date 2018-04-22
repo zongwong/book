@@ -1,8 +1,13 @@
 import * as types from './mutation-types';
-// import { setInfo,getCode } from '../api/api';
+// import Vue from 'vue';
 export default {
     [types.Login](state, payload){
         state.userInfo = payload
+    },
+    [types.LoginOut](state, payload){
+        state.token = '';
+        localStorage.removeItem('token');
+        window.location.href = '/';
     },
     [types.EditName](state, payload){
         state.nickname = payload.nickname
@@ -15,6 +20,9 @@ export default {
         state.mobilephone = payload.mobilephone
         state.headimgurl = payload.headimgurl
     },
+    [types.getUserInfo](state,payload){
+        state.userInfo = payload
+    },
     [types.EditCard](state, payload){
         
     },
@@ -23,6 +31,7 @@ export default {
     },
     [types.NowCampu](state, payload){
         state.nowCampu = payload.nowCampu
+        localStorage.setItem('nowCampu',JSON.stringify(payload.nowCampu))
     },
     [types.Currency](state, payload){
         state.Currency = payload.list

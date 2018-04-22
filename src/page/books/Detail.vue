@@ -4,19 +4,19 @@
       <div class="box1000">
           <div class="goods_info">
               <div class="goods_imgs">
-                  <img src="../../assets/image/book.png" alt="">
+                  <img src="../../assets/image/book.png" alt="封面">
               </div>
               <div class="goods_data">
                   <p class="title">{{goodsInfo.title}}</p>
                   <p class="price">￥{{goodsInfo.shop_price}}</p>
                   <div class="buyBtn_wrap">
-                      <router-link to="/buy"><el-button size="small" type="success" round>立即购买</el-button></router-link>
+                      <router-link :to="'/buy/'+goodsInfo.goods_id"><el-button size="small" type="success" round>立即购买</el-button></router-link>
                   </div>
               </div>
               <div class="saler_info">
                   <div class="avatar_wrap">
-                      <router-link to="/user/1">
-                        <img src="../../assets/image/book.png" alt="">
+                      <router-link :to="'/user/'+userinfo.user_id">
+                        <img :src="host+userinfo.headimgurl" alt="用户头像">
                         <i class="saler_sex"></i>
                       </router-link>
                   </div>
@@ -35,6 +35,7 @@
 <script>
 import Search from '../../components/common/Search';
 import { getGoodsInfo } from '../../api/api';
+import { mapState } from 'vuex';
 export default {
   name: 'BookDetail',
   components: {
@@ -46,10 +47,14 @@ export default {
       userinfo: {}
     };
   },
+  computed:{
+      ...mapState([
+          'host'
+      ])
+  },
   created(){
       getGoodsInfo({
           goods_id:this.$route.params.id,
-          token: this.$store.state.token
       }).then(res=>{
         this.goodsInfo = res.data.goodsInfo
         this.userinfo = res.data.goodsInfo.userinfo

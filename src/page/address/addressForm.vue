@@ -13,14 +13,20 @@
     <el-button type="primary" @click="onSubmit">立即发布</el-button>
   </el-form-item>
 </el-form>
+
+
+
+
+
+
 </div>
 </template>
 
 <script>
-import { publishLease } from '../../api/api';
+
 
 export default {
-  name: 'HouseFrom',
+  name: 'addressFrom',
   components: {
   },
   data() {
@@ -37,21 +43,6 @@ export default {
         }
       };
   },
-  methods: {
-      onSubmit() {
-        publishLease({
-            content:'房屋详情描述房屋详情描述',
-            address: '地址描述房屋详情描述房屋详情描述',
-            start_date: '2020-12-12',
-            // [end_date 可租赁结束日]
-            monetary_unit:'CNY',
-            rent:999,
-            deposit:888,
-        }).then(res=>{
-            console.log(res)
-        })
-      }
-  }
 };
 
 </script>

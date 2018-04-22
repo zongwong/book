@@ -6,7 +6,7 @@
       <el-input v-model="ruleForm.title"></el-input>
     </el-form-item>
 
-    <el-form-item label="图片">
+    <el-form-item label="图片" prop="images">
       <my-upload
         v-on:uploadfile="uploadFileEvent"
       ></my-upload>
@@ -15,24 +15,28 @@
     <el-form-item label="书的简介" prop="summary">
       <el-input type="textarea" v-model="ruleForm.summary"></el-input>
     </el-form-item>
-    <el-form-item label="所在校区">
+    <el-form-item label="所在校区" prop="campus">
       <el-select v-model="ruleForm.campus" placeholder="请选择所在校区">
         <template v-for="item in campuList">
           <el-option :key="item.campus_id" :label="item.campus_name" :value="item.campus_name"></el-option>
         </template>
       </el-select>
     </el-form-item>
-    <el-form-item label="价格" prop="shop_price">
+    <el-form-item label="价格">
       <el-row :gutter="10"> 
         <el-col :span="4">
-          <el-select v-model="ruleForm.currency" placeholder="货币">
-            <template v-for="item in currency">
-              <el-option :key="item.currency_id" :label="item.currency_symbol" :value="item.currency_code"></el-option>
-            </template>
-          </el-select>
+          <el-form-item prop="currency">
+            <el-select v-model="ruleForm.currency" placeholder="货币">
+              <template v-for="item in currency">
+                <el-option :key="item.currency_id" :label="item.currency_symbol" :value="item.currency_code"></el-option>
+              </template>
+            </el-select>
+           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-input type="number" v-model="ruleForm.shop_price"></el-input>
+          <el-form-item prop="shop_price">
+            <el-input type="number" v-model="ruleForm.shop_price"></el-input>
+          </el-form-item>
         </el-col>
       </el-row>
       
@@ -56,7 +60,15 @@ export default {
     'my-upload':Upload
   },
   data() {
+    let checkImg = (rule, value, callback) => {
+      if(this.files.length){
+        callback()
+      }else{
+        callback(new Error('请上传图片'));
+      }
+    }
     return {
+        category_id:1,
         ruleForm: {
           title: '',
           summary: '',
@@ -73,7 +85,16 @@ export default {
           ],
           shop_price: [
             { required: true, message: '请输入售价', trigger: 'change' }
-          ]
+          ],
+          campus:[{
+            required: true, message: '请选择校区', trigger: 'change'
+          }],
+          currency:[{
+            required: true, message: '请选择单位', trigger: 'change'
+          }],
+          images:[{
+            validator:checkImg, message: '请上传图片', trigger: 'change'
+          }]
         },
         files:[]
       };
@@ -86,12 +107,12 @@ export default {
   },
   methods: {
     uploadFileEvent(ret) {
-      if(typeof ret.file.length === 'undefined'){
+      if(typeof ret.file === 'string'){
         this.files.push(ret.file);
       }else{
         this.files= [];
         ret.file.forEach( item =>{
-          this.files.push(item.raw);
+          this.files.push(item.response.data.imageurl);
         });
       }
     },
@@ -99,8 +120,7 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           publishGoods({
-            token:this.$store.state.token,
-            category_id:1,
+            category_id:this.category_id,
             title:this.ruleForm.title,
             summary:this.ruleForm.title,
             shop_price:this.ruleForm.shop_price,
@@ -108,12 +128,14 @@ export default {
             currency_symbol:'$'||this.ruleForm.title,
             campus_id:2,
             images:this.files
-          },{
-            // headers: {
-            //     'Content-Type': 'multipart/form-data'
-            // }
           }).then(res=>{
-            console.log(res)
+            
+            if(res.code==200){
+              this.$message.success(res.message);
+              this.$router.back();
+            }else{
+              this.$message.error(res.message);
+            }
           })
         } else {
           console.log('error submit!!');
@@ -124,6 +146,8 @@ export default {
   },
   created(){
     // this.files = new FormData();
+    console.log(this.$route)
+    this.category_id = this.$route.query.category_id
   }
 };
 

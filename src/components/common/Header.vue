@@ -19,8 +19,9 @@
           </el-dropdown-menu>
         </el-dropdown>
         <span>丨</span>
-        <router-link to="/center"><span class="user name">{{userInfo.name}}</span></router-link>
-        <router-link to="/login"><span class="user">{{$t("navs.login")}}</span></router-link>
+        <router-link v-if="token" to="/center"><span class="user name">{{userInfo.name}}</span></router-link>
+        <router-link v-if="!token" to="/login"><span class="user">{{$t("navs.login")}}</span></router-link>
+        <span v-if="token" class="user" @click="LoginOut_MUTATION">退出</span>
         <span>丨</span>
         <el-dropdown @command="changeLanguage">
           <span class="el-dropdown-link select">
@@ -50,7 +51,7 @@ export default {
   name: 'Header',
   data() {
     return {
-      // campuList:this.$store.state.campuList
+      isLogin:false
     };
   },
   // watch:{
@@ -62,7 +63,8 @@ export default {
     ...mapState({
       userInfo: 'userInfo',
       campuList: 'campuList',
-      nowCampu: 'nowCampu'
+      nowCampu: 'nowCampu',
+      token: 'token'
     })
   },
   methods:{
@@ -73,17 +75,17 @@ export default {
       'campusAction'
     ]),
     ...mapMutations([
-      'NowCampu_MUTATION'
+      'NowCampu_MUTATION',
+      'LoginOut_MUTATION'
     ]),
     handleCommand(command){
-      // this.$message('click on item ' + command);
       this.NowCampu_MUTATION({
         nowCampu: command
       })
     }
   },
   created() {
-    this.$store.dispatch('campusAction')
+    
   }
 };
 </script>
@@ -132,6 +134,7 @@ export default {
   color: #7cd958;
   padding:2px 0;
   margin: 0 10px;
+  cursor: pointer;
   &.name{
     padding-left: 20px;
     background: url(../../assets/icon/icon_user.png) 0 center no-repeat;
