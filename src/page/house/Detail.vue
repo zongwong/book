@@ -5,31 +5,35 @@
           <div class="topic_info">
               <div class="topic_header flex_row">
                 <div class="row_bd">
-                    <h3 class="topic_title">qweqweqwe请问请问亲</h3>
-                    <p class="topic_time">2012-12-12-12-12</p>
+                    <h3 class="topic_title">{{leaseInfo.title}}</h3>
+                    <p class="topic_time">{{leaseInfo.created_at}}</p>
                 </div>
-                <div class="topic_avatar flex_row">
-                    <div class="topic_avatar_wrap">
-                        <img src="../../assets/image/book.png" alt="">
+                <router-link :to="'/user/'+userinfo.user_id">
+                    <div class="topic_avatar flex_row"> 
+                        <div class="topic_avatar_wrap">
+                            <img :src="host+userinfo.headimgurl" alt="头像">
+                        </div>
+                        <div class="row_bd">
+                            <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
+                            <p class="school">{{userinfo.nickname}}</p>
+                        </div>
                     </div>
-                    <div class="row_bd">
-                        <p class="nickname"><span>姓名</span><i class="icon_sex"></i></p>
-                        <p class="school">大学打赏</p>
-                    </div>
-                </div>
+                </router-link>
               </div>
               <div class="topic_content">
-
+                  {{leaseInfo.content}}
               </div>
               <div class="topic_btn">
-                  <span class="zan">点赞 1232</span>
+                  <span class="zan" @click="onZanEvent">点赞 {{leaseInfo.thumbup}}</span>
                   <span class="hr">丨</span>
-                  <span class="comment">评论 3244</span>
+                  <span class="comment">评论 {{leaseInfo.comment}}</span>
               </div>
               <div class="topic_comment">
                   <div class="comment_item flex_box" v-for="item in commentList" :key="item.comment_id">
                       <div class="comment_avatar">
-                          <img :src="host+item.headimgurl" alt="头像">
+                          <router-link :to="'/user/'+item.user_id">
+                            <img :src="host+item.headimgurl" alt="头像">
+                          </router-link>
                       </div>
                       <div class="row_bd">
                           <div class="comment_info">
@@ -41,7 +45,7 @@
                               {{item.content}}
                           </div>
                           <div class="reply_comment">
-                              <!-- <div  v-for="son in item" :key="son.comment_id">请问立刻就气我而去请问请问</div> -->
+                              <div  v-for="son in item.sonComments" :key="son.comment_id"><router-link :to="'/user/'+son.user_id">{{son.nickname}}</router-link>：{{son.content}}</div>
                           </div>
                       </div>
                   </div>
@@ -57,7 +61,7 @@
 
 <script>
 import Search from '../../components/common/Search';
-import { getLeaseInfo,leaseCommentList,leaseCommentCreate } from '../../api/api';
+import { getLeaseInfo,leaseCommentList,leaseCommentCreate,leaseUnZan,leaseZan } from '../../api/api';
 import { mapState } from 'vuex';
 export default {
   name: 'HouseDetail',
@@ -67,13 +71,15 @@ export default {
   data() {
     return {
       userinfo:{},
-      userinfo:{},
+      leaseInfo:{},
       lease_id:'',
       last_id:'',
       comment:'',
       commentList:[],
       placeholder:'评论',
-      comment_id:''
+      comment_id:'',
+      hasThumbuped:'',
+      isPublisher:'',
     };
   },
   computed:{
@@ -90,6 +96,9 @@ export default {
               content:this.comment 
           }).then(res=>{
               if(res.code==200){
+                  this.leaseInfo.comment = res.data.comments;
+                  this.last_id = '';
+                  this.getComment();
                   this.$message.success(res.message);
               }else{
                   this.$message.error(res.message);
@@ -100,23 +109,53 @@ export default {
         this.comment = '';
         this.comment_id = id;
         this.placeholder = `回复 ${name}：`;
+      },
+      onZanEvent(){
+          if(this.hasThumbuped){
+              leaseUnZan({
+                  lease_id:this.lease_id
+              }).then(res=>{
+                  if(res.code==200){
+                    this.hasThumbuped = res.data.hasThumbuped;
+                    this.leaseInfo.thumbup = res.data.thumbup;
+                  }
+              })
+          }else{
+              leaseZan({
+                  lease_id:this.lease_id
+              }).then(res=>{
+                  if(res.code==200){
+                    this.hasThumbuped = res.data.hasThumbuped;
+                    this.leaseInfo.thumbup = res.data.thumbup;
+                  }
+              })
+          }
+      },
+      getComment(){
+        leaseCommentList({
+            lease_id:this.lease_id,
+            last_id:this.last_id
+        }).then(res=>{
+            if(res.code==200){
+                this.commentList = res.data.comments
+                this.last_id = res.data.last_id
+            }
+        })
       }
   },
   created(){
       this.lease_id = this.$route.params.id;
-    //   getLeaseInfo({
-    //       lease_id:this.$route.params.id,
-    //   }).then(res=>{
-    //     this.leaseInfo = res.data.leaseInfo
-    //     this.userinfo = res.data.leaseInfo.userinfo
-    //   })
-      leaseCommentList({
-          lease_id:this.lease_id,
-          last_id:this.last_id
+
+      getLeaseInfo({
+          lease_id:this.$route.params.id,
       }).then(res=>{
-        this.commentList = res.data.comments
-        this.last_id = res.data.last_id
+        this.leaseInfo = res.data.postInfo
+        this.userinfo = res.data.userinfo
+        this.hasThumbuped = res.data.hasThumbuped
+        this.isPublisher = res.data.isPublisher
       })
+
+      this.getComment();
   }
 };
 

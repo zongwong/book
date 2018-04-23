@@ -15,7 +15,7 @@ export const getCampus = params => Axios.get('/campus/getlist', params);
 export const getCurrency = params => Axios.get('/currency/getlist', params);
 
 //个人资料
-
+export const getUserInfo = params => Axios.get('/user/info', params);
 export const setNickname = params => Axios.post('/set/nickname', params);
 export const setPasswd = params => Axios.post('/set/passwd', params);
 export const getInfo = params => Axios.get('/set/getinfo', params);
@@ -37,10 +37,9 @@ export const publishLease = params => Axios.post('/lease/create', params);
 export const leaseCommentList = params => Axios.get('/lease/comment/getlist', params);
 export const leaseCommentCreate = params => Axios.post('/lease/comment/create', params);
 export const myLeaseList = params => Axios.get('/lease/mylist', params);
+export const leaseZan = params => Axios.get('/lease/thumbup', params);
+export const leaseUnZan = params => Axios.get('/lease/unthumbup', params);
 
-
-// /lease/comment/thumbup
-// /lease/comment/unthumbup
 
 
 // 社团
@@ -65,7 +64,7 @@ export const addressList = params => Axios.get('/mall/address/getlist', params);
 export const addressAdd = params => Axios.post('/mall/address/save', params); 
 export const addressDel = params => Axios.get('/mall/order/delete', params); 
 export const addressEdit = params => Axios.post('/mall/pay/create', params); 
-
+export const addressDefault = params => Axios.post('/mall/address/setdefault', params); 
 
 // 个人中心
 export const getMyGoods = params => Axios.get('/mall/goods/mylist', params);

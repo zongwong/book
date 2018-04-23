@@ -88,9 +88,9 @@ export default {
       // [sort 排序方式] asc 升序 desc 降序
       // 默认以id降序排序
       // [campus_id]校区id
-      this.getBookListData(this.pas).then(data=>{
-        this.list = data.goodslist;
-        this.total = data.maxpage;
+      this.getBookListData(this.pas).then(res=>{
+        this.list = res.data.goodslist;
+        this.total = res.data.maxpage;
       })
     },
     onOrderByChange(type){

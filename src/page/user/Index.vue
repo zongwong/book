@@ -3,24 +3,24 @@
     <my-search></my-search>
     <div class="userInfoBox">
         <div class="avatar">
-            <img src="../../assets/image/book.png" alt="">
+            <img :src="host+userinfo.graduate_school" alt="avatar">
             <i class="icon_sex"></i>
         </div>
-        <p class="name">打打</p>
-        <p>气温气温</p>
+        <p class="name">{{userinfo.nickname}}</p>
+        <p>{{userinfo.graduate_school}}</p>
         <div class="tabBar">
             <div class="box1000 flex_row tabs_wrap">
-                <div class="tab_item on">TA的发布</div>
-                <div class="tab_item">TA的卖出</div>
+                <div class="tab_item" :class="{on:type==1}" @click="changeType(1)">TA的发布</div>
+                <div class="tab_item" :class="{on:type==2}" @click="changeType(2)">TA的卖出</div>
             </div>
         </div>
     </div>
     <div class="box1000">
         <div class="select_box">
-            <el-select v-model="value" placeholder="请选择">
-                <el-option label="二手书籍" value="二手书籍"></el-option>
-                <el-option label="二手笔记" value="二手笔记"></el-option>
-                <el-option label="房屋租赁" value="房屋租赁"></el-option>
+            <el-select v-model="category" placeholder="请选择" @change="categoryChange">
+                <el-option label="二手书籍" value="1"></el-option>
+                <el-option label="二手笔记" value="2"></el-option>
+                <el-option label="房屋租赁" value="3"></el-option>
             </el-select>
         </div>
         <div class="list">
@@ -28,19 +28,21 @@
         </div>
     </div>
     <div class="box1000 nopadding">
-        <div class="history_item">
-            <div class="goods_info">
-                <div class="goods_imgs">
-                    <img src="../../assets/image/book.png" alt="">
+        <div class="history_item" v-for="item in list" :key="item.goods_id">
+            <router-link :to="'/goods/'+item.goods_id">
+                <div class="goods_info">
+                    <div class="goods_imgs">
+                        <img :src="host+item.images[0]" alt="封面">
+                    </div>
+                    <div class="goods_data">
+                        <p class="title">{{item.title}}</p>
+                        <p class="desc">{{item.summary}}</p>
+                        <p class="price">{{item.currency_symbol}}{{item.shop_price}}</p>
+                    </div>
                 </div>
-                <div class="goods_data">
-                    <p class="title">请问请问亲我额去</p>
-                    <p class="desc">1231231223qweqweqweqweqwe</p>
-                    <p class="price">￥20.00</p>
-                </div>
-            </div>
+            </router-link>
         </div>
-        <div class="history_item">
+        <!-- <div class="history_item">
             <div class="post_item">
             <div class="post_user">
                 <img src="../../assets/image/book.png" alt="">
@@ -59,15 +61,21 @@
                 </div>
             </div>
             </div>
-        </div>
+        </div> -->
     </div>
+    <my-pagination
+      :total="total"
+      :current-page.sync="pageno"
+      @page-change="onPageChange"
+    ></my-pagination>
 </div>
 </template>
 
 <script>
 import Search from '../../components/common/Search';
-import { getInfo } from '../../api/api';
+import { getUserInfo } from '../../api/api';
 import pagination from '../../components/pagination';
+import { mapState,mapActions } from 'vuex';
 export default {
   name: 'UserIndex',
   components: {
@@ -77,15 +85,59 @@ export default {
   data() {
     return {
       userinfo: {},
+      type:1,
+      category:'1',
+      user_id:'',
+      list:[],
+      total:1,
+      pageno:1
     };
   },
+  computed:{
+      ...mapState([
+          'host'
+      ])
+  },
   methods:{
-
+      ...mapActions([
+          'getBookListData'
+      ]),
+      changeType(type){
+          this.type = type;
+          this.pageno = 1;
+          this.getListData();
+      },
+      categoryChange(val){
+          this.category = val;
+          this.pageno = 1;
+          this.getListData();
+      },
+      getListData(){
+        if(this.type==1){
+            this.getBookListData({
+                user_id:this.user_id,
+                category_id:this.category
+            }).then(res=>{
+                this.list = res.data.goodslist;
+                this.total = res.data.maxpage;
+            })
+        }
+      },
+      onPageChange(pageno){
+          this.pageno = pageno;
+          this.getListData();
+      }
   },
   created(){
-    //   getInfo().then(res=>{
-
-    //   })
+      this.user_id = this.$route.params.id;
+      getUserInfo({
+          user_id:this.user_id
+      }).then(res=>{
+          if(res.code==200){
+              this.userinfo = res.data.userinfo;
+          }
+      })
+      this.getListData()
   }
 };
 
@@ -104,6 +156,7 @@ export default {
     text-align: center;
     margin: 0 180px;
     font-size: 17px;
+    cursor: pointer;
     &.on{
         color: #7cd958;
         border-bottom: 2px solid #7cd958;

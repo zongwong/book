@@ -9,12 +9,12 @@
                 <p class="desc">详细地址：{{item.detail}} / {{item.city}} / {{item.province}} / {{item.country}}</p>
                 <!-- <p class="desc">省市：</p> -->
             </div>
-            <div class="close"></div>
+            <!-- <div class="close"></div> -->
             
             
         </div>
         <div class="btnsBox">
-            <span class="defaultAdr">默认地址:{{item.is_default}}</span><span class="btn_edit">编辑</span>
+            <span class="defaultAdr" @click="setDefault(item)"><i v-if="item.is_default==1" class="el-icon-success"></i>设置默认</span><span class="btn_edit">编辑</span>
         </div>
     </div>
 
@@ -31,7 +31,7 @@
             <el-form-item label="city" prop="city">
                 <el-input v-model="addressForm.city"></el-input>
             </el-form-item>
-            <el-form-item label="state" prop="state">
+            <el-form-item label="state/省" prop="state">
                 <el-input v-model="addressForm.state"></el-input>
             </el-form-item>
             <el-form-item label="country" prop="country">
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { addressList,addressAdd } from '../../api/api';
+import { addressList,addressAdd,addressDefault } from '../../api/api';
 import pagination from '../../components/pagination';
 export default {
   name: 'myaddress',
@@ -147,6 +147,27 @@ export default {
       },
       addressFormOpen(){
           this.dialogVisible = true;
+      },
+      setDefault(adr){
+        let index = this.list.indexOf(adr);
+        if(index===-1) return;
+        if(this.list[index].is_default==0){
+            addressDefault({
+                address_id:this.list[index].address_id
+            }).then(res=>{
+                if(res.code==200){
+                    this.$message.success(res.message);
+                    this.list =this.list.map((it,i)=>{
+                        if(i===index){
+                            it.is_default = 1;
+                        }else{
+                            it.is_default = 0;
+                        }
+                        return it;
+                    })
+                }
+            })
+        }
       }
   },
   created(){

@@ -12,15 +12,17 @@
                             <p class="desc moreHide">{{info.summary}}</p>
                         </div>
                     </div>
-                    <div class="topic_avatar flex_row">
-                        <div class="topic_avatar_wrap">
-                            <img :src="host+userinfo.headimgurl" alt="头像">
+                    <router-link :to="'/user/'+userinfo.user_id">
+                        <div class="topic_avatar flex_row">
+                            <div class="topic_avatar_wrap">
+                                <img :src="host+userinfo.headimgurl" alt="头像">
+                            </div>
+                            <div class="">
+                                <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
+                                <p class="manger">管理员</p>
+                            </div>
                         </div>
-                        <div class="">
-                            <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
-                            <p class="manger">管理员</p>
-                        </div>
-                    </div>
+                    </router-link>
                 </div>   
             </div>
           </div>
@@ -29,21 +31,22 @@
           <div style="margin-bottom:70px;">
               
             <div class="post_item" v-for="item in postList" :key="item.post_id">
-                <div class="post_user">
-                    <img src="../../assets/image/book.png" alt="">
-                    <p class="name oneHide">气温气温</p>
-                </div>
-                
+                <router-link :to="'/user/'+item.userinfo.user_id">
+                    <div class="post_user">
+                        <img :src="host+item.userinfo.headimgurl" alt="头像">
+                        <p class="name oneHide">{{item.userinfo.nickname}}</p>
+                    </div>
+                </router-link>
                 <div class="post_data">
                     <router-link :to="'/community/post/'+item.post_id">
                         <p class="post_title oneHide">{{item.title}}</p>
                         <div class="post_detail">
-                        <img src="../../assets/image/book.png" alt="">
+                        <img :src="host+item.images[0]" alt="封面">
                         <p class="moreHide">{{item.content}}</p>
                         </div>
                         <div class="post_other">
-                        <span>{{item.created_at}}</span>
-                        <span class="from">来自 陈琳达</span>
+                        <span class="from" style="margin-left:0;">{{item.created_at}}</span>
+                        <!-- <span class="from">来自 陈琳达</span> -->
                         <span class="zan">点赞 {{item.thumbup}}</span>
                         <span class="hr">丨</span>
                         <span class="comment">评论 {{item.comment}}</span>

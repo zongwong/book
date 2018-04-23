@@ -29,9 +29,9 @@
         <el-form-item label="电话" prop="mobilephone">
             <el-input v-model="userInfoForm.mobilephone"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="收货地址">
-            <el-input v-model="userInfoForm.address"></el-input>
-        </el-form-item> -->
+        <el-form-item label="所在学校" prop="graduate_school">
+            <el-input v-model="userInfoForm.graduate_school"></el-input>
+        </el-form-item>
     </el-form>
     <el-form ref="cardForm"  :model="cardForm" :rules="cardRules" label-width="80px">
         <div class="form_title flex_row">
@@ -84,6 +84,7 @@ export default {
           sex: '',
           country:'',
           headimgurl:'/upload/images/201804/21/1524268979_5ada7fb392d5b.jpg',
+          graduate_school:'',
         },
         userInfoRules:{
             name:[{ required:true,trigger:'change',message:"请填写姓名" }],
@@ -91,6 +92,7 @@ export default {
             sex:[{ required:true,trigger:'change',message:"请选择性别" }],
             country:[{ required:true,trigger:'change',message:"请填写国籍" }],
             headimgurl:[{ required:true,trigger:'change',message:"请上传头像" }],
+            graduate_school:[{ required:true,trigger:'change',message:"请填写所在学校" }]
         },
         cardForm:{
             cardholder:'',
@@ -136,7 +138,11 @@ export default {
                 
                 switch(formName){
                     case 'userInfoForm':
-                        this.setUserInfo(this.userInfoForm);
+                        this.setUserInfo(this.userInfoForm).then(res=>{
+                            if(res.code==200){
+                                this.$message.success(res.message);
+                            }
+                        });
                         break;
                     case 'cardForm':
                         this.setBank(this.cardForm);

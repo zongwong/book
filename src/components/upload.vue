@@ -1,21 +1,6 @@
 <template>
 <div>
-    <!-- <el-upload
-        class="avatar-uploader"
-        :limit="limit"
-        :list-type="listType"
-        :multiple="multiple"
-        :name="fileName"
-        :action="uploadUrl"
-        :reviewImgs="reviewImgs"
-        :show-file-list="true"
-        :file-list="this.fileList"
-        :on-remove="handleRemove"
-        :on-success="handleSuccess"
-        :on-progress="handleProgress"
-        :before-upload="beforeUpload">
-        <i class="el-icon-plus"></i>
-    </el-upload> -->
+
     <el-upload
         action="/api/uploader/image"
         :data="{token:token}"
@@ -72,21 +57,12 @@
                 this.dialogVisible = true;
             },
             handleProgress(event, file, fileList) {
-                
             },
             beforeUpload(file) {
-                // this.$emit('uploadfile',{file:file});
             },
             onSuccess(response, file, fileList){
                 this.$emit('uploadfile',{file:response.data.imageurl});
-            },
-            onUpload() {
-                // this.$refs.upload.submit();
-            },
-            // httpRequest() {
-
-            // }
-            
+            }
         }
     };
 </script>

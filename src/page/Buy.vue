@@ -5,12 +5,12 @@
       <div class="box1000">
           <div class="goods_info">
               <div class="goods_imgs">
-                  <img src="../assets/image/book.png" alt="封面">
+                  <img :src="goodsInfo.post" alt="封面">
               </div>
               <div class="goods_data">
                   <p class="title">{{goodsInfo.title}}</p>
                   <p class="desc">{{goodsInfo.summary}}</p>
-                  <p class="price">￥{{goodsInfo.shop_price}}</p>
+                  <p class="price">{{goodsInfo.currency_symbol}} {{goodsInfo.shop_price}}</p>
               </div>
           </div>
       </div>
@@ -87,8 +87,9 @@ export default {
       getGoodsInfo({
           goods_id:this.$route.params.id,
       }).then(res=>{
-        this.goodsInfo = res.data.goodsInfo
-        this.userinfo = res.data.goodsInfo.userinfo
+        this.goodsInfo = res.data.goodsInfo;
+        this.userinfo = res.data.goodsInfo.userinfo;
+        this.$set(this.goodsInfo,'post',this.host+res.data.goodsInfo.images[0]);
       });
       addressList(this.pas).then(res=>{
         if(res.code==200){

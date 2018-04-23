@@ -1,12 +1,17 @@
 <template>
 <div class="publish">
 <el-form ref="form" :model="form" label-width="80px">
-  <el-form-item label="书名">
-    <el-input v-model="form.name"></el-input>
+  <el-form-item label="标题" prop="title">
+    <el-input v-model="form.title"></el-input>
   </el-form-item>
-
-  <el-form-item label="书的简介">
-    <el-input type="textarea" v-model="form.desc"></el-input>
+  <el-form-item label="封面" prop="images">
+    <my-upload
+      :uploadfile="uploadFileEvent"
+      :fileList="fileList"
+    ></my-upload>
+  </el-form-item>
+  <el-form-item label="内容" prop="content">
+    <el-input type="textarea" v-model="form.content"></el-input>
   </el-form-item>
 
   <el-form-item>
@@ -18,10 +23,12 @@
 
 <script>
 import { publishLease } from '../../api/api';
+import upload from '../../components/upload';
 
 export default {
   name: 'HouseFrom',
   components: {
+    'my-upload':upload
   },
   data() {
     return {
@@ -30,11 +37,8 @@ export default {
           region: '',
           date1: '',
           date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        }
+        },
+        fileList:'',
       };
   },
   methods: {
@@ -50,6 +54,9 @@ export default {
         }).then(res=>{
             console.log(res)
         })
+      },
+      uploadFileEvent(){
+        
       }
   }
 };

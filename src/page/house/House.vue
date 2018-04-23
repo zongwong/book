@@ -13,15 +13,14 @@
             <router-link :to="'/house/'+item.lease_id">
               <p class="post_title oneHide">{{item.address}}</p>
               <div class="post_detail">
-                <img src="../../assets/image/book.png" alt="封面">
+                <img :src="host+item.images" alt="封面">
                 <p class="moreHide">{{item.content}}</p>
               </div>
               <div class="post_other">
                 <span class="from">{{item.updated_at}}</span>
-                <!-- <span class="from">来自 陈琳达</span> -->
-                <span class="zan">点赞 23</span>
+                <span class="zan">点赞 {{item.thumbup}}</span>
                 <span class="hr">丨</span>
-                <span class="comment">评论 345</span>
+                <span class="comment">评论 {{item.comment}}</span>
               </div>
             </router-link>
           </div>

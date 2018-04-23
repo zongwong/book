@@ -13,11 +13,27 @@
           </div>
         </div>
         <div class="club_card-right">
-          <!-- <router-link :to="'/community/'+item.association_id"> -->
+          <router-link :to="'/community/'+item.association_id">
             <p class="title oneHide">{{item.title}}</p>
             <p class="desc">{{item.summary}}</p>
-          <!-- </router-link> -->
-          <div class="club_post">
+          </router-link>
+          <div class="club_post" v-for="post in item.latestposts" :key="post.post_id">
+            <router-link :to="'/community/post/'+post.post_id">
+            <div class="flex_row">
+              <div class="imgbox">
+                <img :src="host + post.images[0]" alt="封面">
+              </div>
+              <div class="row_bd club_post-info">
+                <p class="flex_row">
+                  <span class="club_post-title oneHide">{{post.title}}</span>
+                  <span class="row_bd icon_new"></span>
+                </p>
+                <p class="club_post-desc">{{post.content}}</p>
+              </div>
+            </div>
+            </router-link>
+          </div>
+          <!-- <div class="club_post">
             <div class="flex_row">
               <div class="imgbox">
                 <img src="../../assets/image/book.png" alt="">
@@ -30,21 +46,7 @@
                 <p class="club_post-desc">请问请问请问请问</p>
               </div>
             </div>
-          </div>
-          <div class="club_post">
-            <div class="flex_row">
-              <div class="imgbox">
-                <img src="../../assets/image/book.png" alt="">
-              </div>
-              <div class="row_bd club_post-info">
-                <p class="flex_row">
-                  <span class="club_post-title oneHide">请问请问请问请问</span>
-                  <span class="row_bd icon_new"></span>
-                </p>
-                <p class="club_post-desc">请问请问请问请问</p>
-              </div>
-            </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

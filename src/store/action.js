@@ -22,45 +22,45 @@ export default {
             })
         }) 
     },
-    getBookListData(context, params){
+    getBookListData({commit}, params){
         return new Promise((resolve, reject) => {
             getGoodsList(params).then((res)=>{
                 if(res.code==200){
-                    resolve(res.data)
+                    resolve(res)
                 }else{
                     reject(res)
                 }
             })
         }) 
     },
-    setUserInfo(context, params){
+    setUserInfo({commit}, params){
         return new Promise((resolve, reject) => {
             setInfo(params).then((res)=>{
                 if(res.code==200){
                     commit('EditUserInfo_MUTATION',{ list: params})
-                    resolve(res.data)
+                    resolve(res)
                 }else{
                     reject(res)
                 }
             })
         }) 
     },
-    setBank(context, params){
+    setBank({commit}, params){
         return new Promise((resolve, reject) => {
             setBankinfo(params).then((res)=>{
                 if(res.code==200){
-                    resolve(res.data)
+                    resolve(res)
                 }else{
                     reject(res)
                 }
             })
         }) 
     },
-    setGroup(context, params){
+    setGroup({commit}, params){
         return new Promise((resolve, reject) => {
             setassociation(params).then((res)=>{
                 if(res.code==200){
-                    resolve(res.data)
+                    resolve(res)
                 }else{
                     reject(res)
                 }

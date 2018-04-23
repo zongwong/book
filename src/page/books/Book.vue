@@ -97,9 +97,9 @@ export default {
       // 默认以id降序排序
       // [campus_id]校区id
       this.pas.campus_id = this.nowCampu.campus_id || '';
-      this.getBookListData(this.pas).then(data=>{
-        this.list = data.goodslist;
-        this.total = data.maxpage;
+      this.getBookListData(this.pas).then(res=>{
+        this.list = res.data.goodslist;
+        this.total = res.data.maxpage;
       })
     },
     onOrderByChange(type){

@@ -118,8 +118,12 @@ export default new Router({
           name: 'Pbcommunity',
           component: Pbcommunity,
         },{
-          path: '/center/publish',
-          name: 'publishbook',
+          path: '/center/publish/:cat',
+          name: 'publish',
+          component: publishbook,
+        },{
+          path: '/center/publish/:cat/:id',
+          name: 'editpublish',
           component: publishbook,
         }, {
           path: '/center/publishhouse',

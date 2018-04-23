@@ -4,11 +4,11 @@
       <div class="box1000">
           <div class="goods_info">
               <div class="goods_imgs">
-                  <img src="../../assets/image/book.png" alt="封面">
+                  <img v-if="goodsInfo.images[0]" :src="host + goodsInfo.images[0] " alt="封面">
               </div>
               <div class="goods_data">
                   <p class="title">{{goodsInfo.title}}</p>
-                  <p class="price">￥{{goodsInfo.shop_price}}</p>
+                  <p class="price">{{goodsInfo.currency_symbol}} {{goodsInfo.shop_price}}</p>
                   <div class="buyBtn_wrap">
                       <router-link :to="'/buy/'+goodsInfo.goods_id"><el-button size="small" type="success" round>立即购买</el-button></router-link>
                   </div>
@@ -20,8 +20,8 @@
                         <i class="saler_sex"></i>
                       </router-link>
                   </div>
-                  <p>发布者:{{userinfo.name}}</p>
-                  <p>毕业于:{{userinfo.country}}</p>
+                  <p>发布者:{{userinfo.nickname}}</p>
+                  <p>毕业于:{{userinfo.graduate_school}}</p>
               </div>
           </div>
           <p class="goods_intro">简介</p>
@@ -43,8 +43,13 @@ export default {
   },
   data() {
     return {
-      goodsInfo: {},
-      userinfo: {}
+      goods_id:'',
+      goodsInfo: {
+          images:[]
+      },
+      userinfo: {
+          headimgurl:''
+      }
     };
   },
   computed:{
@@ -53,8 +58,9 @@ export default {
       ])
   },
   created(){
+      this.goods_id = this.$route.params.id;
       getGoodsInfo({
-          goods_id:this.$route.params.id,
+          goods_id:this.goods_id,
       }).then(res=>{
         this.goodsInfo = res.data.goodsInfo
         this.userinfo = res.data.goodsInfo.userinfo

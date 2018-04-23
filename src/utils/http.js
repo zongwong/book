@@ -11,7 +11,6 @@ const Axios = axios.create({
 
 Axios.interceptors.request.use(
   config => {
-    console.log( config)
     let token = store.state.token||'';
     if(config.method=='get'){
       config.params.token = token;

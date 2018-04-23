@@ -9,24 +9,25 @@
     <el-form-item label="图片" prop="images">
       <my-upload
         v-on:uploadfile="uploadFileEvent"
+        :fileList="fileList"
       ></my-upload>
     </el-form-item>
 
     <el-form-item label="书的简介" prop="summary">
       <el-input type="textarea" v-model="ruleForm.summary"></el-input>
     </el-form-item>
-    <el-form-item label="所在校区" prop="campus">
-      <el-select v-model="ruleForm.campus" placeholder="请选择所在校区">
+    <el-form-item label="所在校区" prop="campus_id">
+      <el-select v-model="ruleForm.campus_id" placeholder="请选择所在校区">
         <template v-for="item in campuList">
-          <el-option :key="item.campus_id" :label="item.campus_name" :value="item.campus_name"></el-option>
+          <el-option :key="item.campus_id" :label="item.campus_name" :value="item.campus_id"></el-option>
         </template>
       </el-select>
     </el-form-item>
     <el-form-item label="价格">
       <el-row :gutter="10"> 
         <el-col :span="4">
-          <el-form-item prop="currency">
-            <el-select v-model="ruleForm.currency" placeholder="货币">
+          <el-form-item prop="currency_symbol">
+            <el-select v-model="ruleForm.currency_code" placeholder="货币" @change="currencyChange">
               <template v-for="item in currency">
                 <el-option :key="item.currency_id" :label="item.currency_symbol" :value="item.currency_code"></el-option>
               </template>
@@ -52,7 +53,7 @@
 
 <script>
 import Upload from '../../components/upload';
-import { publishGoods } from '../../api/api';
+import { publishGoods,getGoodsInfo } from '../../api/api';
 import { mapState } from 'vuex';
 export default {
   name: 'BookFrom',
@@ -69,12 +70,14 @@ export default {
     }
     return {
         category_id:1,
+        goods_id:'',
         ruleForm: {
           title: '',
           summary: '',
           shop_price: '',
-          campus: '',
-          currency: '',
+          currency_code:'',
+          currency_symbol: '',
+          campus_id:'',
         },
         rules: {
           title: [
@@ -86,23 +89,25 @@ export default {
           shop_price: [
             { required: true, message: '请输入售价', trigger: 'change' }
           ],
-          campus:[{
+          campus_id:[{
             required: true, message: '请选择校区', trigger: 'change'
           }],
-          currency:[{
-            required: true, message: '请选择单位', trigger: 'change'
+          currency_code:[{
+            required: true, message: '请选择货币种类', trigger: 'change'
           }],
           images:[{
             validator:checkImg, message: '请上传图片', trigger: 'change'
           }]
         },
-        files:[]
+        files:[],
+        fileList:[]
       };
   },
   computed: {
     ...mapState({
       campuList:'campuList',
-      currency: 'Currency'
+      currency: 'Currency',
+      host:'host'
     })
   },
   methods: {
@@ -119,16 +124,20 @@ export default {
     submitForm(formName){
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          publishGoods({
+          let params ={
             category_id:this.category_id,
             title:this.ruleForm.title,
-            summary:this.ruleForm.title,
+            summary:this.ruleForm.summary,
             shop_price:this.ruleForm.shop_price,
-            currency_code:'USD'||this.ruleForm.title,
-            currency_symbol:'$'||this.ruleForm.title,
-            campus_id:2,
+            currency_code:this.ruleForm.currency_code,
+            currency_symbol:this.ruleForm.currency_symbol,
+            campus_id:this.ruleForm.campus_id,
             images:this.files
-          }).then(res=>{
+          }
+          if(this.goods_id){
+            params.goods_id = this.goods_id;
+          }
+          publishGoods(params).then(res=>{
             
             if(res.code==200){
               this.$message.success(res.message);
@@ -142,12 +151,40 @@ export default {
           return false;
         }
       });
-    }
+    },
+    currencyChange(val){
+      this.ruleForm.currency_symbol = this.currency.filter(item=>item.currency_code==val)[0].currency_symbol;
+    },
   },
   created(){
-    // this.files = new FormData();
-    console.log(this.$route)
-    this.category_id = this.$route.query.category_id
+    this.category_id = this.$route.params.cat;
+    this.goods_id = this.$route.params.id||'';
+    // 编辑填充
+    getGoodsInfo({
+      goods_id:this.goods_id
+    }).then(res=>{
+      if(res.code==200){
+        if(res.data.isPublisher!=1){
+          this.$router.back();
+        }else{
+          const goodsInfo = res.data.goodsInfo;
+          this.ruleForm.title = goodsInfo.title;
+          this.ruleForm.summary = goodsInfo.summary;
+          this.ruleForm.shop_price = goodsInfo.shop_price;
+          this.ruleForm.campus_id = goodsInfo.campus_id;
+          this.ruleForm.currency_code = goodsInfo.currency_code;
+          this.ruleForm.currency_symbol = goodsInfo.currency_symbol;
+          this.files = goodsInfo.images;
+          this.fileList = goodsInfo.images.map((item,index)=>{
+            return {
+              name:'pic_'+index,
+              url:this.host+item
+            }
+          })
+        }
+        
+      }
+    })
   }
 };
 

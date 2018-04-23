@@ -1,18 +1,18 @@
 <template>
 <div class="publish nopadding">
-    <div class="pbbtn_box"><router-link to="/center/publish?category_id=1"><span>发布二手书籍</span></router-link></div>
-    <div class="history_item">
-        <div class="goods_info" v-for="item in list" :key="item.goods_id">
+    <div class="pbbtn_box"><router-link to="/center/publish/1"><span>发布二手书籍</span></router-link></div>
+    <div class="history_item" v-for="item in list" :key="item.goods_id">
+        <div class="goods_info">
             <div class="goods_imgs">
-                <img src="../../assets/image/book.png" alt="">
+                <img :src="host+item.images[0]" alt="封面">
             </div>
             <div class="goods_data">
                 <p class="title">{{item.title}}</p>
-                <p class="desc">1231231223qweqweqweqweqwe</p>
-                <p class="price">￥20.00</p>
+                <p class="desc">{{item.summary}}</p>
+                <p class="price">{{item.currency_symbol}} {{item.shop_price}}</p>
             </div>
             <div class="close"></div>
-            <div class="btn_edit"><router-link :to="'/center/publish/'+item.goods_id">编辑</router-link></div>
+            <div class="btn_edit"><router-link :to="'/center/publish/1/'+item.goods_id">编辑</router-link></div>
         </div>
     </div>
     <my-pagination
@@ -26,6 +26,7 @@
 <script>
 import { getMyGoods } from '../../api/api';
 import pagination from '../../components/pagination';
+import { mapState } from 'vuex';
 export default {
   name: 'Pbbook',
   components: {
@@ -41,6 +42,11 @@ export default {
             pageno:1
         }
     }
+  },
+  computed:{
+    ...mapState([
+        'host'
+    ])
   },
   methods: {
       getListData(){
