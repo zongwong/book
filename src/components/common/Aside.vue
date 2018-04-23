@@ -2,7 +2,7 @@
   <div class="aside">
     <div class="userInfoBox">
         <div class="avatar">
-            <img :src="userInfo.headimgurl" alt="头像">
+            <img :src="host + userInfo.headimgurl" alt="头像">
             <i class="icon_sex"></i>
         </div>
         <p class="name">{{userInfo.nickname}}</p>

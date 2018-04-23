@@ -2,7 +2,7 @@
   <div class="">
       <my-search></my-search>
       <div class="box1000">
-          <div class="topic_info">
+          <div class="topic_info" v-loading="loading">
               <div class="topic_header flex_row">
                 <div class="row_bd">
                     <h3 class="topic_title">{{postInfo.title}}</h3>
@@ -26,7 +26,7 @@
                   <span class="hr">丨</span>
                   <span class="comment">评论 {{postInfo.comment}}</span>
               </div>
-              <div class="topic_comment">
+              <div class="topic_comment" v-loading="loading2">
                   <div class="comment_item flex_box" v-for="item in commentList" :key="item.comment_id">
                       <div class="comment_avatar">
                           <img :src="host+item.headimgurl" alt="头像">
@@ -75,7 +75,9 @@ export default {
       placeholder:'评论',
       comment_id:'',
       postInfo:{},
-      hasThumbuped:0
+      hasThumbuped:0,
+      loading:false,
+      loading2:false,
     };
   },
   computed:{
@@ -127,11 +129,13 @@ export default {
   },
   created(){
       this.post_id = this.$route.params.id;
+      this.loading = true;
       getPostInfo({
           post_id:this.$route.params.id,
       }).then(res=>{
-        this.postInfo = res.data.postInfo
-        this.userinfo = res.data.postInfo.userinfo
+        this.postInfo = res.data.postInfo;
+        this.userinfo = res.data.postInfo.userinfo;
+        this.loading = false;
       })
       groupCommentList({
           post_id:this.post_id,

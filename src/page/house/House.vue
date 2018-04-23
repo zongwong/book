@@ -1,7 +1,7 @@
 <template>
   <div>
       <my-search></my-search>  
-      <div class="post_box">
+      <div class="post_box" v-loading="loading">
         <div class="post_item" v-for="item in list" :key="item.lease_id">
           <div class="post_user">
             <router-link :to="'/user/'+item.userinfo.user_id">
@@ -55,7 +55,8 @@ export default {
         campus_id:'',
         category_id:1,
         pageno:1,
-      }
+      },
+      loading:false
     };
   },
   computed:{
@@ -65,11 +66,13 @@ export default {
   },
   methods:{
     getListData(){
+      this.loading = true;
       return new Promise((resolve,reject)=>{
         getLeaseList(this.pas).then(res=>{
           if(res.code==200){
             this.list = res.data.leaseList;
             this.total = res.data.maxpage;
+            this.loading = false;
             resolve(res.data);
           }else{
             reject(res);
@@ -92,6 +95,7 @@ export default {
 <style lang="scss" scoped>
 .post_box{
   margin-bottom: 40px;
+  min-height: 200px;
 }
 .post_other .from{
   margin-left: 0;

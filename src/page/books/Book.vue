@@ -17,7 +17,7 @@
           </div>
         </div>
       </div>
-      <div class="container container1000">
+      <div class="container container1000" v-loading="loading">
         <div class="flex_box">
           
           <div class="good_card" v-for="item in list" :key="item.goods_id">
@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       list:[],
+      loading:false,
       total:1,
       pas:{
         orderby:'click',
@@ -96,10 +97,12 @@ export default {
       // [sort 排序方式] asc 升序 desc 降序
       // 默认以id降序排序
       // [campus_id]校区id
+      this.loading = true;
       this.pas.campus_id = this.nowCampu.campus_id || '';
       this.getBookListData(this.pas).then(res=>{
         this.list = res.data.goodslist;
         this.total = res.data.maxpage;
+        this.loading = false;
       })
     },
     onOrderByChange(type){

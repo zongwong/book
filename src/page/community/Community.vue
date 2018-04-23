@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <my-search></my-search>
-    <div class="club_box community_box">
+    <div class="club_box community_box" v-loading="loading">
       <div class="club_card clearfix" v-for="item in list" :key="item.association_id">
         <div class="club_card-left">
           <div class="flex_row">
@@ -74,6 +74,7 @@ export default {
       list:[],
       total:1,
       pageno:1,
+      loading:false
     };
   },
   computed:{
@@ -87,12 +88,14 @@ export default {
       this.getListData();
     },
     getListData(){
+      this.loading = true;
       getgroupList({
         pageno:this.pageno
       }).then(res=>{
         if(res.code==200){
           this.list = res.data.associations;
           this.total = res.data.maxpage;
+          this.loading = false;
         }
       })
     }
@@ -108,6 +111,7 @@ export default {
 .community_box{
   width: 1000px;
   margin: 0 auto;
+  min-height: 200px;
   .club_card{
     padding: 52px 0;
     border:none;

@@ -1,65 +1,66 @@
 <template>
   <div class="">
       <my-search></my-search>
-      <div class="cm_box">
-          <div class="box1000">
-            <div class="topic_info cm_info">
-                <div class="topic_header flex_row">
-                    <div class="row_bd flex_row cm_data">
-                        <img :src="host+info.headimgurl">
-                        <div class="row_bd cm_content">
-                            <p class="title oneHide">{{info.title}}</p>
-                            <p class="desc moreHide">{{info.summary}}</p>
-                        </div>
-                    </div>
-                    <router-link :to="'/user/'+userinfo.user_id">
-                        <div class="topic_avatar flex_row">
-                            <div class="topic_avatar_wrap">
-                                <img :src="host+userinfo.headimgurl" alt="头像">
-                            </div>
-                            <div class="">
-                                <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
-                                <p class="manger">管理员</p>
+      <div v-loading="loading">
+        <div class="cm_box">
+            <div class="box1000">
+                <div class="topic_info cm_info" >
+                    <div class="topic_header flex_row">
+                        <div class="row_bd flex_row cm_data">
+                            <img :src="host+info.headimgurl">
+                            <div class="row_bd cm_content">
+                                <p class="title oneHide">{{info.title}}</p>
+                                <p class="desc moreHide">{{info.summary}}</p>
                             </div>
                         </div>
-                    </router-link>
-                </div>   
-            </div>
-          </div>
-      </div>
-      <div class="box1000">
-          <div style="margin-bottom:70px;">
-              
-            <div class="post_item" v-for="item in postList" :key="item.post_id">
-                <router-link :to="'/user/'+item.userinfo.user_id">
-                    <div class="post_user">
-                        <img :src="host+item.userinfo.headimgurl" alt="头像">
-                        <p class="name oneHide">{{item.userinfo.nickname}}</p>
-                    </div>
-                </router-link>
-                <div class="post_data">
-                    <router-link :to="'/community/post/'+item.post_id">
-                        <p class="post_title oneHide">{{item.title}}</p>
-                        <div class="post_detail">
-                        <img :src="host+item.images[0]" alt="封面">
-                        <p class="moreHide">{{item.content}}</p>
-                        </div>
-                        <div class="post_other">
-                        <span class="from" style="margin-left:0;">{{item.created_at}}</span>
-                        <!-- <span class="from">来自 陈琳达</span> -->
-                        <span class="zan">点赞 {{item.thumbup}}</span>
-                        <span class="hr">丨</span>
-                        <span class="comment">评论 {{item.comment}}</span>
-                        </div>
-                    </router-link>
+                        <router-link :to="'/user/'+userinfo.user_id">
+                            <div class="topic_avatar flex_row">
+                                <div class="topic_avatar_wrap">
+                                    <img :src="host+userinfo.headimgurl" alt="头像">
+                                </div>
+                                <div class="">
+                                    <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
+                                    <p class="manger">管理员</p>
+                                </div>
+                            </div>
+                        </router-link>
+                    </div>   
                 </div>
-                
             </div>
-          </div>
+        </div>
+        <div class="box1000">
+            <div style="margin-bottom:70px;" v-loading="loading2">
+                
+                <div class="post_item" v-for="item in postList" :key="item.post_id">
+                    <router-link :to="'/user/'+item.userinfo.user_id">
+                        <div class="post_user">
+                            <img :src="host+item.userinfo.headimgurl" alt="头像">
+                            <p class="name oneHide">{{item.userinfo.nickname}}</p>
+                        </div>
+                    </router-link>
+                    <div class="post_data">
+                        <router-link :to="'/community/post/'+item.post_id">
+                            <p class="post_title oneHide">{{item.title}}</p>
+                            <div class="post_detail">
+                            <img :src="host+item.images[0]" alt="封面">
+                            <p class="moreHide">{{item.content}}</p>
+                            </div>
+                            <div class="post_other">
+                            <span class="from" style="margin-left:0;">{{item.created_at}}</span>
+                            <!-- <span class="from">来自 陈琳达</span> -->
+                            <span class="zan">点赞 {{item.thumbup}}</span>
+                            <span class="hr">丨</span>
+                            <span class="comment">评论 {{item.comment}}</span>
+                            </div>
+                        </router-link>
+                    </div>
+                    
+                </div>
+            </div>
 
 
+        </div>
       </div>
-
       <my-pagination
         :total="total"
         :current-page.sync="pageno"
@@ -87,6 +88,8 @@ export default {
       postList:[],
       total:1,
       pageno:1,
+      loading:false,
+      loading2:false
     };
   },
   computed:{
@@ -100,6 +103,9 @@ export default {
         this.getListData();
       },
       getListData(){
+        if(!this.loading){
+            this.loading2 = true;
+        }
         groupPostList({
             association_id:this.id,
             pageno:this.pageno
@@ -107,18 +113,21 @@ export default {
             if(res.code==200){
                 this.postList = res.data.postlist;
                 this.total = res.data.maxpage;
+                this.loading2 = false;
             }
         })
       }
   },
   created(){
       this.id = this.$route.params.id;
+      this.loading = true;
       getgroupInfo({
           association_id:this.id
       }).then(res=>{
           if(res.code==200){
               this.info = res.data.associationInfo;
               this.userinfo = res.data.associationInfo.userinfo;
+              this.loading = false;
           }
       })
 

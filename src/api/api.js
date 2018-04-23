@@ -21,7 +21,7 @@ export const setPasswd = params => Axios.post('/set/passwd', params);
 export const getInfo = params => Axios.get('/set/getinfo', params);
 export const setInfo = params => Axios.post('/set/personalinfo', params);
 export const setBankinfo = params => Axios.post('/set/bankinfo', params);
-export const setassociation = params => Axios.post('/set/association', params);
+export const setassociation = params => Axios.post('/association/create', params);
 // export const aa = params => Axios.get('/mall/goods/getlist', params);
 
 // 二手商品

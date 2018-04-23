@@ -2,7 +2,7 @@
   <div class="">
       <my-search></my-search>
       <div class="box1000">
-          <div class="goods_info">
+          <div class="goods_info" v-loading="loading">
               <div class="goods_imgs">
                   <img v-if="goodsInfo.images[0]" :src="host + goodsInfo.images[0] " alt="封面">
               </div>
@@ -49,7 +49,8 @@ export default {
       },
       userinfo: {
           headimgurl:''
-      }
+      },
+      loading:false
     };
   },
   computed:{
@@ -59,11 +60,13 @@ export default {
   },
   created(){
       this.goods_id = this.$route.params.id;
+      this.loading = true;
       getGoodsInfo({
           goods_id:this.goods_id,
       }).then(res=>{
-        this.goodsInfo = res.data.goodsInfo
-        this.userinfo = res.data.goodsInfo.userinfo
+        this.goodsInfo = res.data.goodsInfo;
+        this.userinfo = res.data.goodsInfo.userinfo;
+        this.loading = false;
       })
   }
 };
