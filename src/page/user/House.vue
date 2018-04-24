@@ -1,25 +1,27 @@
 <template>
-<div class="publish">
+<div class="publish" v-loading="loading">
     <div class="pbbtn_box"><router-link to="/center/publishhouse"><span>发布租赁</span></router-link></div>
-    <div class="history_item" v-for="item in list" :key="item.lease_id">
+    <div class="history_item" v-for="(item,index) in list" :key="item.lease_id">
         <div class="post_item">
-          <div class="post_user">
-            <img src="../../assets/image/book.png" alt="">
-          </div>
+          <router-link :to="'/house/'+item.lease_id">
+            <div class="post_user">
+              <img :src="host+item.images[0]" alt="封面">
+            </div>
+          </router-link>
           <div class="post_data">
-            <p class="post_title oneHide">{{item.address}}</p>
+            <router-link :to="'/house/'+item.lease_id"><p class="post_title oneHide">{{item.title}}</p></router-link>
             <div class="post_detail">
-              <p class="moreHide">{{item.content}}</p>
+              <div class="content moreHide">{{item.content}}</div>
             </div>
             <div class="post_other">
               <span>{{item.created_at}}</span>
               <span class="from"></span>
-              <span class="zan">点赞 {{item.comment}}</span>
-              <span class="hr">丨</span>
-              <span class="comment">评论 345</span>
+              <!-- <span class="zan">点赞 {{item.thumbup}}</span> -->
+              <!-- <span class="hr">丨</span> -->
+              <div class="btn_edit"><router-link :to="'/center/publishhouse/'+item.lease_id">编辑</router-link></div>
             </div>
           </div>
-          <div class="close"></div>
+          <div class="close" @click="onDelGoods(item.lease_id,index)"></div>
           <!-- <div class="btn_edit">编辑</div> -->
         </div>
     </div>
@@ -34,8 +36,9 @@
 
 <script>
 
-import { myLeaseList } from '../../api/api';
+import { myLeaseList,delLease } from '../../api/api';
 import pagination from '../../components/pagination';
+import { mapState } from 'vuex';
 export default {
   name: 'Pbhouse',
   components: {
@@ -45,18 +48,26 @@ export default {
     return {
         list:[],
         total:1,
-        pageno:1
+        pageno:1,
+        loading:false,
       };
+  },
+  computed:{
+    ...mapState([
+      'host'
+    ])
   },
   methods:{
     getListData(){
+        this.loading = true;
         return new Promise((resolve,reject)=>{
           myLeaseList({
             pageno:this.pageno
           }).then(res=>{
               if(res.code==200){
                   this.list = res.data.leaseList;
-                  this.total = res.data.maxpage
+                  this.total = res.data.maxpage;
+                  this.loading = false;
               }else{
                   reject(res)
               }
@@ -66,6 +77,25 @@ export default {
     onPageChange(pageno){
       this.pageno = pageno;
       this.getListData()
+    },
+    onDelGoods(id,index){
+          this.$confirm('此操作将删除该发布, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+          }).then(() => {
+              delLease({
+                  lease_id:id
+              }).then(res=>{
+                  if(res.code==200){
+                      this.list.splice(index,1);
+                      this.$message.success(res.message);
+                  }else{
+                      this.$message.error(res.message);
+                  }
+              })
+          })
+
     }
   },
   created(){

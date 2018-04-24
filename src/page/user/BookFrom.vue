@@ -26,7 +26,7 @@
     <el-form-item label="价格">
       <el-row :gutter="10"> 
         <el-col :span="4">
-          <el-form-item prop="currency_symbol">
+          <el-form-item prop="currency_code">
             <el-select v-model="ruleForm.currency_code" placeholder="货币" @change="currencyChange">
               <template v-for="item in currency">
                 <el-option :key="item.currency_id" :label="item.currency_symbol" :value="item.currency_code"></el-option>
@@ -159,32 +159,34 @@ export default {
   created(){
     this.category_id = this.$route.params.cat;
     this.goods_id = this.$route.params.id||'';
-    // 编辑填充
-    getGoodsInfo({
-      goods_id:this.goods_id
-    }).then(res=>{
-      if(res.code==200){
-        if(res.data.isPublisher!=1){
-          this.$router.back();
-        }else{
-          const goodsInfo = res.data.goodsInfo;
-          this.ruleForm.title = goodsInfo.title;
-          this.ruleForm.summary = goodsInfo.summary;
-          this.ruleForm.shop_price = goodsInfo.shop_price;
-          this.ruleForm.campus_id = goodsInfo.campus_id;
-          this.ruleForm.currency_code = goodsInfo.currency_code;
-          this.ruleForm.currency_symbol = goodsInfo.currency_symbol;
-          this.files = goodsInfo.images;
-          this.fileList = goodsInfo.images.map((item,index)=>{
-            return {
-              name:'pic_'+index,
-              url:this.host+item
-            }
-          })
+    if(this.goods_id){
+      // 编辑填充
+      getGoodsInfo({
+        goods_id:this.goods_id
+      }).then(res=>{
+        if(res.code==200){
+          if(res.data.isPublisher!=1){
+            this.$router.back();
+          }else{
+            const goodsInfo = res.data.goodsInfo;
+            this.ruleForm.title = goodsInfo.title;
+            this.ruleForm.summary = goodsInfo.summary;
+            this.ruleForm.shop_price = goodsInfo.shop_price;
+            this.ruleForm.campus_id = goodsInfo.campus_id;
+            this.ruleForm.currency_code = goodsInfo.currency_code;
+            this.ruleForm.currency_symbol = goodsInfo.currency_symbol;
+            this.files = goodsInfo.images;
+            this.fileList = goodsInfo.images.map((item,index)=>{
+              return {
+                name:'pic_'+index,
+                url:this.host+item
+              }
+            })
+          }
+          
         }
-        
-      }
-    })
+      })
+    }
   }
 };
 

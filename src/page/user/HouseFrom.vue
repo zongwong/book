@@ -1,12 +1,12 @@
 <template>
 <div class="publish">
-<el-form ref="form" :model="form" label-width="80px">
+<el-form ref="form" :model="form" :rules="rules" label-width="80px">
   <el-form-item label="标题" prop="title">
     <el-input v-model="form.title"></el-input>
   </el-form-item>
   <el-form-item label="封面" prop="images">
     <my-upload
-      :uploadfile="uploadFileEvent"
+      v-on:uploadfile="uploadFileEvent"
       :fileList="fileList"
     ></my-upload>
   </el-form-item>
@@ -15,15 +15,16 @@
   </el-form-item>
 
   <el-form-item>
-    <el-button type="primary" @click="onSubmit">立即发布</el-button>
+    <el-button type="primary" @click="onSubmit('form')">立即发布</el-button>
   </el-form-item>
 </el-form>
 </div>
 </template>
 
 <script>
-import { publishLease } from '../../api/api';
+import { publishLease,getLeaseInfo } from '../../api/api';
 import upload from '../../components/upload';
+import { mapState } from '../../../node_modules/_vuex@3.0.1@vuex';
 
 export default {
   name: 'HouseFrom',
@@ -31,33 +32,101 @@ export default {
     'my-upload':upload
   },
   data() {
+    let checkImg = (rule, value, callback) => {
+      if(this.files.length){
+        callback()
+      }else{
+        callback(new Error('请上传图片'));
+      }
+    };
     return {
+        lease_id:'',
         form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
+          title: '',
+          content: ''
         },
-        fileList:'',
+        rules:{
+          title:[{ required:true,trigger:'change',message:'请填写标题' }],
+          content:[{ required:true,trigger:'change',message:'请填写内容' }],
+          images:[{
+            validator:checkImg, message: '请上传图片', trigger: 'change'
+          }]
+        },
+        fileList:[],
+        files:[],
       };
   },
+  computed: {
+    ...mapState([
+      'host'
+    ])
+  },
   methods: {
-      onSubmit() {
-        publishLease({
-            content:'房屋详情描述房屋详情描述',
-            address: '地址描述房屋详情描述房屋详情描述',
-            start_date: '2020-12-12',
-            // [end_date 可租赁结束日]
-            monetary_unit:'CNY',
-            rent:999,
-            deposit:888,
-        }).then(res=>{
-            console.log(res)
-        })
+      onSubmit(fromName) {
+        this.$refs[fromName].validate((valid) => {
+          if (valid) {
+            let params = {
+                content:this.form.content,
+                title: this.form.title,
+                images:this.files
+            }
+            if(this.lease_id){
+              params.lease_id = this.lease_id;
+            }
+            publishLease(params).then(res=>{
+                if(res.code==200){
+                  this.$message.success(res.message);
+                  this.$router.back();
+                }else{
+                  this.$message.error(res.message);
+                }
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+
       },
-      uploadFileEvent(){
-        
-      }
+      uploadFileEvent(ret) {
+        if(typeof ret.file === 'string'){
+          this.files.push(ret.file);
+        }else{
+          this.files= [];
+          ret.file.forEach( item =>{
+            this.files.push(item.response.data.imageurl);
+          });
+        }
+      },
+      
+  },
+  created(){
+    this.lease_id = this.$route.params.id||'';
+    if(this.lease_id){    
+      // 编辑填充
+      getLeaseInfo({
+        lease_id:this.lease_id
+      }).then(res=>{
+        if(res.code==200){
+          if(res.data.isPublisher!=1){
+            this.$router.back();
+          }else{
+            const leaseinfo = res.data.leaseinfo;
+            // const isPublisher = res.data.isPublisher;
+            this.form.content = leaseinfo.content;
+            this.form.title = leaseinfo.title;
+            this.files = leaseinfo.images;
+            this.fileList = leaseinfo.images.map((item,index)=>{
+              return {
+                name:'pic_'+index,
+                url:this.host+item
+              }
+            })
+          }
+          
+        }
+      })
+    }
   }
 };
 

@@ -8,18 +8,21 @@
                     <h3 class="topic_title">{{postInfo.title}}</h3>
                     <p class="topic_time">{{postInfo.created_at}}</p>
                 </div>
-                <div class="topic_avatar flex_row">
-                    <div class="topic_avatar_wrap">
-                        <img src="../../assets/image/book.png" alt="">
+                <router-link :to="'/user/'+userinfo.user_id">
+                    <div class="topic_avatar flex_row">
+                        <div class="topic_avatar_wrap">
+                            <img :src="host+userinfo.headimgurl" alt="头像">
+                        </div>
+                        <div class="row_bd">
+                            <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
+                            <p class="school">{{userinfo.nickname}}</p>
+                        </div>
                     </div>
-                    <div class="row_bd">
-                        <p class="nickname"><span>姓名</span><i class="icon_sex"></i></p>
-                        <p class="school">大学打赏</p>
-                    </div>
-                </div>
+                </router-link>
               </div>
               <div class="topic_content">
                   {{postInfo.content}}
+                  <img class="images"  v-for="(url,index) in postInfo.images"  :key="index" :src="host+url" alt="图片">
               </div>
               <div class="topic_btn">
                   <span class="zan" @click="postZan">点赞 {{postInfo.thumbup}}</span>
@@ -67,7 +70,6 @@ export default {
   data() {
     return {
       userinfo:{},
-      userinfo:{},
       post_id:'',
       last_id:'',
       comment:'',
@@ -76,6 +78,7 @@ export default {
       comment_id:'',
       postInfo:{},
       hasThumbuped:0,
+      isPublisher:false,
       loading:false,
       loading2:false,
     };
@@ -94,6 +97,11 @@ export default {
               content:this.comment 
           }).then(res=>{
               if(res.code==200){
+                  this.postInfo.comment = res.data.postComments;
+                  this.last_id = '';
+                  this.getComment();
+                  this.comment = '';
+                  this.placeholder = '评论';
                   this.$message.success(res.message);
               }else{
                   this.$message.error(res.message);
@@ -106,13 +114,14 @@ export default {
         this.placeholder = `回复 ${name}：`;
       },
       postZan(){
-          if(this.hasThumbuped==1){
+          if(this.hasThumbuped==0){
               groupPostZan({
                   post_id:this.post_id
               }).then(res=>{
                   if(res.code==200){
                       this.postInfo.thumbup = res.data.thumbup;
                       this.hasThumbuped = res.data.hasThumbuped;
+                      this.$message.success(res.message)
                   };
               })
           }else{
@@ -122,9 +131,25 @@ export default {
                   if(res.code==200){
                       this.postInfo.thumbup = res.data.thumbup;
                       this.hasThumbuped = res.data.hasThumbuped;
+                      this.$message.success(res.message)
                   };
               })
           }
+      },
+      getComment(){
+        if(!this.loading){
+            this.loading2 = true;
+        }
+        groupCommentList({
+            post_id:this.post_id,
+            last_id:this.last_id
+        }).then(res=>{
+            if(res.code==200){
+                this.commentList = res.data.comments;
+                this.last_id = res.data.last_id;
+                this.loading2 = false;
+            }
+        })
       }
   },
   created(){
@@ -134,16 +159,12 @@ export default {
           post_id:this.$route.params.id,
       }).then(res=>{
         this.postInfo = res.data.postInfo;
-        this.userinfo = res.data.postInfo.userinfo;
+        this.userinfo = res.data.userinfo;
+        this.hasThumbuped = res.data.hasThumbuped;
+        this.isPublisher = res.data.isPublisher;
         this.loading = false;
       })
-      groupCommentList({
-          post_id:this.post_id,
-          last_id:this.last_id
-      }).then(res=>{
-        this.commentList = res.data.comments
-        this.last_id = res.data.last_id
-      })
+      this.getComment();
   }
 };
 

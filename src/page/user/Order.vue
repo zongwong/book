@@ -1,7 +1,7 @@
 <template>
-<div class="my_order">
+<div class="my_order" v-loading="loading">
     <template v-for="item in list">    
-        <div class="order_item green" :key="item.order_id">
+        <div class="order_item" :class="{'yellow':cat==='buy','green':cat==='sale'}" :key="item.order_id">
             <div class="order_header">
                 <div class="flex_row order_header-th">
                     <span>发布时间</span>
@@ -17,15 +17,19 @@
             <div class="order_detail">
                 <el-tabs tab-position="right">
                     <el-tab-pane label="商品信息">
-                        <div slot="label"><span class="order_tabNav">商品信息</span></div>
+                        <div slot="label"><span class="order_tabNav">订单信息</span></div>
                         <div class="order_tabContent">
                             <div class="flex_row orderGoodInfo">
                                 <div class="imgBox">
-                                    <img src="../../assets/image/book.png" alt="">
+                                    <img :src="host+item.goods_info.images[0]" alt="封面">
                                 </div>
                                 <div class="row_bd">
-                                    <p class="title">书名</p>
-                                    <div class="content">简介:123123123123123</div>
+                                    <p class="title">{{item.goods_info.title}}</p>
+                                    <div class="content">简介:{{item.goods_info.summary}}</div>
+                                
+                                    <div class="content adr">收货人:{{item.address_info.recipients}}</div>
+                                    <div class="content adr">手机号:{{item.address_info.mobilephone}}</div>
+                                    <div class="content adr">收货地址:{{item.address_info.detail}} / {{item.address_info.city}} / {{item.address_info.province}} / {{item.address_info.country}}</div>
                                 </div>
                             </div>
                         </div>
@@ -34,25 +38,24 @@
                         <div slot="label"><span class="order_tabNav">交易状况</span></div>
                         <div class="order_tabContent">
                             <p class="title">交易状况：</p>
-                            <p class="content">买家以来向你</p>
+                            <p class="content">{{item.show_order_status}}</p>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="买家信息">
-                        <div slot="label"><span class="order_tabNav">买家信息</span></div>
+                        <div slot="label"><span class="order_tabNav">{{cat==='sale'?'买家':'卖家'}}信息</span></div>
                         <div class="order_tabContent">
                             <div class="flex_row">
                                 <div class="userInfoBox">
                                     <div class="avatar">
-                                        <img src="http://api.dedele.net/upload/headimgurl/201804/22/1524363560_5adbf1287fa4a.jpg" alt="头像"> 
+                                        <img :src="host+item.userinfo.headimgurl" alt="头像"> 
                                         <i class="icon_sex"></i>
                                     </div> 
                                 </div>
                                 <div class="row_bd userInfoP">
-                                    <p>x请问请问亲我额</p>
-                                    <p>x请问请问亲我额</p>
-                                    <p>x请问请问亲我额</p>
-                                    <p>x请问请问亲我额</p>
-                                    <p>x请问请问亲我额</p>
+                                    <p>{{item.userinfo.name}}</p>
+                                    <p>{{item.userinfo.graduate_school}}</p>
+                                    <!-- <p>x请问请问亲我额</p> -->
+                                    <!-- <p>x请问请问亲我额</p> -->
                                 </div>
                             </div>
                         </div>
@@ -108,27 +111,78 @@
             </el-tabs>
         </div>
     </div> -->
+    <my-pagination
+        :total="total"
+        :current-page.sync="pageno"
+        @page-change="onPageChange"
+    ></my-pagination>
 </div>
 </template>
 
 <script>
-import { orderList } from "../../api/api";
+import { salelist,consumelist } from "../../api/api";
+import { mapState } from 'vuex';
+import pagination from '../../components/pagination';
 export default {
   name: "Order",
-  components: {},
+  components: {
+      'my-pagination':pagination
+  },
   data() {
     return {
+      cat:'',
       list: [],
-      total: 1
+      total: 1,
+      pageno:1,
+      value1:1,
+      loading:false
     };
   },
-  created() {
-    orderList().then(res => {
-      if (res.code == 200) {
-        this.list = res.data.orderlist;
-        this.total = res.data.maxpage;
+  watch: {
+    '$route' (to, from) {
+      this.cat = to.params.cat;
+      this.pageno = 1;
+      this.getListData();
+    }
+  },
+  computed:{
+    ...mapState([
+        'host'
+    ])
+  },
+  methods:{
+      getListData(){
+          this.loading = true;
+          if(this.cat=='buy'){
+              consumelist({
+                  pageno:this.pageno
+              }).then(res=>{
+                    if (res.code == 200) {
+                        this.list = res.data.orderlist;
+                        this.total = res.data.maxpage;
+                        this.loading = false;
+                    }
+              })
+          }else if(this.cat=='sale'){
+              salelist({
+                  pageno:this.pageno
+              }).then(res=>{
+                    if (res.code == 200) {
+                        this.list = res.data.orderlist;
+                        this.total = res.data.maxpage;
+                        this.loading = false;
+                    }
+              })
+          }
+      },
+      onPageChange(currentPage){
+          this.pas.pageno = currentPage;
+          this.getListData();
       }
-    });
+  },
+  created() {
+    this.cat = this.$route.params.cat;
+    this.getListData();
   }
 };
 </script>
@@ -207,6 +261,10 @@ export default {
   .content {
     color: #7d7d7d;
     font-size: 17px;
+    margin-bottom: 8px;
+  }
+  .content.adr{
+      font-size: 15px;
   }
   .userInfoBox {
     padding-top: 0;

@@ -138,11 +138,13 @@ export default {
                 
                 switch(formName){
                     case 'userInfoForm':
-                        this.setUserInfo(this.userInfoForm).then(res=>{
-                            if(res.code==200){
-                                this.$message.success(res.message);
-                            }
-                        });
+                        console.log(this.userInfoForm)
+                        this.setUserInfo(this.userInfoForm)
+                        // .then(res=>{
+                        //     if(res.code==200){
+                        //         this.$message.success(res.message);
+                        //     }
+                        // });
                         break;
                     case 'cardForm':
                         this.setBank(this.cardForm);
@@ -162,14 +164,19 @@ export default {
   created(){
       getInfo().then(res=>{
           if(res.code==200){
-              
-              
               if(isNaN(res.data.cardinfo.length)){
                   this.cardForm = res.data.cardinfo; 
               }
               if(isNaN(res.data.userinfo.length)){
-                  this.userInfoForm = res.data.userinfo; 
-                  this.userInfoForm.sex = res.data.userinfo.sex.toString(); 
+                  const userinfo = res.data.userinfo;
+                  this.userInfoForm = {
+                      name:userinfo.name,
+                      mobilephone:userinfo.mobilephone,
+                      sex:userinfo.sex?userinfo.sex.toString():'',
+                      country:userinfo.country,
+                      headimgurl:userinfo.headimgurl,
+                      graduate_school:userinfo.graduate_school,
+                  }
               }
               if(isNaN(res.data.associationInfo.length)){
                   this.groupForm = res.data.associationInfo;

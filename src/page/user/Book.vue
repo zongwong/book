@@ -1,7 +1,7 @@
 <template>
-<div class="publish nopadding">
+<div class="publish nopadding" v-loading="loading">
     <div class="pbbtn_box"><router-link to="/center/publish/1"><span>发布二手书籍</span></router-link></div>
-    <div class="history_item" v-for="item in list" :key="item.goods_id">
+    <div class="history_item" v-for="(item,index) in list" :key="item.goods_id">
         <div class="goods_info">
             <div class="goods_imgs">
                 <img :src="host+item.images[0]" alt="封面">
@@ -11,7 +11,7 @@
                 <p class="desc">{{item.summary}}</p>
                 <p class="price">{{item.currency_symbol}} {{item.shop_price}}</p>
             </div>
-            <div class="close"></div>
+            <div class="close" @click="onDelGoods(item.goods_id,index)"></div>
             <div class="btn_edit"><router-link :to="'/center/publish/1/'+item.goods_id">编辑</router-link></div>
         </div>
     </div>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { getMyGoods } from '../../api/api';
+import { getMyGoods,delGoods } from '../../api/api';
 import pagination from '../../components/pagination';
 import { mapState } from 'vuex';
 export default {
@@ -40,7 +40,8 @@ export default {
             category_id:1,
             // campus_id:2,
             pageno:1
-        }
+        },
+        loading:false
     }
   },
   computed:{
@@ -50,11 +51,13 @@ export default {
   },
   methods: {
       getListData(){
+          this.loading = true;
           return new Promise((resolve,reject)=>{
             getMyGoods(this.pas).then(res=>{
                 if(res.code==200){
                     this.list = res.data.goodslist;
-                    this.total = res.data.maxpage
+                    this.total = res.data.maxpage;
+                    this.loading = false;
                 }else{
                     reject(res)
                 }
@@ -64,6 +67,30 @@ export default {
       onPageChange(pageno){
           this.pageno = pageno;
           this.getListData()
+      },
+      onDelGoods(id,index){
+            this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                delGoods({
+                    goods_id:id
+                }).then(res=>{
+                    if(res.code==200){
+                        this.list.splice(index,1);
+                        this.$message.success(res.message);
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+            }).catch(() => {
+                // this.$message({
+                //     type: 'info',
+                //     message: '已取消删除'
+                // });          
+            });
+
       }
   },
   created(){

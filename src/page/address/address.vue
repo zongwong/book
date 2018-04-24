@@ -20,7 +20,7 @@
 
 
 
-    <el-dialog title="收货地址" :visible.sync="dialogVisible" width="500px">
+    <el-dialog title="收货地址" :modal="modal" :visible.sync="dialogVisible" width="500px">
         <el-form ref="addressForm" :rules="addressRule" :model="addressForm" label-width="80px">
             <el-form-item label="收件人" prop="name">
                 <el-input v-model="addressForm.name"></el-input>
@@ -72,6 +72,7 @@ export default {
             pageno:1
         },
         dialogVisible:false,
+        modal:false,
         addressForm:{
             name:'',
             phone:'',

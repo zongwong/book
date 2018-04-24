@@ -43,10 +43,21 @@
                 <i class="el-icon-tickets"></i>
                 <span slot="title">历史评价</span>
             </el-menu-item>
-            <el-menu-item index="/center/order">
+            <!-- <el-menu-item index="/center/order">
                 <i class="el-icon-goods"></i>
                 <span slot="title">交易记录</span>
-            </el-menu-item>
+            </el-menu-item> -->
+            <el-submenu index="/center/order">
+                <template slot="title">
+                    <i class="el-icon-goods"></i>
+                    <span>交易记录</span>
+                </template>
+                <el-menu-item-group>
+                    <el-menu-item index="/center/order/buy"><i class="el-icon-menu"></i>我的买入</el-menu-item>
+                    <el-menu-item index="/center/order/sale"><i class="el-icon-menu"></i>我的卖出</el-menu-item>
+                </el-menu-item-group>
+                </el-submenu>
+            </el-submenu>
         </el-menu>
 
 

@@ -21,8 +21,8 @@ Vue.locale('en', LangEn);
 Vue.config.lang = 'zh';
 Vue.config.productionTip = false;
 
-// localStorage.setItem('token','94fa6d2e8d6cf3cb9f65012f33e67a10');
-localStorage.setItem('token','c2cf19827f84348c3f65e75325f37ddc');
+localStorage.setItem('token','94fa6d2e8d6cf3cb9f65012f33e67a10');
+// localStorage.setItem('token','c2cf19827f84348c3f65e75325f37ddc');
 
 router.beforeEach((to, from, next) => {
   // if (window.location.href.indexOf('code') >= 0){

@@ -22,6 +22,7 @@
               </div>
               <div class="topic_content">
                   {{leaseInfo.content}}
+                  <img class="images"  v-for="(url,index) in leaseInfo.images"  :key="index" :src="host+url" alt="图片">
               </div>
               <div class="topic_btn">
                   <span class="zan" @click="onZanEvent">点赞 {{leaseInfo.thumbup}}</span>
@@ -101,6 +102,8 @@ export default {
                   this.leaseInfo.comment = res.data.comments;
                   this.last_id = '';
                   this.getComment();
+                  this.comment = '';
+                  this.placeholder = '评论';
                   this.$message.success(res.message);
               }else{
                   this.$message.error(res.message);
@@ -120,6 +123,7 @@ export default {
                   if(res.code==200){
                     this.hasThumbuped = res.data.hasThumbuped;
                     this.leaseInfo.thumbup = res.data.thumbup;
+                    this.$message.success(res.message)
                   }
               })
           }else{
@@ -129,6 +133,7 @@ export default {
                   if(res.code==200){
                     this.hasThumbuped = res.data.hasThumbuped;
                     this.leaseInfo.thumbup = res.data.thumbup;
+                    this.$message.success(res.message)
                   }
               })
           }
@@ -155,7 +160,7 @@ export default {
       getLeaseInfo({
           lease_id:this.$route.params.id,
       }).then(res=>{
-        this.leaseInfo = res.data.postInfo;
+        this.leaseInfo = res.data.leaseinfo;
         this.userinfo = res.data.userinfo;
         this.hasThumbuped = res.data.hasThumbuped;
         this.isPublisher = res.data.isPublisher;

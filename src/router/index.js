@@ -94,7 +94,7 @@ export default new Router({
           name: 'history',
           component: history,
         }, {
-          path: '/center/order',
+          path: '/center/order/:cat',
           name: 'order',
           component: order,
         }, {
@@ -130,8 +130,16 @@ export default new Router({
           name: 'publishhouse',
           component: publishhouse,
         }, {
+          path: '/center/publishhouse/:id',
+          name: 'edithouse',
+          component: publishhouse,
+        }, {
           path: '/center/publishpost',
           name: 'publishpost',
+          component: publishpost,
+        }, {
+          path: '/center/publishpost/:id',
+          name: 'editpost',
           component: publishpost,
         },{
           path: '/center/address',

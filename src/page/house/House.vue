@@ -13,7 +13,7 @@
             <router-link :to="'/house/'+item.lease_id">
               <p class="post_title oneHide">{{item.address}}</p>
               <div class="post_detail">
-                <img :src="host+item.images" alt="封面">
+                <img :src="host+item.images[0]" alt="封面">
                 <p class="moreHide">{{item.content}}</p>
               </div>
               <div class="post_other">

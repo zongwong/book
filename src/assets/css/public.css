@@ -168,6 +168,8 @@ p {
 .good_card .good_card-img img {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .good_card .good_card-title {
@@ -190,6 +192,8 @@ p {
 .house_card .house_card-imgWrap img {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .house_card .house_card-info {
@@ -247,6 +251,8 @@ p {
 .club_card-left .imgbox img {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .club_card-left .club_card-info {
@@ -293,6 +299,8 @@ p {
 .club_post .imgbox img {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .club_post .club_post-info {
@@ -392,6 +400,11 @@ p {
   font-size: 17px;
 }
 
+.post_detail .content {
+  font-size: 17px;
+  height: 70px;
+}
+
 .goods_info {
   display: flex;
   padding-top: 70px;
@@ -406,7 +419,10 @@ p {
 }
 
 .goods_imgs img {
+  display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .goods_data {
@@ -477,6 +493,15 @@ p {
   color: #7d7d7d;
   font-size: 20px;
   margin-bottom: 70px;
+}
+
+.topic_content {
+  margin-top: 50px;
+}
+
+.topic_content .images {
+  display: block;
+  margin: 30px auto;
 }
 
 .topic_info {
@@ -749,6 +774,10 @@ p {
   position: relative;
 }
 
+.publish {
+  min-height: 200px;
+}
+
 .publish .close {
   position: absolute;
   top: 0;
@@ -776,9 +805,11 @@ p {
 
 .pbbtn_box span {
   background: #7cd958;
+  display: inline-block;
   color: #fff;
   border-radius: 30px;
-  padding: 6px 10px;
+  padding: 0 10px;
+  line-height: 30px;
   cursor: pointer;
 }
 

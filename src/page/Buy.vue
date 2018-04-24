@@ -1,7 +1,7 @@
 <template>
 <div>
-  <div class="buy">
-      <my-search></my-search>
+  <my-search></my-search>
+  <div class="buy" v-loading="loading">
       <div class="box1000">
           <div class="goods_info">
               <div class="goods_imgs">
@@ -32,25 +32,33 @@
         <el-button size="small" type="success" round @click="makeOrder">立即付款</el-button>
     </div>
   </div>
+  <!-- <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+      <my-address></my-address>
+  </el-dialog> -->
+  
 </div>
 </template>
 
 <script>
 import Search from '../components/common/Search';
 import { getGoodsInfo,createOrder,deleteOrder,payPal,addressList } from '../api/api';
+import address from '../page/address/address';
 import { mapState } from 'vuex';
 export default {
   name: 'Buy',
   components: {
-    'my-search': Search
+    'my-search': Search,
+    'my-address':address
   },
   data() {
     return {
+      dialogTableVisible:true,
       goodsInfo:{},
       userinfo:{},
       orderInfo:{},
       defaultAddress:{},
       payType:'paypal',
+      loading:false
     }
   },
   computed:{
@@ -68,7 +76,7 @@ export default {
               goods_id:this.goodsInfo.goods_id
           }).then(res=>{
               if(res.code==200){
-                  console.log(res.data)
+                  return res.data.order_id 
               }else{
                   this.$alert(res.message, {
                     confirmButtonText: '确定',
@@ -80,12 +88,15 @@ export default {
                     }
                 });
               }
+          }).then(res=>{
+              alert(res)
           })
       }
   },
   created(){
+      this.loading = true;
       getGoodsInfo({
-          goods_id:this.$route.params.id,
+        goods_id:this.$route.params.id,
       }).then(res=>{
         this.goodsInfo = res.data.goodsInfo;
         this.userinfo = res.data.goodsInfo.userinfo;
@@ -93,9 +104,13 @@ export default {
       });
       addressList(this.pas).then(res=>{
         if(res.code==200){
-            this.defaultAddress = res.data.addresslist.filter(item=>{
+            const defaddr = res.data.addresslist.filter(item=>{
                 return item.is_default == 1
-            })[0];
+            });
+            if(defaddr.length){
+                this.defaultAddress = defaddr[0]
+            }
+            this.loading = false;
         }
       })
   }

@@ -28,6 +28,7 @@ export const setassociation = params => Axios.post('/association/create', params
 export const getGoodsList = params => Axios.get('/mall/goods/getlist', params);
 export const getGoodsInfo = params => Axios.get('/mall/goods/info', params);
 export const publishGoods = (params,config) => Axios.post('/mall/goods/publish', params, config);
+export const delGoods = params => Axios.get('/mall/goods/delete', params);
 
 // 租赁
 
@@ -39,13 +40,13 @@ export const leaseCommentCreate = params => Axios.post('/lease/comment/create', 
 export const myLeaseList = params => Axios.get('/lease/mylist', params);
 export const leaseZan = params => Axios.get('/lease/thumbup', params);
 export const leaseUnZan = params => Axios.get('/lease/unthumbup', params);
-
+export const delLease = params => Axios.get('/lease/delete', params);
 
 
 // 社团
 export const getgroupList = params => Axios.get('/association/getlist', params);
 export const getgroupInfo = params => Axios.get('/association/info', params);
-// export const publishgroup = params => Axios.post('/association/create', params);
+
 
 // 社团 帖子
 export const groupPostList = params => Axios.get('/association/post/getlist', params);
@@ -54,8 +55,9 @@ export const groupCommentCreate = params => Axios.post('/association/comment/cre
 export const getPostInfo = params => Axios.get('/association/post/info', params);
 export const groupPostZan = params => Axios.get('/association/post/thumbup', params);
 export const groupPostUnZan = params => Axios.get('/association/post/unthumbup', params);
-
-// 发帖
+export const delgroupPost = params => Axios.get('/association/post/delete', params);
+export const myPostList = params => Axios.get('/association/post/mylist', params);
+export const myGroupList = params => Axios.get('/association/mylist', params);
 export const groupPostCreate = params => Axios.post('/association/post/create', params);
 
 // 收货地址
@@ -76,7 +78,8 @@ export const orderInfo = params => Axios.get('/mall/order/info', params);
 export const deleteOrder = params => Axios.get('/mall/order/delete', params); 
 export const payPal = params => Axios.get('/mall/pay/create', params); 
 
-
 // 交易记录
 
-export const orderList = params => Axios.get('/mall/order/getlist', params); 
+// export const orderList = params => Axios.get('/mall/order/getlist', params); 
+export const salelist = params => Axios.get('/mall/order/salelist', params); 
+export const consumelist = params => Axios.get('/mall/order/consumelist', params); 
