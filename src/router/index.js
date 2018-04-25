@@ -27,6 +27,7 @@ import publishpost from '@/page/user/CommunityFrom';
 import Post from '@/page/community/Post';
 import address from '@/page/address/address';
 import SetNick from '@/page/setnick';
+import wallet from '@/page/user/Wallet';
 import page404 from '@/page/page404';
 
 Vue.use(Router);
@@ -145,6 +146,10 @@ export default new Router({
           path: '/center/address',
           name: 'address',
           component: address,
+        },{
+          path: '/center/wallet',
+          name: 'wallet',
+          component: wallet,
         }]
       }]
     }, {

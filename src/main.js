@@ -21,25 +21,37 @@ Vue.locale('en', LangEn);
 Vue.config.lang = 'zh';
 Vue.config.productionTip = false;
 
-localStorage.setItem('token','94fa6d2e8d6cf3cb9f65012f33e67a10');
+// localStorage.setItem('token','94fa6d2e8d6cf3cb9f65012f33e67a10');
 // localStorage.setItem('token','c2cf19827f84348c3f65e75325f37ddc');
 
 router.beforeEach((to, from, next) => {
   // if (window.location.href.indexOf('code') >= 0){
   // }
+
+  const token = localStorage.getItem('token')||'';
+  const nickname = localStorage.getItem('nickname')||'';
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    const token = localStorage.getItem('token');
+    
     if(!token){
       next({
         path: '/login',
         query: { redirect: to.fullPath }  
       });
+      
     }else{
-      next();
+      
+      if(!nickname){
+        next({
+          path: '/setnick'
+        });
+      }else{
+        next();
+      } 
+      
     }
     
   }else{
-    if(to.path==='/login' && localStorage.getItem('token')){
+    if(to.path==='/login' && token){
       next({
         path: '/',
         query: { redirect: to.fullPath }  
@@ -47,6 +59,10 @@ router.beforeEach((to, from, next) => {
     }else{
       next();
     }
+
+    
+
+
   }
   next();
 });

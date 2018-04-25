@@ -10,12 +10,17 @@
     </div>
     <div class="aside_nav">
         <el-menu
-            :default-active="activeIndex"
-            router
+            :default-active="$route.path"
+            :router="true"
+            
             >
             <el-menu-item index="/center/info">
                 <i class="el-icon-info"></i>
                 <span slot="title">个人资料</span>
+            </el-menu-item>
+            <el-menu-item index="/center/wallet">
+                <i class="el-icon-info"></i>
+                <span slot="title">我的钱包</span>
             </el-menu-item>
             <el-menu-item index="/center/address">
                 <i class="el-icon-info"></i>
@@ -78,7 +83,7 @@ export default {
   name: 'Aside',
   data() {
     return {
-        activeIndex:this.$route.path
+        
     };
   },
   computed:{

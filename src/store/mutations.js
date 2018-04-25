@@ -2,7 +2,8 @@ import * as types from './mutation-types';
 // import Vue from 'vue';
 export default {
     [types.Login](state, payload){
-        state.userInfo = payload
+        state.userInfo = payload.userinfo
+        state.token = payload.token
     },
     [types.LoginOut](state, payload){
         state.token = '';

@@ -89,7 +89,12 @@ export default {
                 });
               }
           }).then(res=>{
-              alert(res)
+              alert(res);
+              payPal({
+                  order_id:res
+              }).then(ret=>{
+                  window.open(ret.data.approval_link);
+              })
           })
       }
   },

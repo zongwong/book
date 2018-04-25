@@ -9,18 +9,14 @@ const state = {
     token: localStorage.getItem('token')||'',
     school:'',
     userInfo:{
-        user_id: 3,
-        name:'王宗荣',
-        nickname: '',
-        sex: 3,
-        country: '中国',
-        mobilephone: 17605952442,
-        passwd: 12,
-        headimgurl: 123,
-        status: 1,
-        created_at: 1523966552,
-        updated_at: 1523966552,
-        deleted_at: null
+        // user_id: '',
+        // name:'',
+        // nickname: '',
+        // sex: '',
+        // country: '',
+        // mobilephone: '',
+        // passwd: '',
+        // headimgurl: '',
     },
     cardInfo:{
 

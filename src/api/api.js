@@ -14,6 +14,12 @@ export const getCampus = params => Axios.get('/campus/getlist', params);
 // 货币列表
 export const getCurrency = params => Axios.get('/currency/getlist', params);
 
+
+// 首页
+
+export const indexList = params => Axios.get('/recommend/getlist', params);
+
+
 //个人资料
 export const getUserInfo = params => Axios.get('/user/info', params);
 export const setNickname = params => Axios.post('/set/nickname', params);
@@ -76,10 +82,20 @@ export const getMyGoods = params => Axios.get('/mall/goods/mylist', params);
 export const createOrder = params => Axios.post('/mall/order/create', params);
 export const orderInfo = params => Axios.get('/mall/order/info', params); 
 export const deleteOrder = params => Axios.get('/mall/order/delete', params); 
-export const payPal = params => Axios.get('/mall/pay/create', params); 
+export const payPal = params => Axios.post('/mall/pay/create', params); 
+
+export const applyRefund = params => Axios.get('/mall/refund/apply', params); 
+export const sendDeliver = params => Axios.post('/mall/deliver/create', params); 
+export const confirmDeliver = params => Axios.post('/mall/deliver/confirm', params); 
+export const delOrder = params => Axios.get('/mall/order/delete', params); 
+export const orderEvaluate = params => Axios.post('/mall/evaluate/create', params); 
+export const evaluateList = params => Axios.get('/mall/evaluate/history', params);
 
 // 交易记录
-
-// export const orderList = params => Axios.get('/mall/order/getlist', params); 
 export const salelist = params => Axios.get('/mall/order/salelist', params); 
 export const consumelist = params => Axios.get('/mall/order/consumelist', params); 
+
+// 我的钱包
+export const wallet = params => Axios.get('/wallet/balance', params); 
+export const walletList = params => Axios.get('/wallet/cashflow', params); 
+export const walletApply= params => Axios.get('/wallet/withdraw', params);

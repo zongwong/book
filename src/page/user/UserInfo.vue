@@ -21,10 +21,6 @@
         </el-form-item>
         <el-form-item label="国籍" prop="country">
             <el-input v-model="userInfoForm.country"></el-input>
-            <!-- <el-select v-model="userInfoForm.region" placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-            </el-select> -->
         </el-form-item>
         <el-form-item label="电话" prop="mobilephone">
             <el-input v-model="userInfoForm.mobilephone"></el-input>

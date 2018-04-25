@@ -39,6 +39,17 @@
                         <div class="order_tabContent">
                             <p class="title">交易状况：</p>
                             <p class="content">{{item.show_order_status}}</p>
+                            <!-- onCancelOrderl
+                            onApplyRefund
+                            onSendDeliver
+                            onConfirmDeliver
+                            onOrderEvaluate -->
+                            <el-button v-if="cat=='buy' && item.order_status=='order_create'" size="mini" round>立即付款</el-button>
+                            <el-button v-if="cat=='buy' && item.order_status=='order_create'" size="mini" round  @click="onCancelOrderl(item.order_id,item.goods_id)">取消订单</el-button>
+                            <el-button v-if="cat=='buy' && item.order_status=='order_payed'" size="mini" round  @click="onApplyRefund(item.order_id,item.goods_id)">申请退款</el-button>
+                            <el-button v-if="cat=='buy' && item.order_status=='goods_delivered'" size="mini" round  @click="onConfirmDeliver(item.order_id,item.goods_id)">确认收货</el-button>
+
+                            <el-button v-if="cat=='sale' && item.order_status=='order_payed'" size="mini" round  @click="onSendDeliver(item.order_id,item.goods_id)">立即发货</el-button>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="买家信息">
@@ -60,7 +71,7 @@
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="评星评价">
+                    <el-tab-pane label="评星评价" v-if="item.order_status=='goods_received'">
                         <div slot="label"><span class="order_tabNav">评星评价</span></div>
                         <div class="order_tabContent">
                             <div class="evaluate_box evaluate_top">      
@@ -120,7 +131,17 @@
 </template>
 
 <script>
-import { salelist,consumelist } from "../../api/api";
+// rder_payed 订单已支付
+// order_create 订单已创建
+// refund_apply 申请退款
+// order_refund 订单已退款
+// order_canceled 订单已取消
+// goods_delivered 商品已发货
+// goods_received 商品已收到
+// seller_evaluated 卖家已评价
+// buyer_evaluated 卖家已评价
+// both_evaluated 已互评
+import { salelist,consumelist,applyRefund,sendDeliver,confirmDeliver,orderEvaluate,delOrder } from "../../api/api";
 import { mapState } from 'vuex';
 import pagination from '../../components/pagination';
 export default {
@@ -135,14 +156,13 @@ export default {
       total: 1,
       pageno:1,
       value1:1,
-      loading:false
+      loading:false,
     };
   },
   watch: {
     '$route' (to, from) {
       this.cat = to.params.cat;
-      this.pageno = 1;
-      this.getListData();
+      this.onPageChange(1);
     }
   },
   computed:{
@@ -176,9 +196,100 @@ export default {
           }
       },
       onPageChange(currentPage){
-          this.pas.pageno = currentPage;
+          this.pageno = currentPage;
           this.getListData();
-      }
+      },
+      // 取消订单
+      onCancelOrderl(id,goods_id){
+        this.$confirm('此操作将永久删除该订单, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            delOrder({
+                order_id:id,
+            }).then(res=>{
+                if(res.code==200){
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                    this.onPageChange(1);
+                }
+            })
+        }).catch(() => {
+        
+        });
+      },
+      // 申请退款
+      onApplyRefund(id,goods_id){
+        applyRefund({
+            order_id:id,
+        }).then(res=>{
+            if(res.code==200){
+
+            }
+        })
+      },
+      // 标记发货
+      onSendDeliver(id,goods_id){
+        this.$confirm('您确认已经发货了?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            sendDeliver({
+                order_id:id,
+                goods_id:goods_id
+            }).then(res=>{
+                if(res.code==200){
+                    this.$message({
+                        type: 'success',
+                        message: '发货成功!'
+                    });
+                    this.onPageChange(1);
+                }
+            })
+        }).catch(() => {
+        
+        });
+
+      },
+      // 确认收货
+      onConfirmDeliver(id,goods_id){
+        this.$confirm('您确认已经收到货了?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            confirmDeliver({
+                order_id:id,
+                goods_id:goods_id
+            }).then(res=>{
+                if(res.code==200){
+                    this.$message({
+                        type: 'success',
+                        message: '确认成功!'
+                    });
+                    this.onPageChange(1);
+                }
+            })
+        }).catch(() => {
+        
+        });
+      },
+      // 评价
+      onOrderEvaluate(id,goods_id){
+        orderEvaluate({
+            order_id:id,
+            goods_id:goods_id
+        }).then(res=>{
+            if(res.code==200){
+
+            }
+        })
+      },
+
   },
   created() {
     this.cat = this.$route.params.cat;

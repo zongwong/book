@@ -25,14 +25,7 @@
         <div class="form" v-if="phoneType">
           <el-form :model="regForm" :rules="rules" ref="regForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="手机号" prop="phone">
-         
-                <!-- <div class="form_row">
-                  <span class="row_ft">手机号：</span>
-                  <div class="row_bd"> -->
-                    <el-input v-model="regForm.phone" class="bordercolor"  placeholder="请输入内容"></el-input>
-                  <!-- </div>
-                </div> -->
-    
+                <el-input v-model="regForm.phone" class="bordercolor"  placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="验证码" prop="captcha">
               <el-row>
@@ -43,44 +36,26 @@
                   <img class="captchaImg" @click="reflash" :src="src" alt="图形验证码">
                 </el-col>
               </el-row>
-              
-              
             </el-form-item>
             <el-form-item label="短信验证码" prop="code">
               <el-row>
                 <el-col :span="14">
                   <el-input v-model="regForm.code" class="bordercolor"  placeholder="请输入内容"></el-input>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="10" style="text-align:right;">
                   <el-button type="success" plain @click="sendSmsCode">发送验证码</el-button>
                 </el-col>
               </el-row>
             </el-form-item>
-
+            <el-form-item label="" >
+              <el-button class="login_btn" type="success"  @click="submitForm('regForm')">登录</el-button>
+            </el-form-item>
             <!-- <div class="form_row">
-              <span class="row_ft">验证码：</span>
-              <div class="row_bd mr18">
-                <el-input v-model="regForm.captcha" class="bordercolor"  placeholder="请输入内容"></el-input>
-              </div>
-              <div>
-                <img src="http://api.dedele.net/token/captcha" alt="图形验证码">
-              </div>
-            </div>
-            <div class="form_row">
-              <span class="row_ft">短信验证码：</span>
-              <div class="row_bd mr18">
-                <el-input v-model="regForm.code" class="bordercolor"  placeholder="请输入内容"></el-input>
-              </div>
-              <div>
-                <el-button type="success" plain @click="">发送验证码</el-button>
-              </div>
-            </div> -->
-            <div class="form_row">
               <span class="row_ft" style="opacity:0;">去登录：</span>
               <div class="row_bd">
                 <el-button class="login_btn" type="success"  @click="submitForm('regForm')">登录</el-button>
               </div>
-            </div>
+            </div> -->
           </el-form>
         </div>
       </div>
@@ -94,6 +69,7 @@
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import { getCaptcha,getCode,toLogin } from '../api/api';
+import { mapMutations } from 'vuex';
 export default {
   name: 'Login',
   components: {
@@ -102,7 +78,7 @@ export default {
   },
   data() {
     return {
-      src:'http://api.dedele.net/token/captcha',
+      src:'/api/token/captcha',
       regForm: {
         phone:'',
         code:'',
@@ -123,13 +99,16 @@ export default {
     };
   },
   methods: {
+    ...mapMutations([
+      'Login_MUTATION'
+    ]),
     loginEvent() {
       getCaptcha().then(res=>{
         console.log(res)
       })
     },
     reflash(){
-      this.src = 'http://api.dedele.net/token/captcha?'+new Date().getTime()
+      this.src = '/api/token/captcha?'+new Date().getTime()
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -138,10 +117,31 @@ export default {
             mobilephone:this.regForm.phone,
             code:this.regForm.code
           }).then(res=>{
-            console.log(res)
+            if(res.code==200){
+              this.Login_MUTATION(res.data);
+              localStorage.setItem('token',res.data.token);
+              localStorage.setItem('nickname',res.data.userinfo.nickname);
+              this.$message.success(res.message);
+
+              if(res.data.userinfo.nickname){
+                this.$router.push({
+                  path:'/setnick'
+                })
+                return;
+              }
+              if(res.data.userinfo.headimgurl){
+                this.$router.push({
+                  path:'/center/info'
+                })
+                return;
+              }
+              this.$router.push({
+                path:'/'
+              })
+            }else{
+              this.$message.error(res.message);
+            }
           })
-
-
         } else {
           console.log('error submit!!');
           return false;
@@ -149,12 +149,15 @@ export default {
       });
     },
     sendSmsCode(){
-      // this.regForm.code
       getCode({
         mobilephone:this.regForm.phone,
         captcha:this.regForm.captcha,
       }).then(res => {
-        console.log(res);
+        if(res.code==200){
+          this.$message.success(res.message);
+        }else{
+          this.$message.error(res.message);
+        }
       })
     },
     phoneLogin:function(){
