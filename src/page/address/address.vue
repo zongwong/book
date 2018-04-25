@@ -1,24 +1,18 @@
 <template>
-<div class="publish nopadding">
+<div class="publish nopadding" v-loading="loading">
     <div class="pbbtn_box"><span @click="addressFormOpen">新增地址</span></div>
-    <div class="history_item" v-for="item in list" :key="item.address_id">
+    <div class="history_item" v-for="(item,index) in list" :key="item.address_id">
         <div class="goods_info" >
             <div class="goods_data">
                 <p class="desc">收件人：{{item.recipients}} - {{item.mobilephone}}</p>
-                <!-- <p class="desc">手机：</p> -->
                 <p class="desc">详细地址：{{item.detail}} / {{item.city}} / {{item.province}} / {{item.country}}</p>
-                <!-- <p class="desc">省市：</p> -->
             </div>
             <!-- <div class="close"></div> -->
-            
-            
         </div>
         <div class="btnsBox">
-            <span class="defaultAdr" @click="setDefault(item)"><i v-if="item.is_default==1" class="el-icon-success"></i>设置默认</span><span class="btn_edit">编辑</span>
+            <span class="defaultAdr" @click="setDefault(item)"><i v-if="item.is_default==1" class="el-icon-success"></i>设置默认</span><span @click="editAdr(item.address_id,index)" class="btn_edit">编辑</span>
         </div>
     </div>
-
-
 
     <el-dialog title="收货地址" :modal="modal" :visible.sync="dialogVisible" width="500px">
         <el-form ref="addressForm" :rules="addressRule" :model="addressForm" label-width="80px">
@@ -40,12 +34,12 @@
             <el-form-item label="收货地址" prop="address">
                 <el-input v-model="addressForm.address"></el-input>
             </el-form-item>
-            <el-form-item label="default" prop="default">
-                <el-switch v-model="addressForm.default"></el-switch>
+            <el-form-item label="default" prop="isdefault">
+                <el-switch v-model="addressForm.isdefault"></el-switch>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button @click="closeModal('addressForm')">取 消</el-button>
             <el-button type="primary" @click="onSubmit('addressForm')">确 定</el-button>
         </span>
     </el-dialog>
@@ -67,12 +61,12 @@ export default {
         list:[],
         total:1,
         pas:{
-            category_id:1,
-            // campus_id:2,
             pageno:1
         },
         dialogVisible:false,
-        modal:false,
+        modal:true,
+        loading:false,
+        address_id:'',
         addressForm:{
             name:'',
             phone:'',
@@ -80,7 +74,7 @@ export default {
             city:'',
             state:'',
             country:'',
-            default:true,
+            isdefault:true,
         },
         addressRule:{
             name: [
@@ -106,11 +100,13 @@ export default {
   },
   methods: {
       getListData(){
+          this.loading = true;
           return new Promise((resolve,reject)=>{
             addressList(this.pas).then(res=>{
                 if(res.code==200){
                     this.list = res.data.addresslist;
-                    this.total = res.data.maxpage
+                    this.total = res.data.maxpage;
+                    this.loading = false;
                 }else{
                     reject(res)
                 }
@@ -120,7 +116,7 @@ export default {
       onSubmit(formName){
         this.$refs[formName].validate((valid) => {
             if (valid) {
-                addressAdd({
+                let params = {
                     country:this.addressForm.country,
                     province:this.addressForm.state,
                     city:this.addressForm.city,
@@ -128,20 +124,23 @@ export default {
                     mobilephone:this.addressForm.phone,
                     recipients:this.addressForm.name,
                     is_default:1,
-                }).then(res=>{
-                    if(res.code==200){
-                        this.dialogVisible = true;
+                };
+                if(this.address_id){
+                    params.address_id = this.address_id;
+                }
+                addressAdd(params).then(res=>{
+                    if(res.code==200){           
+                        this.closeModal();
                         this.$message.success('添加成功');
-                        this.$refs[formName].resetFields();
+                        this.getListData()
                     }else{
                         this.$message.error(res.message);
                     }
 
                 })
 
-
             } else {
-                console.log('error submit!!');
+                
                 return false;
             }
         });
@@ -169,6 +168,29 @@ export default {
                 }
             })
         }
+      },
+      editAdr(id,index){
+          this.address_id = id;
+          this.addressForm.country = this.list[index].country;
+          this.addressForm.state = this.list[index].province;
+          this.addressForm.city = this.list[index].city;
+          this.addressForm.address = this.list[index].detail;
+          this.addressForm.phone = this.list[index].mobilephone;
+          this.addressForm.name = this.list[index].recipients;
+          this.addressForm.isdefault = this.list[index].is_default==0?false:true;
+          this.addressFormOpen();
+      },
+      closeModal(){
+        this.address_id = '';
+        this.addressForm.country = '';
+        this.addressForm.state = '';
+        this.addressForm.city = '';
+        this.addressForm.address ='';
+        this.addressForm.phone = '';
+        this.addressForm.name = '';
+        this.addressForm.isdefault = true;
+        this.dialogVisible = false;
+        this.$refs['addressForm'].resetFields();
       }
   },
   created(){

@@ -19,7 +19,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <span>丨</span>
-        <router-link v-if="token" to="/center"><span class="user name">{{userInfo.name}}</span></router-link>
+        <router-link v-if="token" to="/center"><span class="user name">{{userInfo.nickname}}</span></router-link>
         <router-link v-if="!token" to="/login"><span class="user">{{$t("navs.login")}}</span></router-link>
         <span v-if="token" class="user" @click="LoginOut_MUTATION">退出</span>
         <span>丨</span>

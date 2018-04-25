@@ -1,5 +1,6 @@
 import axios from 'axios';
 import store from '../store/index';
+import router from '../router/index';
 axios.defaults.headers.post['content-Type'] = 'application/x-www=form-urlencoded';
 axios.defaults.withCredentials = true;
 const Axios = axios.create({
@@ -16,6 +17,7 @@ Axios.interceptors.request.use(
       config.params.token = token;
     }else if(config.method=='post'){
       config.data.token = token;
+      // if(!token)
     }
     
     return config;
@@ -29,15 +31,15 @@ Axios.interceptors.request.use(
 Axios.interceptors.response.use(
   res => {
     // token 失效处理
-    // if(0){
-    //   store.commit(types.LOGOUT);
-    //   router.replace({
-    //     path: 'login',
-    //     query: {
-    //       redirect: router.currentRoute.fullPath
-    //     }
-    //   })
-    // }
+    if(res.data.code == 400 && res.data.message == '未提交token'){
+      // store.commit('LoginOut_MUTATION');
+      router.push({
+        path: '/login',
+        query: {
+          redirect: router.currentRoute.fullPath
+        }
+      })
+    }
     return res;
   },
   error => {

@@ -37,7 +37,8 @@ export default {
         return new Promise((resolve, reject) => {
             setInfo(params).then((res)=>{
                 if(res.code==200){
-                    commit('EditUserInfo_MUTATION',{ list: params})
+                    console.log(params)
+                    commit('EditUserInfo_MUTATION',params)
                     resolve(res)
                 }else{
                     reject(res)
@@ -46,6 +47,7 @@ export default {
         }) 
     },
     setBank({commit}, params){
+        console.log(params)
         return new Promise((resolve, reject) => {
             setBankinfo(params).then((res)=>{
                 if(res.code==200){

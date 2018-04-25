@@ -4,61 +4,98 @@
         <div class="form_title flex_row">
             <span class="text">个人信息</span>
             <span class="hr row_bd"></span>
-            <span class="btn_save" @click="userFromSubmit('userInfoForm')">保存</span>
+            <span v-if="editUserMode" class="btn_save" @click="userFromSubmit('userInfoForm')">保存</span>
+            <span v-if="!editUserMode" class="btn_save" @click="modeChange('editUserMode')">编辑</span>
         </div>
     
         <el-form-item label="头像" prop="headimgurl">
-            <el-input v-model="userInfoForm.headimgurl"></el-input>
+            <!-- <el-input v-model="userInfoForm.headimgurl"></el-input> -->
+            <img v-if="!editUserMode" :src="imageUrl" class="uavatar">
+            <el-upload
+                v-if="editUserMode"
+                class="avatar-uploader"
+                action="/api/uploader/image"
+                :data="{token:token}"
+                name="image"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess">
+                <img v-if="imageUrl" :src="imageUrl" class="uavatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
-            <el-input v-model="userInfoForm.name"></el-input>
+            <el-input v-if="editUserMode" v-model="userInfoForm.name"></el-input>
+            <p class="formShowP" v-if="!editUserMode">{{userInfoForm.name}}</p>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
-            <el-radio-group v-model="userInfoForm.sex">
+            <el-radio-group v-if="editUserMode" v-model="userInfoForm.sex">
                 <el-radio label="1">男</el-radio>
                 <el-radio label="2">女</el-radio>
             </el-radio-group>
+            <p class="formShowP" v-if="!editUserMode">{{userInfoForm.sex==1?'男':'女'}}</p>
         </el-form-item>
         <el-form-item label="国籍" prop="country">
-            <el-input v-model="userInfoForm.country"></el-input>
+            <el-input v-if="editUserMode" v-model="userInfoForm.country"></el-input>
+            <p class="formShowP" v-if="!editUserMode">{{userInfoForm.country}}</p>
         </el-form-item>
         <el-form-item label="电话" prop="mobilephone">
-            <el-input v-model="userInfoForm.mobilephone"></el-input>
+            <el-input v-if="editUserMode" v-model="userInfoForm.mobilephone"></el-input>
+            <p  class="formShowP" v-if="!editUserMode">{{userInfoForm.mobilephone}}</p>
         </el-form-item>
         <el-form-item label="所在学校" prop="graduate_school">
-            <el-input v-model="userInfoForm.graduate_school"></el-input>
+            <el-input v-if="editUserMode" v-model="userInfoForm.graduate_school"></el-input>
+            <p class="formShowP" v-if="!editUserMode">{{userInfoForm.graduate_school}}</p>
         </el-form-item>
     </el-form>
     <el-form ref="cardForm"  :model="cardForm" :rules="cardRules" label-width="80px">
         <div class="form_title flex_row">
             <span class="text">银行卡信息</span>
             <span class="hr row_bd"></span>
-            <span class="btn_save" @click="userFromSubmit('cardForm')">保存</span>
+            <span v-if="editCardMode" class="btn_save" @click="userFromSubmit('cardForm')">保存</span>
+            <span v-if="!editCardMode" class="btn_save" @click="modeChange('editCardMode')">编辑</span>
         </div>
         <el-form-item label="持卡人" prop="cardholder">
-            <el-input v-model="cardForm.cardholder"></el-input>
+            <el-input v-if="editCardMode" v-model="cardForm.cardholder"></el-input>
+            <p class="formShowP" v-if="!editCardMode">{{cardForm.cardholder}}</p>
         </el-form-item>
         <el-form-item label="银行卡号" prop="cardno">
-            <el-input v-model="cardForm.cardno"></el-input>
+            <el-input v-if="editCardMode" v-model="cardForm.cardno"></el-input>
+            <p class="formShowP" v-if="!editCardMode">{{cardForm.cardno}}</p>
         </el-form-item>
         <el-form-item label="安全号" prop="safeno">
-            <el-input v-model="cardForm.safeno"></el-input>
+            <el-input v-if="editCardMode" v-model="cardForm.safeno"></el-input>
+            <p class="formShowP" v-if="!editCardMode">{{cardForm.safeno}}</p>
         </el-form-item>
     </el-form>
     <el-form ref="groupForm"  :model="groupForm" :rules="groupRules" label-width="80px">
         <div class="form_title flex_row">
             <span class="text">社团信息</span>
             <span class="hr row_bd"></span>
-            <span class="btn_save" @click="userFromSubmit('groupForm')">保存</span>
+            <span v-if="editGroupMode" class="btn_save" @click="userFromSubmit('groupForm')">保存</span>
+            <span v-if="!editGroupMode" class="btn_save" @click="modeChange('editGroupMode')">编辑</span>
         </div>
         <el-form-item label="社团图片" prop="headimgurl">
-            <el-input v-model="groupForm.headimgurl"></el-input>
+            <!-- <el-input  v-if="editGroupMode" v-model="groupForm.headimgurl"></el-input> -->
+            <img v-if="!editGroupMode" :src="imageUrl2" class="uavatar2">
+            <el-upload
+                v-if="editGroupMode"
+                class="avatar-uploader"
+                action="/api/uploader/image"
+                :data="{token:token}"
+                name="image"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess2">
+                <img v-if="imageUrl2" :src="imageUrl2" class="uavatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
         </el-form-item>
         <el-form-item label="社团名字" prop="title">
-            <el-input v-model="groupForm.title"></el-input>
+            <el-input  v-if="editGroupMode" v-model="groupForm.title"></el-input>
+            <p class="formShowP" v-if="!editGroupMode">{{groupForm.title}}</p>
         </el-form-item>
         <el-form-item label="社团简介" prop="summary">
-            <el-input v-model="groupForm.summary"></el-input>
+            <el-input  v-if="editGroupMode" v-model="groupForm.summary"></el-input>
+            <p class="formShowP" v-if="!editGroupMode">{{groupForm.summary}}</p>
         </el-form-item>
     </el-form>
 </div>
@@ -68,9 +105,11 @@
 <script>
 import { mapState,mapMutations, mapActions } from 'vuex';
 import { getInfo } from '../../api/api';
+import Upload from '../../components/upload';
 export default {
   name: 'UserInfo',
   components: {
+      'my-upload':Upload
   },
   data() {
     return {
@@ -79,7 +118,7 @@ export default {
           mobilephone: '',
           sex: '',
           country:'',
-          headimgurl:'/upload/images/201804/21/1524268979_5ada7fb392d5b.jpg',
+          headimgurl:'',
           graduate_school:'',
         },
         userInfoRules:{
@@ -101,7 +140,7 @@ export default {
             safeno:[{required:true,trigger:'change',message:"请填写安全码"}],
         },
         groupForm:{
-            headimgurl:'/upload/images/201804/21/1524268979_5ada7fb392d5b.jpg',
+            headimgurl:'',
             title:'',
             summary:'',
         },
@@ -110,15 +149,20 @@ export default {
             title:[{required:true,trigger:'change',message:"请填写社团名称"}],
             summary:[{required:true,trigger:'change',message:"请填写社团简介"}],
         },
- 
-
+        imageUrl:'',
+        imageUrl2:'',
+        editUserMode:false,
+        editCardMode:false,
+        editGroupMode:false
       };
   },
   computed:{
       ...mapState([
-        'userInfo',
-        'cardInfo',
-        'associationInfo'
+        'host',
+        'token',
+        // 'userInfo',
+        // 'cardInfo',
+        // 'associationInfo'
       ])
   },
   methods:{
@@ -130,23 +174,33 @@ export default {
       userFromSubmit(formName){
         this.$refs[formName].validate((valid) => {
             if (valid) {
-                // alert('submit!');
-                
                 switch(formName){
                     case 'userInfoForm':
-                        console.log(this.userInfoForm)
                         this.setUserInfo(this.userInfoForm)
-                        // .then(res=>{
-                        //     if(res.code==200){
-                        //         this.$message.success(res.message);
-                        //     }
-                        // });
+                        .then(res=>{
+                            if(res.code==200){
+                                this.modeChange('editUserMode')
+                                this.$message.success(res.message);
+                            }
+                        });
                         break;
                     case 'cardForm':
-                        this.setBank(this.cardForm);
+                        this.setBank(this.cardForm)
+                        .then(res=>{
+                            if(res.code==200){
+                                this.modeChange('editCardMode')
+                                this.$message.success(res.message);
+                            }
+                        });
                         break;
                     case 'groupForm':
-                        this.setGroup(this.groupForm);
+                        this.setGroup(this.groupForm)
+                        .then(res=>{
+                            if(res.code==200){
+                                this.modeChange('editGroupMode')
+                                this.$message.success(res.message);
+                            }
+                        });
                         break;
                 }
 
@@ -155,13 +209,29 @@ export default {
                 return false;
             }
         });
+      },
+      handleAvatarSuccess(res, file){
+          this.userInfoForm.headimgurl = res.data.imageurl;
+          this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      handleAvatarSuccess2(res, file){
+          this.groupForm.headimgurl = res.data.imageurl;
+          this.imageUrl2 = URL.createObjectURL(file.raw);
+      },
+      modeChange(name){
+          this[name]=!this[name];
       }
   },
   created(){
       getInfo().then(res=>{
           if(res.code==200){
               if(isNaN(res.data.cardinfo.length)){
-                  this.cardForm = res.data.cardinfo; 
+                  const cardinfo = res.data.cardinfo; 
+                  this.cardForm = {
+                    cardholder:cardinfo.cardholder,
+                    cardno:cardinfo.cardno,
+                    safeno:cardinfo.safeno,
+                  }
               }
               if(isNaN(res.data.userinfo.length)){
                   const userinfo = res.data.userinfo;
@@ -173,9 +243,16 @@ export default {
                       headimgurl:userinfo.headimgurl,
                       graduate_school:userinfo.graduate_school,
                   }
+                  this.imageUrl = this.host+userinfo.headimgurl;
               }
               if(isNaN(res.data.associationInfo.length)){
-                  this.groupForm = res.data.associationInfo;
+                  const associationInfo = res.data.associationInfo;
+                  this.groupForm = {
+                      headimgurl:associationInfo.headimgurl,
+                      title:associationInfo.title,
+                      summary:associationInfo.summary,
+                  }
+                  this.imageUrl2 = this.host+associationInfo.headimgurl;
               }
               
           }
@@ -206,4 +283,34 @@ export default {
         padding: 0 20px;
     }
 }
+  .avatar-uploader .el-upload {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    border: 1px solid #333;
+    border-radius: 50%;
+  }
+ .uavatar,.uavatar2 {
+    width: 100px;
+    height: 100px;
+    display: block;
+    border-radius: 50%;
+  }
+  .uavatar2{
+      border-radius: 0;
+  }
+  .formShowP{
+      color: #999;
+  }
 </style>

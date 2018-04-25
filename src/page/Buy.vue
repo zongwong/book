@@ -1,35 +1,37 @@
 <template>
 <div>
   <my-search></my-search>
-  <div class="buy" v-loading="loading">
-      <div class="box1000">
-          <div class="goods_info">
-              <div class="goods_imgs">
-                  <img :src="goodsInfo.post" alt="封面">
-              </div>
-              <div class="goods_data">
-                  <p class="title">{{goodsInfo.title}}</p>
-                  <p class="desc">{{goodsInfo.summary}}</p>
-                  <p class="price">{{goodsInfo.currency_symbol}} {{goodsInfo.shop_price}}</p>
-              </div>
-          </div>
-      </div>
-  </div>
-  <div class="box1000">
-    <div class="address">
-        <p>收件人：{{defaultAddress.recipients}}</p>
-        <p>手机：{{defaultAddress.mobilephone}}</p>
-        <p>详细地址：{{defaultAddress.detail}} / {{defaultAddress.city}} / {{defaultAddress.province}} / {{defaultAddress.country}}</p>
+  <div v-loading="loading">
+    <div class="buy">
+        <div class="box1000">
+            <div class="goods_info">
+                <div class="goods_imgs">
+                    <img v-if="goodsInfo.post" :src="goodsInfo.post" alt="封面">
+                </div>
+                <div class="goods_data">
+                    <p class="title">{{goodsInfo.title}}</p>
+                    <p class="desc">{{goodsInfo.summary}}</p>
+                    <p class="price">{{goodsInfo.currency_symbol}} {{goodsInfo.shop_price}}</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <p class="pay_title">付款方式</p>
-    <div class="pay_box">
-        <span @click="selectPayType('zfb')" :class="{on:payType=='zfb'}"><i class="icon icon_zfb"></i>支付宝</span>
-        <span @click="selectPayType('wx')" :class="{on:payType=='wx'}"><i class="icon icon_wx"></i>微信</span>
-        <span @click="selectPayType('paypal')" :class="{on:payType=='paypal'}"><i class="icon icon_card"></i>PayPal</span>
-    </div>
-    <div class="btns">
-        <el-button size="small" round>取消订单</el-button>
-        <el-button size="small" type="success" round @click="makeOrder">立即付款</el-button>
+    <div class="box1000">
+        <div class="address">
+            <p>收件人：{{defaultAddress.recipients}}</p>
+            <p>手机：{{defaultAddress.mobilephone}}</p>
+            <p>详细地址：{{defaultAddress.detail}} / {{defaultAddress.city}} / {{defaultAddress.province}} / {{defaultAddress.country}}</p>
+        </div>
+        <p class="pay_title">付款方式</p>
+        <div class="pay_box">
+            <span @click="selectPayType('zfb')" :class="{on:payType=='zfb'}"><i class="icon icon_zfb"></i>支付宝</span>
+            <span @click="selectPayType('wx')" :class="{on:payType=='wx'}"><i class="icon icon_wx"></i>微信</span>
+            <span @click="selectPayType('paypal')" :class="{on:payType=='paypal'}"><i class="icon icon_card"></i>PayPal</span>
+        </div>
+        <div class="btns">
+            <el-button size="small" round>取消订单</el-button>
+            <el-button size="small" type="success" round @click="makeOrder">立即付款</el-button>
+        </div>
     </div>
   </div>
   <!-- <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
@@ -71,30 +73,32 @@ export default {
           this.payType = type;
       },
       makeOrder(){
+          this.loading = true;
           createOrder({
               address_id:this.defaultAddress.address_id,
               goods_id:this.goodsInfo.goods_id
           }).then(res=>{
               if(res.code==200){
-                  return res.data.order_id 
+                    return res.data.order_id; 
               }else{
-                  this.$alert(res.message, {
-                    confirmButtonText: '确定',
-                    callback: action => {
-                        // this.$message({
-                        // type: 'info',
-                        // message: `action: ${ action }`
-                        // });
-                    }
-                });
+                    
+                    this.$alert(res.message, {
+                        confirmButtonText: '确定',
+                        callback: action => {
+                        }
+                    });
               }
           }).then(res=>{
-              alert(res);
-              payPal({
-                  order_id:res
-              }).then(ret=>{
-                  window.open(ret.data.approval_link);
-              })
+              if(res){
+                  payPal({
+                      order_id:res
+                  }).then(ret=>{
+                      window.open(ret.data.approval_link);
+                      this.loading = false;
+                  })
+              }else{
+                  this.loading = false;
+              }
           })
       }
   },

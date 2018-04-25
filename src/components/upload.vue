@@ -6,12 +6,13 @@
         :data="{token:token}"
         name="image"
         :auto-upload="true"
-        list-type="picture-card"
+        :list-type="listType"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
         :before-upload="beforeUpload"
         :on-success="onSuccess"
         :file-list="fileList"
+        :class="className"
     >
         <i class="el-icon-plus"></i>
     </el-upload>
@@ -31,6 +32,15 @@
             },
             fileList: {
                 type: Array,
+                required: false
+            },
+            listType: {
+                type: String,
+                required: false,
+                default: 'picture-card'
+            },
+            className: {
+                type: String,
                 required: false
             }
         },
@@ -67,6 +77,6 @@
     };
 </script>
 
-<style scoped>
+<style lang="scss" >
 
 </style>

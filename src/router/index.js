@@ -160,6 +160,7 @@ export default new Router({
       path: '/setnick',
       name: 'SetNick',
       component: SetNick,
+      meta: { requiresAuth: true },
     },{ 
       path: '*', 
       component: page404 

@@ -63,6 +63,7 @@
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import { setNickname } from '../api/api';
+import { mapMutations } from 'vuex';
 export default {
   name: 'Setnick',
   components: {
@@ -98,6 +99,9 @@ export default {
     };
   },
   methods: {
+    ...mapMutations([
+      'EditName_MUTATION'
+    ]),
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -106,6 +110,7 @@ export default {
           }).then(res=>{
             if(res.code==200){
               this.$message.success(res.message);
+              this.EditName_MUTATION(this.regForm)
               this.$router.push({
                 path:'/center/info'
               })

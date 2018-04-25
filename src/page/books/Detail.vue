@@ -16,7 +16,7 @@
               <div class="saler_info">
                   <div class="avatar_wrap">
                       <router-link :to="'/user/'+userinfo.user_id">
-                        <img :src="host+userinfo.headimgurl" alt="用户头像">
+                        <img v-if="userinfo.headimgurl" :src="host+userinfo.headimgurl" alt="用户头像">
                         <i class="saler_sex"></i>
                       </router-link>
                   </div>

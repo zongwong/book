@@ -3,23 +3,27 @@ import * as types from './mutation-types';
 export default {
     [types.Login](state, payload){
         state.userInfo = payload.userinfo
+        localStorage.setItem('nickname',payload.userinfo.nickname);
         state.token = payload.token
     },
     [types.LoginOut](state, payload){
         state.token = '';
         localStorage.removeItem('token');
-        window.location.href = '/';
+        window.location.href='/';
     },
     [types.EditName](state, payload){
-        state.nickname = payload.nickname
+        state.userInfo.nickname = payload.nickname;
+        localStorage.setItem('nickname',payload.nickname);
     },
     [types.EditUserInfo](state, payload){
-        state.name = payload.name
-        state.nickname = payload.nickname
-        state.sex = payload.sex
-        state.country = payload.country
-        state.mobilephone = payload.mobilephone
-        state.headimgurl = payload.headimgurl
+        state.userInfo.name = payload.name
+        state.userInfo.graduate_school = payload.graduate_school
+        state.userInfo.sex = payload.sex
+        state.userInfo.country = payload.country
+        state.userInfo.mobilephone = payload.mobilephone
+        state.userInfo.headimgurl = payload.headimgurl
+        // localStorage.setItem('nickname',payload.nickname);
+        
     },
     [types.getUserInfo](state,payload){
         state.userInfo = payload

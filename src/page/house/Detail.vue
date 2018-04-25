@@ -105,8 +105,6 @@ export default {
                   this.comment = '';
                   this.placeholder = '评论';
                   this.$message.success(res.message);
-              }else{
-                  this.$message.error(res.message);
               }
           })
       },

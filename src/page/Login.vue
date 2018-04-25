@@ -120,23 +120,22 @@ export default {
             if(res.code==200){
               this.Login_MUTATION(res.data);
               localStorage.setItem('token',res.data.token);
-              localStorage.setItem('nickname',res.data.userinfo.nickname);
               this.$message.success(res.message);
 
-              if(res.data.userinfo.nickname){
+              if(!res.data.userinfo.nickname){
                 this.$router.push({
                   path:'/setnick'
                 })
                 return;
               }
-              if(res.data.userinfo.headimgurl){
+              if(!res.data.userinfo.headimgurl){
                 this.$router.push({
                   path:'/center/info'
                 })
                 return;
               }
               this.$router.push({
-                path:'/'
+                path:this.$route.query.redirect
               })
             }else{
               this.$message.error(res.message);

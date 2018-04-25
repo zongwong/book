@@ -1,18 +1,18 @@
 <template>
-<div class="publish nopadding">
-    <div class="pbbtn_box"><router-link to="/center/publish?category_id=2"><span>发布二手笔记</span></router-link></div>
-    <div class="history_item">
-        <div class="goods_info" v-for="item in list" :key="item.goods_id">
+<div class="publish nopadding" v-loading="loading">
+    <div class="pbbtn_box"><router-link to="/center/publish/2"><span>发布二手笔记</span></router-link></div>
+    <div class="history_item" v-for="(item,index) in list" :key="item.goods_id">
+        <div class="goods_info">
             <div class="goods_imgs">
-                <img src="../../assets/image/book.png" alt="">
+                <img :src="host+item.images[0]" alt="封面">
             </div>
             <div class="goods_data">
                 <p class="title">{{item.title}}</p>
-                <p class="desc">1231231223qweqweqweqweqwe</p>
-                <p class="price">￥20.00</p>
+                <p class="desc">{{item.summary}}</p>
+                <p class="price">{{item.currency_symbol}} {{item.shop_price}}</p>
             </div>
-            <div class="close"></div>
-            <div class="btn_edit"><router-link :to="'/center/publish/'+item.goods_id">编辑</router-link></div>
+            <div class="close" @click="onDelGoods(item.goods_id,index)"></div>
+            <div class="btn_edit"><router-link :to="'/center/publish/2/'+item.goods_id">编辑</router-link></div>
         </div>
     </div>
     <my-pagination
@@ -24,8 +24,9 @@
 </template>
 
 <script>
-import { getMyGoods } from '../../api/api';
+import { getMyGoods,delGoods } from '../../api/api';
 import pagination from '../../components/pagination';
+import { mapState } from 'vuex';
 export default {
   name: 'Pbnote',
   components: {
@@ -39,16 +40,24 @@ export default {
             category_id:2,
             // campus_id:2,
             pageno:1
-        }
+        },
+        loading:false
     }
+  },
+  computed:{
+    ...mapState([
+        'host'
+    ])
   },
   methods: {
       getListData(){
+          this.loading = true;
           return new Promise((resolve,reject)=>{
             getMyGoods(this.pas).then(res=>{
                 if(res.code==200){
                     this.list = res.data.goodslist;
-                    this.total = res.data.maxpage
+                    this.total = res.data.maxpage;
+                    this.loading = false;
                 }else{
                     reject(res)
                 }
@@ -58,6 +67,30 @@ export default {
       onPageChange(pageno){
           this.pageno = pageno;
           this.getListData()
+      },
+      onDelGoods(id,index){
+            this.$confirm('此操作将删除该商品, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                delGoods({
+                    goods_id:id
+                }).then(res=>{
+                    if(res.code==200){
+                        this.list.splice(index,1);
+                        this.$message.success(res.message);
+                    }else{
+                        this.$message.error(res.message);
+                    }
+                })
+            }).catch(() => {
+                // this.$message({
+                //     type: 'info',
+                //     message: '已取消删除'
+                // });          
+            });
+
       }
   },
   created(){
