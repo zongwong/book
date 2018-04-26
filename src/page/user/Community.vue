@@ -58,13 +58,16 @@ export default {
         mygroup_id:''
       };
   },
-  beforeRouteLeave (to, from, next) {
-    if(this.noCreate){
-      alert('请先填写社团资料')
-    }else{
-      next();
-    }
-  },
+  // beforeRouteEnter (to, from, next) {
+  //   if(this.noCreate){
+  //     this.$message.error('请先填写社团资料')
+  //     next({
+  //       path:'/center/info'
+  //     })
+  //   }else{
+  //     next();
+  //   }
+  // },
   computed:{
     ...mapState([
       'host'
@@ -120,6 +123,10 @@ export default {
           this.getListData()
         }else{
           this.noCreate = true;
+          this.$message.error('请先填写社团资料,才能发帖');
+          this.$router.push({
+            path:'/center/info'
+          })
         }
       }
     })

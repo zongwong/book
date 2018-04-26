@@ -21,19 +21,27 @@ import Pbnote from '@/page/user/note';
 import Pbhouse from '@/page/user/house';
 import Pbcommunity from '@/page/user/community';
 import publishbook from '@/page/user/BookFrom';
-// import publishnote from '@/page/user/NoteFrom';
+import setinfo from '@/page/Setinfo';
 import publishhouse from '@/page/user/HouseFrom';
 import publishpost from '@/page/user/CommunityFrom';
 import Post from '@/page/community/Post';
 import address from '@/page/address/address';
 import SetNick from '@/page/setnick';
 import wallet from '@/page/user/Wallet';
+import SearchResult from '@/page/SearchResult';
 import page404 from '@/page/page404';
 
 Vue.use(Router);
 
 export default new Router({
   mode:"history",
+  scrollBehavior(to, from, savedPosition) {
+　　if (to.hash) {
+　　　　return {
+　　　　　　selector: to.hash
+　　　　}
+　　}
+　},
   routes: [
     {
       path: '/',
@@ -80,11 +88,16 @@ export default new Router({
         path: '/buy/:id',
         name: 'Buy',
         component: Buy,
+        meta: { requiresAuth: true },
       }, {
         path: '/user/:id',
         name: 'User',
         component: User,
-      },{
+      }, {
+        path: '/search',
+        name: 'SearchResult',
+        component: SearchResult
+      }, {
         path: '/center',
         name: 'Center',
         component: Center,
@@ -160,6 +173,11 @@ export default new Router({
       path: '/setnick',
       name: 'SetNick',
       component: SetNick,
+      meta: { requiresAuth: true },
+    }, {
+      path: '/setinfo',
+      name: 'setinfo',
+      component: setinfo,
       meta: { requiresAuth: true },
     },{ 
       path: '*', 

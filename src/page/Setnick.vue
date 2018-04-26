@@ -16,44 +16,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="login_box">
-      <div class="center_box">
-        <p class="login_title" style="color:#7cd958;">- 请填写详细资料  -</p>
-        <div class="form">
-          <el-form ref="userInfoForm"  :model="userInfoForm" :rules="userInfoRules" label-width="80px">
-              
-              <el-form-item label="头像" prop="headimgurl">
-                  <el-input v-model="userInfoForm.headimgurl"></el-input>
-              </el-form-item>
-              <el-form-item label="姓名" prop="name">
-                  <el-input v-model="userInfoForm.name"></el-input>
-              </el-form-item>
-              <el-form-item label="性别" prop="sex">
-                  <el-radio-group v-model="userInfoForm.sex">
-                      <el-radio label="1">男</el-radio>
-                      <el-radio label="2">女</el-radio>
-                  </el-radio-group>
-              </el-form-item>
-              <el-form-item label="国籍" prop="country">
-                  <el-input v-model="userInfoForm.country"></el-input>
-              </el-form-item>
-              <el-form-item label="电话" prop="mobilephone">
-                  <el-input v-model="userInfoForm.mobilephone"></el-input>
-              </el-form-item>
-              <el-form-item label="所在学校" prop="graduate_school">
-                  <el-input v-model="userInfoForm.graduate_school"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button class="login_btn" style="width: 150px;" type="success"  @click="submitForm('regForm')">确定</el-button>
-              </el-form-item>
-              
-          </el-form>
-        </div>
-      </div>
-    </div> -->
-
-
     <my-footer></my-footer>
   </div>
 </template>
@@ -80,22 +42,6 @@ export default {
             { required: true, message: '请填写昵称', trigger: 'blur' },
           ]
       },
-      userInfoForm: {
-          name: '',
-          mobilephone: '',
-          sex: '',
-          country:'',
-          headimgurl:'/upload/images/201804/21/1524268979_5ada7fb392d5b.jpg',
-          graduate_school:'',
-        },
-      userInfoRules:{
-          name:[{ required:true,trigger:'change',message:"请填写姓名" }],
-          mobilephone:[{ required:true,trigger:'change',message:"请填写电话" }],
-          sex:[{ required:true,trigger:'change',message:"请选择性别" }],
-          country:[{ required:true,trigger:'change',message:"请填写国籍" }],
-          headimgurl:[{ required:true,trigger:'change',message:"请上传头像" }],
-          graduate_school:[{ required:true,trigger:'change',message:"请填写所在学校" }]
-      },
     };
   },
   methods: {
@@ -112,7 +58,7 @@ export default {
               this.$message.success(res.message);
               this.EditName_MUTATION(this.regForm)
               this.$router.push({
-                path:'/center/info'
+                path:'/setInfo'
               })
             }else{
               this.$message.error(res.message);

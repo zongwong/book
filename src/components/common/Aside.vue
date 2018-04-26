@@ -2,17 +2,16 @@
   <div class="aside">
     <div class="userInfoBox">
         <div class="avatar">
-            <img :src="host + userInfo.headimgurl" alt="头像">
+            <img v-if="userInfo.headimgurl" :src="host + userInfo.headimgurl" alt="头像">
             <i class="icon_sex"></i>
         </div>
         <p class="name">{{userInfo.nickname}}</p>
-        <p>{{userInfo.nickname}}</p>
+        <p>毕业于：{{userInfo.graduate_school}}</p>
     </div>
     <div class="aside_nav">
         <el-menu
             :default-active="$route.path"
             :router="true"
-            
             >
             <el-menu-item index="/center/info">
                 <i class="el-icon-info"></i>
@@ -107,6 +106,9 @@ export default {
     .userInfoBox{
         background: #f2fbee;
         padding-bottom: 30px;
+        p{
+            padding: 0 10px；
+        }
     }
 }
 .aside_nav{

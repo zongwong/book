@@ -1,7 +1,7 @@
 <template>
   <div class="">
       <my-search></my-search>
-      <div class="sort_box">
+      <!-- <div class="sort_box">
         <div class="sort_type" :class="{on:pas.orderby=='click'}" @click="onOrderByChange('click')">
           按热度排序
           <div class="caret-wrapper">
@@ -16,7 +16,8 @@
             <i class="sort-caret descending" :class="{on:pas.orderby=='price'&&pas.sort=='asc'}" @click.stop="onSortChange('asc')"></i>
           </div>
         </div>
-      </div>
+      </div> -->
+      <p class="searchTitle">搜索结果</p>
       <div class="container container1000" v-loading="loading">
         <div class="flex_box">
           
@@ -37,19 +38,24 @@
         :current-page.sync="pas.pageno"
         @page-change="onPageChange"
       ></my-pagination>
+
   </div>
 </template>
 
 <script>
-import Search from '../../components/common/Search';
-import Pagination from '../../components/pagination';
+import Header from '../components/common/Header';
+import Footer from '../components/common/Footer';
+import Search from '../components/common/Search';
+import Pagination from '../components/pagination';
 import { mapState,mapMutations, mapActions } from 'vuex';
-import { getGoodsList } from '../../api/api';
+import { searchGoods } from '../api/api';
 export default {
-  name: 'Note',
+  name: 'SearchResult',
   components: {
     'my-search': Search,
-    'my-pagination': Pagination
+    'my-pagination': Pagination,
+    'my-header': Header,
+    'my-footer': Footer,
   },
   computed:{
    
@@ -60,12 +66,13 @@ export default {
       loading:false,
       total:1,
       pas:{
-        orderby:'click',
-        sort:'desc',
+        // orderby:'click',
+        // sort:'desc',
         // campus_id:this.nowCampu.campus_id,
-        category_id:2,
+        // category_id:1,
         pageno:1,
-      }
+        q:''
+      },      
     };
   },
   computed:{
@@ -76,7 +83,12 @@ export default {
   },
   watch:{
     nowCampu(){
-      this.pas.campus_id = this.nowCampu.campus_id || '';
+      // this.pas.campus_id = this.nowCampu.campus_id || '';
+      this.pas.pageno = 1;
+      this.getListData();
+    },
+    '$route'(to, from){
+      this.pas.q = to.query.word;
       this.pas.pageno = 1;
       this.getListData();
     }
@@ -99,7 +111,7 @@ export default {
       // [campus_id]校区id
       this.loading = true;
       this.pas.campus_id = this.nowCampu.campus_id || '';
-      this.getBookListData(this.pas).then(res=>{
+      searchGoods(this.pas).then(res=>{
         this.list = res.data.goodslist;
         this.total = res.data.maxpage;
         this.loading = false;
@@ -121,6 +133,7 @@ export default {
     },
   },
   created(){
+    this.pas.q = this.$route.query.word;
     this.getListData()
   }
 };
@@ -141,5 +154,12 @@ export default {
   &:nth-child(4n){
     margin-right: 0;
   }
+}
+.searchTitle{
+  text-align: center;
+  color: #7cd958;
+  margin-top: 30px;
+  font-size: 28px;
+  font-weight: bold;
 }
 </style>

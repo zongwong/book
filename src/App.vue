@@ -12,6 +12,7 @@ export default {
     this.$store.dispatch('campusAction');
     if(localStorage.getItem('token')){
       this.$store.dispatch('userInfoAction');
+      console.log(1)
     }
   }
 };

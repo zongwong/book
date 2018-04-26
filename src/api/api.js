@@ -7,7 +7,7 @@ export const getCaptcha = params => Axios.get('/token/captcha', params);
 export const getCode = params => Axios.get('/token/getcode', params);
 // 登录
 export const toLogin = params => Axios.post('/token/create', params);
-
+export const googleToken= params => Axios.post('/token/google', params);
 //校区列表
 export const getCampus = params => Axios.get('/campus/getlist', params);
 
@@ -35,6 +35,8 @@ export const getGoodsList = params => Axios.get('/mall/goods/getlist', params);
 export const getGoodsInfo = params => Axios.get('/mall/goods/info', params);
 export const publishGoods = (params,config) => Axios.post('/mall/goods/publish', params, config);
 export const delGoods = params => Axios.get('/mall/goods/delete', params);
+export const searchGoods = params => Axios.get('/mall/goods/search', params);
+
 
 // 租赁
 

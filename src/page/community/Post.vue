@@ -11,7 +11,7 @@
                 <router-link :to="'/user/'+userinfo.user_id">
                     <div class="topic_avatar flex_row">
                         <div class="topic_avatar_wrap">
-                            <img :src="host+userinfo.headimgurl" alt="头像">
+                            <img v-if="userinfo.headimgurl" :src="host+userinfo.headimgurl" alt="头像">
                         </div>
                         <div class="row_bd">
                             <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>

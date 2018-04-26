@@ -7,7 +7,7 @@
                 <div class="topic_info cm_info" >
                     <div class="topic_header flex_row">
                         <div class="row_bd flex_row cm_data">
-                            <img :src="host+info.headimgurl">
+                            <img v-if="info.headimgurl" :src="host+info.headimgurl">
                             <div class="row_bd cm_content">
                                 <p class="title oneHide">{{info.title}}</p>
                                 <p class="desc moreHide">{{info.summary}}</p>
@@ -16,7 +16,7 @@
                         <router-link :to="'/user/'+userinfo.user_id">
                             <div class="topic_avatar flex_row">
                                 <div class="topic_avatar_wrap">
-                                    <img :src="host+userinfo.headimgurl" alt="头像">
+                                    <img v-if="userinfo.headimgurl" :src="host+userinfo.headimgurl" alt="头像">
                                 </div>
                                 <div class="">
                                     <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>

@@ -390,6 +390,10 @@ p {
   align-items: center;
 }
 
+.post_detail .moreHide {
+  width: 760px;
+}
+
 .post_detail img {
   width: 84px;
   height: 84px;

@@ -1,10 +1,17 @@
 <template>
   <div>
     <my-banner></my-banner>
-    <my-search></my-search>
+    <my-search
+      :className="nobg"
+    ></my-search>
     <div class="container" v-loading="loading">
-
-      <div class="index_title">
+      <div class="target flex_row">
+        <a href="#nav1"><img  src="../assets/image/nav1.png" alt="图片"></a>
+        <a href="#nav2"><img  src="../assets/image/nav2.png" alt="图片"></a>
+        <a href="#nav3"><img  src="../assets/image/nav3.png" alt="图片"></a>
+        <a href="#nav4"><img  src="../assets/image/nav4.png" alt="图片"></a>
+      </div>
+      <div class="index_title" id="nav1">
         <div class="index_title-en"><span>P</span>OPULAR BOOKS</div>
         <P class="index_title-zh">热门书籍</P>
         <router-link to="/book"><span class="index_title-more">MORE ></span></router-link>
@@ -22,7 +29,7 @@
         </div>
       </div>
 
-      <div class="index_title">
+      <div class="index_title" id="nav2">
         <div class="index_title-en"><span>S</span>ECOND-HAND NOTES</div>
         <P class="index_title-zh">二手笔记</P>
         <router-link to="/notes"><span class="index_title-more">MORE ></span></router-link>
@@ -40,7 +47,7 @@
         </div>
       </div>
 
-      <div class="index_title">
+      <div class="index_title" id="nav3">
         <div class="index_title-en"><span>H</span>OUSE LEASE</div>
         <P class="index_title-zh">房屋租赁</P>
         <router-link to="/house"><span class="index_title-more">MORE ></span></router-link>
@@ -69,7 +76,7 @@
           
         </div>
       </div>
-      <div class="index_title">
+      <div class="index_title" id="nav4">
         <div class="index_title-en"><span>C</span>OMMUNITY</div>
         <P class="index_title-zh">社团交流</P>
         <router-link to="/community"><span class="index_title-more">MORE ></span></router-link>
@@ -131,7 +138,8 @@ export default {
       book:[],
       lease:[],
       note:[],
-      loading:false
+      loading:false,
+      nobg:'nobg'
     };
   },
   computed:{
@@ -175,5 +183,11 @@ export default {
   .index_title-more{
     color: #d3d3d3;
   }
-
+  .target{
+    justify-content: space-around;
+    margin-top: 40px;
+    img{
+      cursor: pointer;
+    }
+  }
 </style>

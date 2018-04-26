@@ -2,7 +2,7 @@
 <div>
 
     <el-upload
-        action="/api/uploader/image"
+        :action="action"
         :data="{token:token}"
         name="image"
         :auto-upload="true"
@@ -24,6 +24,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import config from '../utils/global';
     export default {
         name: "upload",
         props: {
@@ -48,6 +49,7 @@
             return {
                 dialogImageUrl: '',
                 dialogVisible: false,
+                action:config.host+'/uploader/image'
             };
         },
         created: function () {

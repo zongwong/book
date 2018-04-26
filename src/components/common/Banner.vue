@@ -29,6 +29,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.banner{
+  margin-bottom: 40px;
+}
 .bannerImg{
   width: 100%;
 }

@@ -18,7 +18,6 @@ export default {
         return new Promise((resolve, reject) => {
             getInfo().then((res)=>{
                 commit('getUserInfo_MUTATION',res.data.userinfo)
-                // resolve(res.data)
             })
         }) 
     },

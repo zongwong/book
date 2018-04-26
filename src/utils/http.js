@@ -1,11 +1,11 @@
 import axios from 'axios';
 import store from '../store/index';
 import router from '../router/index';
+import confg from '../utils/global';
 axios.defaults.headers.post['content-Type'] = 'application/x-www=form-urlencoded';
 axios.defaults.withCredentials = true;
 const Axios = axios.create({
-  // baseURL: 'http://api.dedele.net',
-  baseURL: '/api',
+  baseURL: confg.host,
   timeout: 10000,
 });
 
@@ -31,8 +31,9 @@ Axios.interceptors.request.use(
 Axios.interceptors.response.use(
   res => {
     // token 失效处理
-    if(res.data.code == 400 && res.data.message == '未提交token'){
-      // store.commit('LoginOut_MUTATION');
+    console.log(res.data)
+    if( (res.data.code == 400 && res.data.message == '未提交token') || (res.data.code == 400 &&res.data.message=='token已过期，请重新登录')){
+      store.commit('LoginOut_MUTATION');
       router.push({
         path: '/login',
         query: {

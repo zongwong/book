@@ -1,6 +1,6 @@
 <template>
-<div class="center_userInfo">
-    <el-form ref="userInfoForm"  :model="userInfoForm" :rules="userInfoRules" label-width="80px">
+<div class="center_userInfo" v-loading="loading">
+    <el-form ref="userInfoForm"  :model="userInfoForm" :rules="userInfoRules" label-width="100px" label-position="left">
         <div class="form_title flex_row">
             <span class="text">个人信息</span>
             <span class="hr row_bd"></span>
@@ -10,16 +10,16 @@
     
         <el-form-item label="头像" prop="headimgurl">
             <!-- <el-input v-model="userInfoForm.headimgurl"></el-input> -->
-            <img v-if="!editUserMode" :src="imageUrl" class="uavatar">
+            <img v-if="!editUserMode && imageUrl" :src="imageUrl | headfilter" class="uavatar">
             <el-upload
                 v-if="editUserMode"
                 class="avatar-uploader"
-                action="/api/uploader/image"
+                :action="action"
                 :data="{token:token}"
                 name="image"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess">
-                <img v-if="imageUrl" :src="imageUrl" class="uavatar">
+                <img v-if="imageUrl" :src="imageUrl | headfilter" class="uavatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
         </el-form-item>
@@ -32,7 +32,7 @@
                 <el-radio label="1">男</el-radio>
                 <el-radio label="2">女</el-radio>
             </el-radio-group>
-            <p class="formShowP" v-if="!editUserMode">{{userInfoForm.sex==1?'男':'女'}}</p>
+            <p class="formShowP" v-if="!editUserMode">{{userInfoForm.sex==1?'男':''}}{{userInfoForm.sex==2?'女':''}}</p>
         </el-form-item>
         <el-form-item label="国籍" prop="country">
             <el-input v-if="editUserMode" v-model="userInfoForm.country"></el-input>
@@ -47,7 +47,7 @@
             <p class="formShowP" v-if="!editUserMode">{{userInfoForm.graduate_school}}</p>
         </el-form-item>
     </el-form>
-    <el-form ref="cardForm"  :model="cardForm" :rules="cardRules" label-width="80px">
+    <el-form ref="cardForm"  :model="cardForm" :rules="cardRules" label-width="100px" label-position="left">
         <div class="form_title flex_row">
             <span class="text">银行卡信息</span>
             <span class="hr row_bd"></span>
@@ -67,7 +67,7 @@
             <p class="formShowP" v-if="!editCardMode">{{cardForm.safeno}}</p>
         </el-form-item>
     </el-form>
-    <el-form ref="groupForm"  :model="groupForm" :rules="groupRules" label-width="80px">
+    <el-form ref="groupForm"  :model="groupForm" :rules="groupRules" label-width="100px" label-position="left">
         <div class="form_title flex_row">
             <span class="text">社团信息</span>
             <span class="hr row_bd"></span>
@@ -76,16 +76,16 @@
         </div>
         <el-form-item label="社团图片" prop="headimgurl">
             <!-- <el-input  v-if="editGroupMode" v-model="groupForm.headimgurl"></el-input> -->
-            <img v-if="!editGroupMode" :src="imageUrl2" class="uavatar2">
+            <img v-if="!editGroupMode && imageUrl2" :src="imageUrl2 | headfilter" class="uavatar2">
             <el-upload
                 v-if="editGroupMode"
                 class="avatar-uploader"
-                action="/api/uploader/image"
+                :action="action"
                 :data="{token:token}"
                 name="image"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess2">
-                <img v-if="imageUrl2" :src="imageUrl2" class="uavatar">
+                <img v-if="imageUrl2" :src="imageUrl2 | headfilter" class="uavatar2">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
         </el-form-item>
@@ -106,6 +106,8 @@
 import { mapState,mapMutations, mapActions } from 'vuex';
 import { getInfo } from '../../api/api';
 import Upload from '../../components/upload';
+import config from '../../utils/global';
+import headfilter from '../../utils/tools';
 export default {
   name: 'UserInfo',
   components: {
@@ -113,6 +115,7 @@ export default {
   },
   data() {
     return {
+        action:config.host+'/uploader/image',
         userInfoForm: {
           name: '',
           mobilephone: '',
@@ -153,8 +156,12 @@ export default {
         imageUrl2:'',
         editUserMode:false,
         editCardMode:false,
-        editGroupMode:false
+        editGroupMode:false,
+        loading:false
       };
+  },
+  filters:{
+      headfilter
   },
   computed:{
       ...mapState([
@@ -174,6 +181,7 @@ export default {
       userFromSubmit(formName){
         this.$refs[formName].validate((valid) => {
             if (valid) {
+                this.loading = true;
                 switch(formName){
                     case 'userInfoForm':
                         this.setUserInfo(this.userInfoForm)
@@ -182,6 +190,7 @@ export default {
                                 this.modeChange('editUserMode')
                                 this.$message.success(res.message);
                             }
+                            this.loading = false;
                         });
                         break;
                     case 'cardForm':
@@ -191,6 +200,7 @@ export default {
                                 this.modeChange('editCardMode')
                                 this.$message.success(res.message);
                             }
+                            this.loading = false;
                         });
                         break;
                     case 'groupForm':
@@ -200,6 +210,7 @@ export default {
                                 this.modeChange('editGroupMode')
                                 this.$message.success(res.message);
                             }
+                            this.loading = false;
                         });
                         break;
                 }
@@ -223,6 +234,7 @@ export default {
       }
   },
   created(){
+      this.loading = true;
       getInfo().then(res=>{
           if(res.code==200){
               if(isNaN(res.data.cardinfo.length)){
@@ -243,7 +255,9 @@ export default {
                       headimgurl:userinfo.headimgurl,
                       graduate_school:userinfo.graduate_school,
                   }
-                  this.imageUrl = this.host+userinfo.headimgurl;
+                  if(userinfo.headimgurl){
+                      this.imageUrl = userinfo.headimgurl;
+                  }
               }
               if(isNaN(res.data.associationInfo.length)){
                   const associationInfo = res.data.associationInfo;
@@ -252,11 +266,13 @@ export default {
                       title:associationInfo.title,
                       summary:associationInfo.summary,
                   }
-                  this.imageUrl2 = this.host+associationInfo.headimgurl;
+                  if(associationInfo.headimgurl){
+                      this.imageUrl2 = associationInfo.headimgurl;
+                  }
               }
               
           }
-          
+          this.loading = false;
       })
   }
 };
@@ -264,6 +280,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.center_userInfo{
+    margin-bottom: 80px;
+}
 .form_title{
     margin-bottom: 20px;
     .text{
@@ -276,11 +295,15 @@ export default {
         height: 1px;
     }
     .btn_save{
-        background: #7cd958;
-        color: #fff;
+        // background: #7cd958;
+        color: #7cd958;
+        border: 1px solid #7cd958;
         border-radius: 50px;
-        line-height: 30px;
-        padding: 0 20px;
+        line-height: 25px;
+        padding: 0 10px;
+        cursor: pointer;
+        background: url(../../assets/icon/icon_edit.png) 10px center / 15px 14px no-repeat;
+        padding-left: 30px;
     }
 }
   .avatar-uploader .el-upload {
@@ -294,16 +317,16 @@ export default {
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
     text-align: center;
     border: 1px solid #333;
     border-radius: 50%;
   }
  .uavatar,.uavatar2 {
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     display: block;
     border-radius: 50%;
   }
