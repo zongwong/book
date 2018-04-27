@@ -52,7 +52,7 @@
                   </div>
               </div>
               <div class="reply_box">
-                  <textarea class="reply_textarea" v-model="comment" :placeholder="placeholder"></textarea>
+                  <textarea class="reply_textarea" ref="focus" v-model="comment" :placeholder="placeholder"></textarea>
                   <el-button size="mini" type="success" @click="toReply">发送</el-button>
               </div>
           </div>
@@ -112,6 +112,8 @@ export default {
         this.comment = '';
         this.comment_id = id;
         this.placeholder = `回复 ${name}：`;
+        document.documentElement.scrollTop = document.body.offsetHeight - window.innerHeight;
+        this.$refs['focus'].focus()
       },
       onZanEvent(){
           if(this.hasThumbuped){

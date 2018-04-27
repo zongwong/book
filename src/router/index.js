@@ -11,6 +11,7 @@ import HouseDetail from '@/page/house/Detail';
 import Community from '@/page/community/Community';
 import CommunityDetail from '@/page/community/Detail';
 import Buy from '@/page/Buy';
+import orderDetail from '@/page/OrderInfo';
 import User from '@/page/user/Index';
 import Center from '@/page/user/Center';
 import history from '@/page/user/History';
@@ -30,7 +31,7 @@ import SetNick from '@/page/setnick';
 import wallet from '@/page/user/Wallet';
 import SearchResult from '@/page/SearchResult';
 import page404 from '@/page/page404';
-
+import loading from '@/page/Loading';
 Vue.use(Router);
 
 export default new Router({
@@ -85,9 +86,14 @@ export default new Router({
         name: 'post',
         component: Post,
       }, {
-        path: '/buy/:id',
+        path: '/buy/:cat/:id',
         name: 'Buy',
         component: Buy,
+        meta: { requiresAuth: true },
+      }, {
+        path: '/order/:id',
+        name: 'orderDetail',
+        component: orderDetail,
         meta: { requiresAuth: true },
       }, {
         path: '/user/:id',
@@ -179,6 +185,10 @@ export default new Router({
       name: 'setinfo',
       component: setinfo,
       meta: { requiresAuth: true },
+    },{
+      path: '/loading',
+      name: 'loading',
+      component: loading,
     },{ 
       path: '*', 
       component: page404 

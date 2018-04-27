@@ -338,6 +338,7 @@ p {
     display: block;
     height: 70px;
     width: 70px;
+    object-fit: cover;
   }
   .name{
     color: #7d7d7d;
@@ -352,7 +353,8 @@ p {
 .post_title{
   font-size: 20px;
   margin-bottom: 10px;
-  max-width: 900px;
+  // max-width: 900px;
+  // max-width: 500px;
 }
 .post_detail{
   background: #f8f8f8;
@@ -361,12 +363,13 @@ p {
   display: flex;
   align-items: center;
   .moreHide{
-    width: 760px;
+    // width: 760px;
   }
   img{
     width: 84px;
     height: 84px;
     margin-right: 20px;
+    object-fit: cover;
   }
   p{
     font-size: 17px;
@@ -431,6 +434,7 @@ p {
       width: 100%;
       height: 100%;
       border-radius: 50%;
+      object-fit: cover;
     }
     i{
       position: absolute;
@@ -459,6 +463,7 @@ p {
   .images{
     display: block;
     margin: 30px auto;
+    max-width: 90%;
   }
 }
 .topic_info{
@@ -480,6 +485,8 @@ p {
     img{
       display: block;
       width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
   .nickname{
@@ -555,6 +562,8 @@ p {
   img{
     display: block;
     width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 .comment_info{
@@ -605,6 +614,7 @@ p {
           display: block;
           width: 80px;
           height: 80px;
+          object-fit: cover;
       }
       .icon_sex{
           position: absolute;
@@ -631,6 +641,10 @@ p {
       .goods_data{
           .title{
               font-size: 20px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 500px;
           }
           .desc{
               font-size: 17px;
@@ -641,6 +655,7 @@ p {
               overflow: hidden;
               word-break: break-all;
               margin: 20px 0;
+              height: 45px;
           }
       }
   }
@@ -660,7 +675,8 @@ p {
     img{
       width: 100%;
       display: block;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
     }
   }
 }

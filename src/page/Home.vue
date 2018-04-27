@@ -61,7 +61,7 @@
               </router-link>
             </div>
             <div class="row_bd house_card-info">
-              <router-link :to="'/house'+item.lease_id">
+              <router-link :to="'/house/'+item.lease_id">
               <p class="house_card-title oneHide">{{item.title}}</p>
               <p class="house_card-desc moreHide">{{item.content}}</p>
               <div class="house_card-other">

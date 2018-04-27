@@ -1,20 +1,17 @@
 <template>
 <div>
   <my-search></my-search>
-  <div 
-    v-loading="loading"
-  >
+  <div v-loading="loading">
     <div class="buy">
         <div class="box1000">
             <div class="goods_info">
                 <div class="goods_imgs">
-                    <img  :src="goodsInfo.images[0] | headfilter" alt="封面">
+                    <img :src="goodsInfo.images" alt="封面">
                 </div>
                 <div class="goods_data">
                     <p class="title">{{goodsInfo.title}}</p>
                     <p class="desc">{{goodsInfo.summary}}</p>
                     <p class="price">{{goodsInfo.currency_symbol}} {{goodsInfo.shop_price}}</p>
-                    <!-- <p v-if="goodsInfo.on_sale==1 && cat==1" class="status">{{goodsInfo.on_sale==1?'已售':''}}</p> -->
                 </div>
             </div>
         </div>
@@ -25,45 +22,29 @@
             <p>手机：{{defaultAddress.mobilephone}}</p>
             <p>详细地址：{{defaultAddress.detail}} / {{defaultAddress.city}} / {{defaultAddress.province}} / {{defaultAddress.country}}</p>
         </div>
-        <p class="pay_title" v-if="(cat==2 && orderInfo.order_status==='order_create')">付款方式</p>
-        <div class="pay_box" v-if="(cat==2 && orderInfo.order_status==='order_create')">
+        <p class="pay_title">付款方式</p>
+        <div class="pay_box">
             <span @click="selectPayType('zfb')" :class="{on:payType=='zfb'}"><i class="icon icon_zfb"></i>支付宝</span>
             <span @click="selectPayType('wx')" :class="{on:payType=='wx'}"><i class="icon icon_wx"></i>微信</span>
             <span @click="selectPayType('paypal')" :class="{on:payType=='paypal'}"><i class="icon icon_card"></i>PayPal</span>
         </div>
-        <p class="pay_title" v-if="cat==2">订单状态</p>
-        <div class="address" v-if="cat==2">
-            <p>{{orderInfo.order_status}}</p>
-        </div>
         <div class="btns">
-            <el-button v-if="cat==1" size="small" type="success" round @click="makeOrder">立即下单</el-button>
-            <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" round @click="onCancelOrderl(orderInfo.order_id,goodsInfo.goods_id)">取消订单</el-button>
-            <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" type="success" round @click="makePay(order_id)">立即付款</el-button>
-            <el-button v-if="cat==2 && orderInfo.order_status=='order_payed'" size="small" type="success" round @click="makePay(order_id)">申请退款</el-button>
+            <el-button size="small" round @click="onCancelOrderl(orderInfo.order_id,goodsInfo.goods_id)">取消订单</el-button>
+            <el-button size="small" type="success" round @click="makeOrder">立即下单</el-button>
+            <el-button size="small" type="success" round @click="makePay">立即付款</el-button>
         </div>
     </div>
   </div>
   <!-- <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
       <my-address></my-address>
   </el-dialog> -->
-  <el-dialog
-    title="提示"
-    :visible.sync="dialogVisible"
-    @close="onPayEvent"
-    width="30%">
-    <span>这是一段信息</span>
-    <span slot="footer" class="dialog-footer">
-        <el-button @click="onPayEvent">完成支付</el-button>
-        <el-button type="primary" @click="onPayEvent">遇到问题</el-button>
-    </span>
- </el-dialog>
-
+  
 </div>
 </template>
 
 <script>
 import Search from '../components/common/Search';
-import { getGoodsInfo,createOrder,orderInfo,delOrder,payPal,addressList } from '../api/api';
+import { orderInfo,createOrder,delOrder,payPal,addressList } from '../api/api';
 import address from '../page/address/address';
 import { mapState } from 'vuex';
 import headfilter from '../utils/tools';
@@ -76,20 +57,12 @@ export default {
   data() {
     return {
       dialogTableVisible:true,
-      fullscreenLoading:false,
-      order_id:'',
-      goods_id:'',
-      goodsInfo:{
-          images:[]
-      },
+      goodsInfo:{},
       userinfo:{},
       orderInfo:{},
       defaultAddress:{},
       payType:'paypal',
-      loading:false,
-      dialogVisible:false,
-      newWin:'',
-      cat:''
+      loading:false
     }
   },
   filters:{
@@ -111,9 +84,9 @@ export default {
               goods_id:this.goodsInfo.goods_id
           }).then(res=>{
               if(res.code==200){
-                    this.newWin = window.open('/loading');
                     return res.data.order_id; 
               }else{
+                    
                     this.$alert(res.message, {
                         confirmButtonText: '确定',
                         callback: action => {
@@ -122,11 +95,20 @@ export default {
               }
           }).then(res=>{
               if(res){
-                  this.order_id = res;
                   this.makePay(res);
+              }else{
+                  this.loading = false;
               }
-              this.loading = false;
           })
+      },
+      makePay(id){
+        payPal({
+            order_id:id
+        }).then(ret=>{
+            // window.open(ret.data.approval_link);
+            
+            this.loading = false;
+        })
       },
       onCancelOrderl(id,goods_id){
         this.$confirm('此操作将永久删除该订单, 是否继续?', '提示', {
@@ -147,72 +129,29 @@ export default {
                     })
                 }
             })
-        })
+        }).catch(() => {
+        
+        });
       },
-      makePay(id){
-        if(!this.newWin){
-            this.newWin = window.open('/loading');  
-        }
-        this.dialogVisible = true;
-        payPal({
-            order_id:id
-        }).then(ret=>{
-            this.newWin.location.href = ret.data.approval_link;
-        })
-      },
-      onPayEvent(){
-        // this.$router.push({
-        //     path:`/buy/2/${this.order_id}`,
-        // })
-        window.location = `/buy/2/${this.order_id}`;
-      }
   },
   created(){
       this.loading = true;
-      this.cat = this.$route.params.cat;
-      if(this.cat==1){
-          // 未下单
-        this.goods_id = this.$route.params.id
-        // 商品信息
-        getGoodsInfo({
-            goods_id:this.$route.params.id,
-        }).then(res=>{
-            this.goodsInfo = res.data.goodsInfo;
-            this.userinfo = res.data.goodsInfo.userinfo;
-            this.$set(this.goodsInfo,'post',this.host+res.data.goodsInfo.images[0]);
-        });
-        // 默认地址
-        addressList(this.pas).then(res=>{
-            if(res.code==200){
-                const defaddr = res.data.addresslist.filter(item=>{
-                    return item.is_default == 1
-                });
-                if(defaddr.length){
-                    this.defaultAddress = defaddr[0]
-                }
-                this.loading = false;
-            }
-        })
-      }else{
-            // 已下单
-            this.order_id = this.$route.params.id
-            orderInfo({
-                order_id:this.$route.params.id,
-            }).then(res=>{
-                if(res.code==200){
-                    this.orderInfo = res.data.orderInfo;
-                    this.goodsInfo = res.data.orderInfo.goods_info;
-                    this.userinfo = res.data.orderInfo.userinfo;
-                    this.defaultAddress= res.data.orderInfo.address_info;
-                    this.loading = false;
-                }else{
-                    this.$router.push({
-                        path:'/home'
-                    })
-                }
-            });
-      }
-
+      orderInfo({
+        order_id:this.$route.params.id,
+      }).then(res=>{
+          if(res.code==200){
+              this.orderInfo = res.data.orderInfo;
+              this.goodsInfo = res.data.orderInfo.goods_info;
+              this.userinfo = res.data.orderInfo.userinfo;
+              this.defaultAddress= res.data.orderInfo.address_info;
+              this.loading = false;
+          }else{
+            this.$router.push({
+                path:'/home'
+            })
+          }
+      });
+      
   }
 };
 

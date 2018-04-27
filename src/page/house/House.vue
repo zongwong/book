@@ -11,7 +11,7 @@
           </div>
           <div class="post_data">
             <router-link :to="'/house/'+item.lease_id">
-              <p class="post_title oneHide">{{item.address}}</p>
+              <p class="post_title oneHide">{{item.title}}</p>
               <div class="post_detail">
                 <img :src="host+item.images[0]" alt="封面">
                 <p class="moreHide">{{item.content}}</p>
@@ -100,5 +100,12 @@ export default {
 .post_other .from{
   margin-left: 0;
 }
-
+.post_title{
+  max-width: 900px;
+}
+.post_detail{
+  .moreHide{
+    width: 760px;
+  }
+}
 </style>

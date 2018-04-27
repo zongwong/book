@@ -176,5 +176,12 @@ export default {
 
     }
 }
-
+.post_title{
+  max-width: 900px;
+}
+.post_detail{
+  .moreHide{
+    width: 760px;
+  }
+}
 </style>

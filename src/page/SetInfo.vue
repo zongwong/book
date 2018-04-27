@@ -10,7 +10,7 @@
               <el-form-item label="头像" prop="headimgurl">
                   <el-upload
                     class="avatar-uploader"
-                    action="/api/uploader/image"
+                    :action="action"
                     :data="{token:token}"
                     name="image"
                     :show-file-list="false"
@@ -57,6 +57,7 @@ import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import { setNickname } from '../api/api';
 import { mapMutations,mapState,mapActions } from 'vuex';
+import config from '../utils/global';
 export default {
   name: 'Setnick',
   components: {
@@ -90,7 +91,8 @@ export default {
           graduate_school:[{ required:true,trigger:'change',message:"请填写所在学校" }]
       },
       loading:false,
-      imageUrl:''
+      imageUrl:'',
+      action:config.host+'/uploader/image'
     };
   },
   computed:{

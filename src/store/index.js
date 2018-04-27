@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import actions from './action';
 import mutations from './mutations';
+import headfilter from '../utils/tools';
 Vue.use(Vuex);
 
 const state = {
@@ -30,7 +31,9 @@ const state = {
 }
 
 const getters = {
-    
+    headimgurl(state, getters){
+        return headfilter(state.userInfo.headimgurl);
+    }
 }
 
 export default new Vuex.Store({

@@ -86,7 +86,7 @@ export const orderInfo = params => Axios.get('/mall/order/info', params);
 export const deleteOrder = params => Axios.get('/mall/order/delete', params); 
 export const payPal = params => Axios.post('/mall/pay/create', params); 
 
-export const applyRefund = params => Axios.get('/mall/refund/apply', params); 
+export const applyRefund = params => Axios.post('/mall/refund/apply', params); 
 export const sendDeliver = params => Axios.post('/mall/deliver/create', params); 
 export const confirmDeliver = params => Axios.post('/mall/deliver/confirm', params); 
 export const delOrder = params => Axios.get('/mall/order/delete', params); 

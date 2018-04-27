@@ -12,6 +12,9 @@ import LangZhCN from "../static/lang/zh";
 import GoogleAuth from 'vue-google-oauth';
 import store from "./store/index";
 
+import promise from 'es6-promise';
+promise.polyfill();
+
 Vue.use(VueI18n);
 Vue.use(ElementUI);
 
@@ -20,7 +23,6 @@ Vue.locale('zh', LangZhCN);
 Vue.locale('en', LangEn);
 Vue.config.lang = 'zh';
 Vue.config.productionTip = false;
-Vue.prototype.host = 'http://api.dedele.net';
 
 
 
@@ -30,32 +32,30 @@ Vue.googleAuth().load()
 // localStorage.setItem('token','94fa6d2e8d6cf3cb9f65012f33e67a10');
 // localStorage.setItem('token','c2cf19827f84348c3f65e75325f37ddc');
 
-
+function getStorage(key){
+  return localStorage.getItem(key)||'';
+}
 
 router.beforeEach((to, from, next) => {
   // if (window.location.href.indexOf('code') >= 0){
   // }
 
-  const token = localStorage.getItem('token')||'';
-  const nickname = localStorage.getItem('nickname')||'';
-  const name = localStorage.getItem('name')||'';
   if (to.matched.some(record => record.meta.requiresAuth)) {
     
-    if(!token){
+    if(!getStorage('token')){
       next({
         path: '/login',
         query: { redirect: to.fullPath }  
       });
       
     }else{
-      
-      if(!nickname){
+      if(!getStorage('nickname')){
         next({
           path: '/setnick'
         });
       }else if(to.path!=='/setinfo'){
    
-        if(!name){
+        if(!getStorage('name')){
           next({
             path: '/setinfo'
           });
@@ -69,7 +69,7 @@ router.beforeEach((to, from, next) => {
     }
     
   }else{
-    if(to.path==='/login' && token){
+    if(to.path==='/login' && getStorage('token')){
       next({
         path: '/',
         query: { redirect: to.fullPath }  

@@ -363,6 +363,7 @@ p {
   display: block;
   height: 70px;
   width: 70px;
+  object-fit: cover;
 }
 
 .post_user .name {
@@ -379,7 +380,6 @@ p {
 .post_title {
   font-size: 20px;
   margin-bottom: 10px;
-  max-width: 900px;
 }
 
 .post_detail {
@@ -390,14 +390,11 @@ p {
   align-items: center;
 }
 
-.post_detail .moreHide {
-  width: 760px;
-}
-
 .post_detail img {
   width: 84px;
   height: 84px;
   margin-right: 20px;
+  object-fit: cover;
 }
 
 .post_detail p {
@@ -475,6 +472,7 @@ p {
   width: 100%;
   height: 100%;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .saler_info .avatar_wrap i {
@@ -506,6 +504,7 @@ p {
 .topic_content .images {
   display: block;
   margin: 30px auto;
+  max-width: 90%;
 }
 
 .topic_info {
@@ -530,6 +529,8 @@ p {
 .topic_header .topic_avatar_wrap img {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .topic_header .nickname {
@@ -613,6 +614,8 @@ p {
 .comment_avatar img {
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .comment_info {
@@ -674,6 +677,7 @@ p {
   display: block;
   width: 80px;
   height: 80px;
+  object-fit: cover;
 }
 
 .userInfoBox .avatar .icon_sex {
@@ -703,6 +707,10 @@ p {
 
 .history_item .goods_info .goods_data .title {
   font-size: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
 }
 
 .history_item .goods_info .goods_data .desc {
@@ -714,6 +722,7 @@ p {
   overflow: hidden;
   word-break: break-all;
   margin: 20px 0;
+  height: 45px;
 }
 
 .history_item .post_item {
@@ -737,7 +746,8 @@ p {
 .history_item .post_user img {
   width: 100%;
   display: block;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 }
 
 .evaluate_box {

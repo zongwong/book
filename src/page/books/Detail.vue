@@ -10,7 +10,7 @@
                   <p class="title">{{goodsInfo.title}}</p>
                   <p class="price">{{goodsInfo.currency_symbol}} {{goodsInfo.shop_price}}</p>
                   <div class="buyBtn_wrap">
-                      <router-link :to="'/buy/'+goodsInfo.goods_id"><el-button size="small" type="success" round>立即购买</el-button></router-link>
+                      <router-link :to="'/buy/1/'+goodsInfo.goods_id"><el-button size="small" type="success" round>立即购买</el-button></router-link>
                   </div>
               </div>
               <div class="saler_info">

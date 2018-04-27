@@ -19,19 +19,21 @@
                     <el-tab-pane label="商品信息">
                         <div slot="label"><span class="order_tabNav">订单信息</span></div>
                         <div class="order_tabContent">
-                            <div class="flex_row orderGoodInfo">
-                                <div class="imgBox">
-                                    <img :src="host+item.goods_info.images[0]" alt="封面">
+                            <router-link :to="'/buy/2/'+item.order_id">
+                                <div class="flex_row orderGoodInfo">
+                                    <div class="imgBox">
+                                        <img :src="host+item.goods_info.images[0]" alt="封面">
+                                    </div>
+                                    <div class="row_bd">
+                                        <p class="title">{{item.goods_info.title}}</p>
+                                        <div class="content">简介:{{item.goods_info.summary}}</div>
+                                    
+                                        <div class="content adr">收货人:{{item.address_info.recipients}}</div>
+                                        <div class="content adr">手机号:{{item.address_info.mobilephone}}</div>
+                                        <div class="content adr">收货地址:{{item.address_info.detail}} / {{item.address_info.city}} / {{item.address_info.province}} / {{item.address_info.country}}</div>
+                                    </div>
                                 </div>
-                                <div class="row_bd">
-                                    <p class="title">{{item.goods_info.title}}</p>
-                                    <div class="content">简介:{{item.goods_info.summary}}</div>
-                                
-                                    <div class="content adr">收货人:{{item.address_info.recipients}}</div>
-                                    <div class="content adr">手机号:{{item.address_info.mobilephone}}</div>
-                                    <div class="content adr">收货地址:{{item.address_info.detail}} / {{item.address_info.city}} / {{item.address_info.province}} / {{item.address_info.country}}</div>
-                                </div>
-                            </div>
+                            </router-link>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="交易状况">
