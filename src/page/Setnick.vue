@@ -5,7 +5,7 @@
       <div class="center_box">
         <p class="login_title" style="color:#7cd958;">- 请为自己设置一个昵称  -</p>
         <div class="form">
-          <el-form :model="regForm" :rules="rules" ref="regForm" label-width="0" class="demo-ruleForm">
+          <el-form :model="regForm" :rules="rules" ref="regForm" label-width="0" class="demo-ruleForm" @submit.native.prevent>
             <el-form-item label="" prop="nickname">
                 <el-input v-model="regForm.nickname" class="bordercolor"  placeholder="请输入昵称"></el-input>  
             </el-form-item>

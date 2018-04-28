@@ -11,7 +11,8 @@ import LangEn from "../static/lang/en";
 import LangZhCN from "../static/lang/zh";
 import GoogleAuth from 'vue-google-oauth';
 import store from "./store/index";
-
+import axios from 'axios';
+Vue.prototype.$http = axios;
 import promise from 'es6-promise';
 promise.polyfill();
 
@@ -21,7 +22,8 @@ Vue.use(ElementUI);
 
 Vue.locale('zh', LangZhCN);
 Vue.locale('en', LangEn);
-Vue.config.lang = 'zh';
+
+Vue.config.lang = localStorage.getItem('lang') || 'zh';
 Vue.config.productionTip = false;
 
 
@@ -39,36 +41,41 @@ function getStorage(key){
 router.beforeEach((to, from, next) => {
   // if (window.location.href.indexOf('code') >= 0){
   // }
-
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    
+  // 需要登录的路由
+  if (to.matched.some(record => record.meta.requiresAuth)) { 
+    console.log(to.path=='/setnick')
     if(!getStorage('token')){
+      // 不存在token
       next({
         path: '/login',
         query: { redirect: to.fullPath }  
       });
-      
-    }else{
-      if(!getStorage('nickname')){
-        next({
-          path: '/setnick'
-        });
-      }else if(to.path!=='/setinfo'){
-   
-        if(!getStorage('name')){
-          next({
-            path: '/setinfo'
-          });
-        }else{
-          next();
-        }
-      } else {
+    
+    }else if(!getStorage('nickname')){
+      if(to.path=='/setnick'){
         next()
+      }else{
+        next({
+          path: '/setnick' 
+        });
+      }
+
+    }else if(!getStorage('graduate_school')){
+      if(to.path=='/setinfo'){
+        next()
+      }else{
+        next({
+          path: '/setinfo'
+        });
       }
       
+    }else{
+      next()
     }
+
     
   }else{
+
     if(to.path==='/login' && getStorage('token')){
       next({
         path: '/',
@@ -77,8 +84,9 @@ router.beforeEach((to, from, next) => {
     }else{
       next();
     }
+    
   }
-  // next();
+
 });
 
 /* eslint-disable no-new */

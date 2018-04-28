@@ -60,7 +60,7 @@
                             <div class="flex_row">
                                 <div class="userInfoBox">
                                     <div class="avatar">
-                                        <img :src="host+item.userinfo.headimgurl" alt="头像"> 
+                                        <img :src="item.userinfo.headimgurl | headfilter" alt="头像"> 
                                         <i class="icon_sex"></i>
                                     </div> 
                                 </div>
@@ -146,6 +146,7 @@
 import { salelist,consumelist,applyRefund,sendDeliver,confirmDeliver,orderEvaluate,delOrder } from "../../api/api";
 import { mapState } from 'vuex';
 import pagination from '../../components/pagination';
+import headfilter from '../../utils/tools';
 export default {
   name: "Order",
   components: {
@@ -166,6 +167,9 @@ export default {
       this.cat = to.params.cat;
       this.onPageChange(1);
     }
+  },
+  filters:{
+      headfilter
   },
   computed:{
     ...mapState([
@@ -225,12 +229,24 @@ export default {
       },
       // 申请退款
       onApplyRefund(id,goods_id){
-        applyRefund({
-            order_id:id,
-        }).then(res=>{
-            if(res.code==200){
-
-            }
+        this.$confirm('您确定要申请退款吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            applyRefund({
+                order_id:id,
+            }).then(res=>{
+                if(res.code==200){
+                    this.$message({
+                        type: 'success',
+                        message: '申请成功!'
+                    });
+                    this.$router.push({
+                        path:'/home'
+                    })
+                }
+            })
         })
       },
       // 标记发货

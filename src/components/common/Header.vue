@@ -25,7 +25,7 @@
         <span>丨</span>
         <el-dropdown @command="changeLanguage">
           <span class="el-dropdown-link select">
-            中<i class="el-icon--right icon_china"></i>
+            {{lang=='zh'?'中':'EN'}}<i class="el-icon--right" :class="{'icon_china':lang=='zh','icon_english':lang=='en'}"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="zh">Chinese</el-dropdown-item>
@@ -51,7 +51,8 @@ export default {
   name: 'Header',
   data() {
     return {
-      isLogin:false
+      isLogin:false,
+      lang:'中'
     };
   },
   // watch:{
@@ -69,7 +70,9 @@ export default {
   },
   methods:{
     changeLanguage(lang){
-      Vue.config.lang = lang
+      Vue.config.lang = lang;
+      this.lang = lang;
+      localStorage.setItem('lang',lang);
     },
     ...mapActions([
       'campusAction'
@@ -85,7 +88,7 @@ export default {
     }
   },
   created() {
-    
+    this.lang = localStorage.getItem('lang') || 'zh';
   }
 };
 </script>
@@ -141,13 +144,13 @@ export default {
     background-size: 16px 16px;
   }
 }
-.icon_china{
+.icon_china,.icon_english{
   width: 28px;
   height: 19px;
   background: url(../../assets/icon/lang_zh.png) 0 center no-repeat;
   vertical-align: middle;
 }
 .icon_english{
-  background-image: url(../../assets/icon/lang_zh.png);
+  background-image: url(../../assets/icon/lang_en.png);
 }
 </style>

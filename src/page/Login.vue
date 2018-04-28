@@ -137,9 +137,11 @@ export default {
     loginSuccess(res){
       if(res.code==200){
         this.Login_MUTATION(res.data);
+        
         localStorage.setItem('token',res.data.token);
         localStorage.setItem('nickname',res.data.userinfo.nickname);
-        localStorage.setItem('name',res.data.userinfo.name);
+        localStorage.setItem('graduate_school',res.data.userinfo.name);
+
         this.$message.success(res.message);
 
         if(!res.data.userinfo.nickname){

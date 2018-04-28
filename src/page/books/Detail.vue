@@ -4,7 +4,7 @@
       <div class="box1000">
           <div class="goods_info" v-loading="loading">
               <div class="goods_imgs">
-                  <img v-if="goodsInfo.images[0]" :src="host + goodsInfo.images[0] " alt="封面">
+                  <img v-if="goodsInfo.images[0]" :src="goodsInfo.images[0] | headfilter" alt="封面">
               </div>
               <div class="goods_data">
                   <p class="title">{{goodsInfo.title}}</p>
@@ -16,7 +16,7 @@
               <div class="saler_info">
                   <div class="avatar_wrap">
                       <router-link :to="'/user/'+userinfo.user_id">
-                        <img v-if="userinfo.headimgurl" :src="host+userinfo.headimgurl" alt="用户头像">
+                        <img v-if="userinfo.headimgurl" :src="userinfo.headimgurl | headfilter" alt="用户头像">
                         <i class="saler_sex"></i>
                       </router-link>
                   </div>
@@ -36,6 +36,7 @@
 import Search from '../../components/common/Search';
 import { getGoodsInfo } from '../../api/api';
 import { mapState } from 'vuex';
+import headfilter from '../../utils/tools';
 export default {
   name: 'BookDetail',
   components: {
@@ -52,6 +53,9 @@ export default {
       },
       loading:false
     };
+  },
+  filters:{
+      headfilter
   },
   computed:{
       ...mapState([

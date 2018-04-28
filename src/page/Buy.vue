@@ -12,7 +12,7 @@
                 </div>
                 <div class="goods_data">
                     <p class="title">{{goodsInfo.title}}</p>
-                    <p class="desc">{{goodsInfo.summary}}</p>
+                    <p class="desc moreHide">{{goodsInfo.summary}}</p>
                     <p class="price">{{goodsInfo.currency_symbol}} {{goodsInfo.shop_price}}</p>
                     <!-- <p v-if="goodsInfo.on_sale==1 && cat==1" class="status">{{goodsInfo.on_sale==1?'已售':''}}</p> -->
                 </div>
@@ -36,10 +36,11 @@
             <p>{{orderInfo.order_status}}</p>
         </div>
         <div class="btns">
-            <el-button v-if="cat==1" size="small" type="success" round @click="makeOrder">立即下单</el-button>
+            <p v-if="cat==1 && goodsInfo.status>0">已售罄</p>
+            <el-button v-if="cat==1 && goodsInfo.status==0" size="small" type="success" round @click="makeOrder">立即下单</el-button>
             <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" round @click="onCancelOrderl(orderInfo.order_id,goodsInfo.goods_id)">取消订单</el-button>
             <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" type="success" round @click="makePay(order_id)">立即付款</el-button>
-            <el-button v-if="cat==2 && orderInfo.order_status=='order_payed'" size="small" type="success" round @click="makePay(order_id)">申请退款</el-button>
+            <el-button v-if="cat==2 && orderInfo.order_status=='order_payed'" size="small" type="success" round @click="onCancelOrderl(order_id)">申请退款</el-button>
         </div>
     </div>
   </div>
@@ -50,8 +51,11 @@
     title="提示"
     :visible.sync="dialogVisible"
     @close="onPayEvent"
+    :close-on-click-modal="showClose"
+    :close-on-press-escape="showClose"
+    :show-close="showClose"
     width="30%">
-    <span>这是一段信息</span>
+    <span>请在新打开的窗口完成支付操作</span>
     <span slot="footer" class="dialog-footer">
         <el-button @click="onPayEvent">完成支付</el-button>
         <el-button type="primary" @click="onPayEvent">遇到问题</el-button>
@@ -62,6 +66,7 @@
 </template>
 
 <script>
+// 商品状态0待售1下单锁定2支付3发货4收货5评价
 import Search from '../components/common/Search';
 import { getGoodsInfo,createOrder,orderInfo,delOrder,payPal,addressList } from '../api/api';
 import address from '../page/address/address';
@@ -89,7 +94,8 @@ export default {
       loading:false,
       dialogVisible:false,
       newWin:'',
-      cat:''
+      cat:'',
+      showClose:false
     }
   },
   filters:{
@@ -106,14 +112,15 @@ export default {
       },
       makeOrder(){
           this.loading = true;
+          this.newWin = window.open('/loading');
           createOrder({
               address_id:this.defaultAddress.address_id,
               goods_id:this.goodsInfo.goods_id
           }).then(res=>{
               if(res.code==200){
-                    this.newWin = window.open('/loading');
                     return res.data.order_id; 
               }else{
+                    window.close(this.newWin);
                     this.$alert(res.message, {
                         confirmButtonText: '确定',
                         callback: action => {
@@ -128,6 +135,7 @@ export default {
               this.loading = false;
           })
       },
+      // 取消订单
       onCancelOrderl(id,goods_id){
         this.$confirm('此操作将永久删除该订单, 是否继续?', '提示', {
             confirmButtonText: '确定',
@@ -142,6 +150,28 @@ export default {
                         type: 'success',
                         message: '删除成功!'
                     });
+                    this.onPageChange(1);
+                }
+            })
+        }).catch(() => {
+        
+        });
+      },
+      // 申请退款
+      onApplyRefund(id,goods_id){
+        this.$confirm('您确定要申请退款吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            applyRefund({
+                order_id:id,
+            }).then(res=>{
+                if(res.code==200){
+                    this.$message({
+                        type: 'success',
+                        message: '申请成功!'
+                    });
                     this.$router.push({
                         path:'/home'
                     })
@@ -151,13 +181,14 @@ export default {
       },
       makePay(id){
         if(!this.newWin){
-            this.newWin = window.open('/loading');  
+            this.newWin = window.open('/loading');
         }
         this.dialogVisible = true;
         payPal({
             order_id:id
         }).then(ret=>{
             this.newWin.location.href = ret.data.approval_link;
+            this.newWin = '';
         })
       },
       onPayEvent(){
@@ -165,6 +196,9 @@ export default {
         //     path:`/buy/2/${this.order_id}`,
         // })
         window.location = `/buy/2/${this.order_id}`;
+      },
+      handleClose(){
+
       }
   },
   created(){
@@ -189,6 +223,14 @@ export default {
                 });
                 if(defaddr.length){
                     this.defaultAddress = defaddr[0]
+                }else{
+                    this.$message.error('请先填写收货地址');
+                    this.$router.push({
+                        path:'/center/address',
+                        query:{
+                            redirect: this.$route.fullPath
+                        }
+                    })
                 }
                 this.loading = false;
             }
@@ -270,4 +312,13 @@ export default {
     margin: 50px 0 90px;
     text-align: right;
 }
+.goods_data{
+    .desc{
+        -webkit-line-clamp: 5;
+        height: 104px;
+        margin-bottom:22px;
+
+    }
+}
+
 </style>

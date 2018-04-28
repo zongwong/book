@@ -11,7 +11,7 @@
                 <router-link :to="'/user/'+userinfo.user_id">
                     <div class="topic_avatar flex_row">
                         <div class="topic_avatar_wrap">
-                            <img v-if="userinfo.headimgurl" :src="host+userinfo.headimgurl" alt="头像">
+                            <img v-if="userinfo.headimgurl" :src="userinfo.headimgurl | headfilter" alt="头像">
                         </div>
                         <div class="row_bd">
                             <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
@@ -22,7 +22,7 @@
               </div>
               <div class="topic_content">
                   {{postInfo.content}}
-                  <img class="images"  v-for="(url,index) in postInfo.images"  :key="index" :src="host+url" alt="图片">
+                  <img class="images"  v-for="(url,index) in postInfo.images"  :key="index" :src="url | headfilter" alt="图片">
               </div>
               <div class="topic_btn">
                   <span class="zan" @click="postZan">点赞 {{postInfo.thumbup}}</span>
@@ -32,7 +32,7 @@
               <div class="topic_comment" v-loading="loading2">
                   <div class="comment_item flex_box" v-for="item in commentList" :key="item.comment_id">
                       <div class="comment_avatar">
-                          <img :src="host+item.headimgurl" alt="头像">
+                          <img :src="item.headimgurl | headfilter" alt="头像">
                       </div>
                       <div class="row_bd">
                           <div class="comment_info">
@@ -62,6 +62,7 @@
 import Search from '../../components/common/Search';
 import { groupCommentList,groupCommentCreate,getPostInfo,groupPostZan,groupPostUnZan } from '../../api/api';
 import { mapState } from 'vuex';
+import headfilter from '../../utils/tools';
 export default {
   name: 'PostDetail',
   components: {
@@ -82,6 +83,9 @@ export default {
       loading:false,
       loading2:false,
     };
+  },
+  filters:{
+      headfilter
   },
   computed:{
       ...mapState([

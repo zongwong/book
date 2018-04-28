@@ -20,19 +20,19 @@
             <el-select v-model="category" placeholder="请选择" @change="categoryChange">
                 <el-option label="二手书籍" value="1"></el-option>
                 <el-option label="二手笔记" value="2"></el-option>
-                <el-option label="房屋租赁" value="3"></el-option>
+                <el-option v-if="type==1" label="房屋租赁" value="3"></el-option>
             </el-select>
         </div>
         <!-- <div class="list">
 
         </div> -->
     </div>
-    <div class="box1000 nopadding" v-loading="loading" style="min-height:200px;">
+    <div v-if="type==1" class="box1000 nopadding" v-loading="loading" style="min-height:200px;">
         <div class="history_item" v-if="category!=3" v-for="item in list" :key="item.goods_id">
             <router-link :to="'/goods/'+item.goods_id">
                 <div class="goods_info">
                     <div class="goods_imgs">
-                        <img :src="host+item.images[0]" alt="封面">
+                        <img :src="item.images[0] | headfilter" alt="封面">
                     </div>
                     <div class="goods_data">
                         <p class="title">{{item.title}}</p>
@@ -65,6 +65,22 @@
             </router-link>
         </div>
     </div>
+    <div v-if="type==2" class="box1000 nopadding" v-loading="loading" style="min-height:200px;">
+        <div class="history_item" v-for="item in salelist" :key="item.order_id">
+            <router-link :to="'/goods/'+item.goods_id">
+                <div class="goods_info">
+                    <div class="goods_imgs">
+                        <img v-if="item.goods_info.images[0]" :src="item.goods_info.images[0] | headfilter" alt="封面">
+                    </div>
+                    <div class="goods_data">
+                        <p class="title">{{item.goods_info.title}}</p>
+                        <p class="desc">{{item.goods_info.summary}}</p>
+                        <p class="price">{{item.goods_info.currency_symbol}}{{item.goods_info.shop_price}}</p>
+                    </div>
+                </div>
+            </router-link>
+        </div>
+    </div>
     <my-pagination
       :total="total"
       :current-page.sync="pageno"
@@ -75,7 +91,7 @@
 
 <script>
 import Search from '../../components/common/Search';
-import { getUserInfo,getLeaseList } from '../../api/api';
+import { getUserInfo,getLeaseList,salelist } from '../../api/api';
 import pagination from '../../components/pagination';
 import { mapState,mapActions } from 'vuex';
 import headfilter from '../../utils/tools';
@@ -92,6 +108,7 @@ export default {
       category:'1',
       user_id:'',
       list:[],
+      salelist:[],
       total:1,
       pageno:1,
       loading:false
@@ -147,9 +164,17 @@ export default {
                 })
             }
         }else if(this.type==2){ // 他的卖出
-            this.list = [];
-            this.total = 1;
-            this.loading = false;
+            this.$http.get('/api/mall/order/salelist',{
+                params:{
+                    user_id:this.user_id,
+                    category_id:this.category,
+                    pageno:this.pageno
+                }
+            }).then(res=>{
+                this.salelist = res.data.data.orderlist;
+                this.total = res.data.data.maxpage;
+                this.loading = false;
+            })
         }
       },
       onPageChange(pageno){

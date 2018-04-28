@@ -132,7 +132,12 @@ export default {
                     if(res.code==200){           
                         this.closeModal();
                         this.$message.success('添加成功');
-                        this.getListData()
+                        if(this.$route.query.redirect){
+                            this.$router.push({
+                                path:this.$route.query.redirect
+                            })
+                        }
+                        this.getListData();
                     }else{
                         this.$message.error(res.message);
                     }

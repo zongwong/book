@@ -2,7 +2,7 @@
   <div class="aside">
     <div class="userInfoBox">
         <div class="avatar">
-            <img v-if="userInfo.headimgurl" :src="host + userInfo.headimgurl" alt="头像">
+            <img v-if="userInfo.headimgurl" :src="headimgurl" alt="头像">
             <i class="icon_sex"></i>
         </div>
         <p class="name">{{userInfo.nickname}}</p>
@@ -15,37 +15,37 @@
             >
             <el-menu-item index="/center/info">
                 <i class="el-icon-info"></i>
-                <span slot="title">个人资料</span>
+                <span slot="title">{{$t("navs.userinfo")}}</span>
             </el-menu-item>
             <el-menu-item index="/center/wallet">
                 <i class="el-icon-info"></i>
-                <span slot="title">我的钱包</span>
+                <span slot="title">{{$t("navs.wallet")}}</span>
             </el-menu-item>
             <el-menu-item index="/center/address">
                 <i class="el-icon-info"></i>
-                <span slot="title">收货地址</span>
+                <span slot="title">{{$t("navs.address")}}</span>
             </el-menu-item>
             <el-submenu index="/center/info">
                 <template slot="title">
                     <i class="el-icon-news"></i>
-                    <span>我的发布</span>
+                    <span>{{$t("navs.publish")}}</span>
                 </template>
                 <el-menu-item-group>
-                    <el-menu-item index="/center/book"><i class="el-icon-menu"></i>二手书籍</el-menu-item>
-                    <el-menu-item index="/center/note"><i class="el-icon-menu"></i>二手笔记</el-menu-item>
-                    <el-menu-item index="/center/house"><i class="el-icon-menu"></i>房屋租赁</el-menu-item>
-                    <el-menu-item index="/center/community"><i class="el-icon-menu"></i>社团交流</el-menu-item>
+                    <el-menu-item index="/center/book"><i class="el-icon-menu"></i>{{$t("navs.book")}}</el-menu-item>
+                    <el-menu-item index="/center/note"><i class="el-icon-menu"></i>{{$t("navs.note")}}</el-menu-item>
+                    <el-menu-item index="/center/house"><i class="el-icon-menu"></i>{{$t("navs.house")}}</el-menu-item>
+                    <el-menu-item index="/center/community"><i class="el-icon-menu"></i>{{$t("navs.community")}}</el-menu-item>
                 </el-menu-item-group>
                 </el-submenu>
             </el-submenu>
 
             <el-menu-item index="/center/message">
                 <i class="el-icon-message"></i>
-                <span slot="title">我的消息</span>
+                <span slot="title">{{$t("navs.message")}}</span>
             </el-menu-item>
             <el-menu-item index="/center/history">
                 <i class="el-icon-tickets"></i>
-                <span slot="title">历史评价</span>
+                <span slot="title">{{$t("navs.history")}}</span>
             </el-menu-item>
             <!-- <el-menu-item index="/center/order">
                 <i class="el-icon-goods"></i>
@@ -54,11 +54,11 @@
             <el-submenu index="/center/order">
                 <template slot="title">
                     <i class="el-icon-goods"></i>
-                    <span>交易记录</span>
+                    <span>{{$t("navs.order")}}</span>
                 </template>
                 <el-menu-item-group>
-                    <el-menu-item index="/center/order/buy"><i class="el-icon-menu"></i>我的买入</el-menu-item>
-                    <el-menu-item index="/center/order/sale"><i class="el-icon-menu"></i>我的卖出</el-menu-item>
+                    <el-menu-item index="/center/order/buy"><i class="el-icon-menu"></i>{{$t("navs.orderbuy")}}</el-menu-item>
+                    <el-menu-item index="/center/order/sale"><i class="el-icon-menu"></i>{{$t("navs.ordersale")}}</el-menu-item>
                 </el-menu-item-group>
                 </el-submenu>
             </el-submenu>
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState,mapGetters } from 'vuex';
 export default {
   name: 'Aside',
   data() {
@@ -86,6 +86,9 @@ export default {
     };
   },
   computed:{
+      ...mapGetters([
+          'headimgurl'
+      ]),
       ...mapState([
           'host',
           'userInfo'

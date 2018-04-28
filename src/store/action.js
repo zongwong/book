@@ -4,7 +4,7 @@ export default {
     campusAction({ commit }){
         return new Promise((resolve, reject) => {
             getCampus({}).then((res)=>{
-                commit('CampuList_MUTATION',{ list: res.data[1]})
+                commit('CampuList_MUTATION',{ list: res.data.campuslist})
                 resolve(res.data)
             })
         }) 

@@ -22,7 +22,7 @@ export default {
         state.userInfo.country = payload.country
         state.userInfo.mobilephone = payload.mobilephone
         state.userInfo.headimgurl = payload.headimgurl
-        localStorage.setItem('name',payload.name);
+        localStorage.setItem('graduate_school',payload.graduate_school);
         
     },
     [types.getUserInfo](state,payload){

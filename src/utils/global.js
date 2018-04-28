@@ -1,4 +1,4 @@
 export default {
-    // host:'http://api.dedele.net'
-    host:'/api',
+    host:'http://api.risuntechs.com'
+    // host:'/api',
 }

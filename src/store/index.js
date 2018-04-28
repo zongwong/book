@@ -6,7 +6,7 @@ import headfilter from '../utils/tools';
 Vue.use(Vuex);
 
 const state = {
-    host:'http://api.dedele.net',
+    host:'http://api.risuntechs.com',
     token: localStorage.getItem('token')||'',
     school:'',
     userInfo:{

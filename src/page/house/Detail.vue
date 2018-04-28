@@ -11,7 +11,7 @@
                 <router-link :to="'/user/'+userinfo.user_id">
                     <div class="topic_avatar flex_row"> 
                         <div class="topic_avatar_wrap">
-                            <img :src="host+userinfo.headimgurl" alt="头像">
+                            <img :src="userinfo.headimgurl | headfilter" alt="头像">
                         </div>
                         <div class="row_bd">
                             <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
@@ -22,7 +22,7 @@
               </div>
               <div class="topic_content">
                   {{leaseInfo.content}}
-                  <img class="images"  v-for="(url,index) in leaseInfo.images"  :key="index" :src="host+url" alt="图片">
+                  <img class="images"  v-for="(url,index) in leaseInfo.images"  :key="index" :src="url | headfilter" alt="图片">
               </div>
               <div class="topic_btn">
                   <span class="zan" @click="onZanEvent">点赞 {{leaseInfo.thumbup}}</span>
@@ -33,7 +33,7 @@
                   <div class="comment_item flex_box" v-for="item in commentList" :key="item.comment_id">
                       <div class="comment_avatar">
                           <router-link :to="'/user/'+item.user_id">
-                            <img :src="host+item.headimgurl" alt="头像">
+                            <img :src="item.headimgurl | headfilter" alt="头像">
                           </router-link>
                       </div>
                       <div class="row_bd">
@@ -64,6 +64,7 @@
 import Search from '../../components/common/Search';
 import { getLeaseInfo,leaseCommentList,leaseCommentCreate,leaseUnZan,leaseZan } from '../../api/api';
 import { mapState } from 'vuex';
+import headfilter from '../../utils/tools';
 export default {
   name: 'HouseDetail',
   components: {
@@ -84,6 +85,9 @@ export default {
       loading:false,
       loading2:false
     };
+  },
+  filters:{
+      headfilter
   },
   computed:{
       ...mapState([

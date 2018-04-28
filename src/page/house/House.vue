@@ -5,7 +5,7 @@
         <div class="post_item" v-for="item in list" :key="item.lease_id">
           <div class="post_user">
             <router-link :to="'/user/'+item.userinfo.user_id">
-            <img :src="host+item.userinfo.headimgurl" alt="用户头像">
+            <img :src="item.userinfo.headimgurl | headfilter" alt="用户头像">
             <p class="name oneHide">{{item.userinfo.nickname}}</p>
             </router-link>
           </div>
@@ -13,7 +13,7 @@
             <router-link :to="'/house/'+item.lease_id">
               <p class="post_title oneHide">{{item.title}}</p>
               <div class="post_detail">
-                <img :src="host+item.images[0]" alt="封面">
+                <img :src="item.images[0] | headfilter" alt="封面">
                 <p class="moreHide">{{item.content}}</p>
               </div>
               <div class="post_other">
@@ -39,6 +39,7 @@ import Search from '../../components/common/Search';
 import Pagination from '../../components/pagination';
 import { getLeaseList } from '../../api/api';
 import { mapState,mapActions } from 'vuex';
+import headfilter from '../../utils/tools';
 export default {
   name: 'House',
   components: {
@@ -58,6 +59,9 @@ export default {
       },
       loading:false
     };
+  },
+  filters:{
+    headfilter
   },
   computed:{
     ...mapState([

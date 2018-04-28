@@ -7,7 +7,7 @@
                 <div class="topic_info cm_info" >
                     <div class="topic_header flex_row">
                         <div class="row_bd flex_row cm_data">
-                            <img v-if="info.headimgurl" :src="host+info.headimgurl">
+                            <img v-if="info.headimgurl" :src="info.headimgurl | headfilter">
                             <div class="row_bd cm_content">
                                 <p class="title oneHide">{{info.title}}</p>
                                 <p class="desc moreHide">{{info.summary}}</p>
@@ -16,7 +16,7 @@
                         <router-link :to="'/user/'+userinfo.user_id">
                             <div class="topic_avatar flex_row">
                                 <div class="topic_avatar_wrap">
-                                    <img v-if="userinfo.headimgurl" :src="host+userinfo.headimgurl" alt="头像">
+                                    <img v-if="userinfo.headimgurl" :src="userinfo.headimgurl | headfilter" alt="头像">
                                 </div>
                                 <div class="">
                                     <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
@@ -34,7 +34,7 @@
                 <div class="post_item" v-for="item in postList" :key="item.post_id">
                     <router-link :to="'/user/'+item.userinfo.user_id">
                         <div class="post_user">
-                            <img :src="host+item.userinfo.headimgurl" alt="头像">
+                            <img :src="item.userinfo.headimgurl | headfilter" alt="头像">
                             <p class="name oneHide">{{item.userinfo.nickname}}</p>
                         </div>
                     </router-link>
@@ -42,7 +42,7 @@
                         <router-link :to="'/community/post/'+item.post_id">
                             <p class="post_title oneHide">{{item.title}}</p>
                             <div class="post_detail">
-                            <img :src="host+item.images[0]" alt="封面">
+                            <img :src="item.images[0] | headfilter" alt="封面">
                             <p class="moreHide">{{item.content}}</p>
                             </div>
                             <div class="post_other">
@@ -74,6 +74,7 @@ import Search from '../../components/common/Search';
 import pagination from '../../components/pagination';
 import { getgroupInfo,groupPostList } from '../../api/api';
 import { mapState } from 'vuex';
+import headfilter from '../../utils/tools';
 export default {
   name: 'CommunityDetail',
   components: {
@@ -91,6 +92,9 @@ export default {
       loading:false,
       loading2:false
     };
+  },
+  filters:{
+      headfilter
   },
   computed:{
       ...mapState([

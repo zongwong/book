@@ -6,6 +6,55 @@ module.exports = {
     book: "Books",
     community: "Community",
     school:"School",
-    login: "Login"
+    login: "Login",
+    userinfo:'USER INFO',
+    cardinfo:'CARD INFO',
+    communityinfo:'COMMUNITY INFO',
+    wallet:'wallet',
+    address:'address',
+    publish:'publish',
+    book:'2hand books',
+    note:'2hand notes',
+    house:'house',
+    community:'community',
+    message:'message',
+    history:'history',
+    order:'order Record',
+    orderbuy:'Buy',
+    ordersale:'Sale',
+  },
+  search: "搜索",
+  user: {
+
+  },
+  form:{
+      name:"name",
+      sex:"sex",
+      contory:"contory",
+      address:"address",
+      phone:"phone",
+      code:"code",
+      send:"send",
+      loginBtn:"loginBtn",
+      loginTpis:"loginTpis",
+      edit:"edit",
+      school:'school',
+      cardholder:'cardholder',
+      cardno:'cardno',
+      safeno:'safeno',
+      cpost:'post',
+      cname:'name',
+      cdesc:'desc',
+      
+  },
+  show:{
+      from:"from",
+      comment:"comment",
+      zan:"like",
+      replay:"replay",
+      send:"send",
+  },
+  msg:{
+
   }
 }

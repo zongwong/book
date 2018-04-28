@@ -31,6 +31,7 @@ import SetNick from '@/page/setnick';
 import wallet from '@/page/user/Wallet';
 import SearchResult from '@/page/SearchResult';
 import page404 from '@/page/page404';
+import message from '@/page/user/Message';
 import loading from '@/page/Loading';
 Vue.use(Router);
 
@@ -169,7 +170,11 @@ export default new Router({
           path: '/center/wallet',
           name: 'wallet',
           component: wallet,
-        }]
+        }, {
+          path: '/center/message',
+          name: 'message',
+          component: message,
+        }, ]
       }]
     }, {
       path: '/login',

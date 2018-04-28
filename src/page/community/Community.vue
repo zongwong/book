@@ -7,7 +7,7 @@
           <div class="flex_row">
             <div class="imgbox">
               <router-link :to="'/community/'+item.association_id">
-                <img :src="host+item.headimgurl" alt="封面">
+                <img :src="item.headimgurl | headfilter" alt="封面">
               </router-link>
             </div>
           </div>
@@ -21,7 +21,7 @@
             <router-link :to="'/community/post/'+post.post_id">
             <div class="flex_row">
               <div class="imgbox">
-                <img :src="host + post.images[0]" alt="封面">
+                <img :src="post.images[0] | headfilter" alt="封面">
               </div>
               <div class="row_bd club_post-info">
                 <p class="flex_row">
@@ -63,6 +63,7 @@ import Search from '../../components/common/Search';
 import { getgroupList } from '../../api/api';
 import { mapState } from 'vuex';
 import pagination from '../../components/pagination';
+import headfilter from '../../utils/tools';
 export default {
   name: 'Community',
   components: {
@@ -76,6 +77,9 @@ export default {
       pageno:1,
       loading:false
     };
+  },
+  filters:{
+    headfilter
   },
   computed:{
     ...mapState([

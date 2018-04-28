@@ -101,3 +101,8 @@ export const consumelist = params => Axios.get('/mall/order/consumelist', params
 export const wallet = params => Axios.get('/wallet/balance', params); 
 export const walletList = params => Axios.get('/wallet/cashflow', params); 
 export const walletApply= params => Axios.get('/wallet/withdraw', params);
+
+// 消息
+export const msgList = params => Axios.get('/message/getlist', params); 
+export const msgDel= params => Axios.post('/message/delete', params);
+
