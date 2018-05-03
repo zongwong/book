@@ -1,24 +1,8 @@
 <template>
   <div class="">
       <my-search></my-search>
-      <!-- <div class="sort_box">
-        <div class="sort_type" :class="{on:pas.orderby=='click'}" @click="onOrderByChange('click')">
-          按热度排序
-          <div class="caret-wrapper">
-            <i class="sort-caret ascending" :class="{on:pas.orderby=='click'&&pas.sort=='desc'}" @click.stop="onSortChange('desc')"></i>
-            <i class="sort-caret descending" :class="{on:pas.orderby=='click'&&pas.sort=='asc'}" @click.stop="onSortChange('asc')"></i>
-          </div>
-        </div>
-        <div class="sort_type" :class="{on:pas.orderby=='price'}" @click="onOrderByChange('price')">
-          按价格排序
-          <div class="caret-wrapper">
-            <i class="sort-caret ascending" :class="{on:pas.orderby=='price'&&pas.sort=='desc'}" @click.stop="onSortChange('desc')"></i>
-            <i class="sort-caret descending" :class="{on:pas.orderby=='price'&&pas.sort=='asc'}" @click.stop="onSortChange('asc')"></i>
-          </div>
-        </div>
-      </div> -->
-      <p class="searchTitle">搜索结果</p>
-      <div class="container container1000" v-loading="loading">
+      <p class="searchTitle">{{$t('show.result')}}</p>
+      <div v-if="list.length>0" class="container container1000" v-loading="loading">
         <div class="flex_box">
           
           <div class="good_card" v-for="item in list" :key="item.goods_id">
@@ -27,17 +11,43 @@
                 <img :src="host+item.images[0]" alt="商品封面">
               </div>
               <p class="good_card-title oneHide">{{item.title}}</p>
-              <p class="good_card-price">￥{{item.shop_price}}</p>
+              <p class="good_card-price">{{item.currency_symbol}} {{item.shop_price}}</p>
             </router-link>
           </div>
 
         </div>
       </div>
-      <my-pagination
+
+      <div v-if="postList.length>0" class="post_box" v-loading="loading">
+        <div class="post_item" v-for="item in postList" :key="item.lease_id">
+          <div class="post_user">
+            <router-link :to="'/user/'+item.userinfo.user_id">
+            <img :src="item.userinfo.headimgurl | headfilter" alt="用户头像">
+            <p class="name oneHide">{{item.userinfo.nickname}}</p>
+            </router-link>
+          </div>
+          <div class="post_data">
+            <router-link :to="'/house/'+item.lease_id">
+              <p class="post_title oneHide">{{item.title}}</p>
+              <div class="post_detail">
+                <img :src="item.images[0] | headfilter" alt="封面">
+                <p class="moreHide">{{item.content}}</p>
+              </div>
+              <div class="post_other">
+                <span class="from">{{item.updated_at}}</span>
+                <span class="zan">{{$t('show.zan')}} {{item.thumbup}}</span>
+                <span class="hr">丨</span>
+                <span class="comment">{{$t('show.comment')}} {{item.comment}}</span>
+              </div>
+            </router-link>
+          </div>
+        </div>
+      </div>
+      <!-- <my-pagination
         :total="total"
         :current-page.sync="pas.pageno"
         @page-change="onPageChange"
-      ></my-pagination>
+      ></my-pagination> -->
 
   </div>
 </template>
@@ -48,7 +58,8 @@ import Footer from '../components/common/Footer';
 import Search from '../components/common/Search';
 import Pagination from '../components/pagination';
 import { mapState,mapMutations, mapActions } from 'vuex';
-import { searchGoods } from '../api/api';
+import { searchGoods,getLeaseList,groupPostList } from '../api/api';
+import headfilter from '../utils/tools';
 export default {
   name: 'SearchResult',
   components: {
@@ -57,12 +68,17 @@ export default {
     'my-header': Header,
     'my-footer': Footer,
   },
+  filters:{
+    headfilter
+  },
   computed:{
    
   },
   data() {
     return {
       list:[],
+      postList:[],
+      postList2:[],
       loading:false,
       total:1,
       pas:{
@@ -105,36 +121,29 @@ export default {
       this.getListData();
     },
     getListData() {
-      // orderby 排序依据] 热度click 价格 price
-      // [sort 排序方式] asc 升序 desc 降序
-      // 默认以id降序排序
-      // [campus_id]校区id
       this.loading = true;
-      this.pas.campus_id = this.nowCampu.campus_id || '';
       searchGoods(this.pas).then(res=>{
         this.list = res.data.goodslist;
         this.total = res.data.maxpage;
         this.loading = false;
       })
     },
-    onOrderByChange(type){
-      if(this.pas.orderby === type){
-        this.pas.sort = this.pas.sort==='desc'?'asc':'desc';
-      }else{
-        this.pas.orderby = type;
-      }
-      this.pas.pageno = 1;
-      this.getListData();
+    onGetLeaseList(){
+      getLeaseList(this.pas).then(res=>{
+        this.postList = this.postList.concat(res.data.leaseList);
+      })
     },
-    onSortChange(type){
-      this.pas.sort = type;
-      this.pas.pageno = 1;
-      this.getListData();
-    },
+    onGetPostInfo(){
+      groupPostList(this.pas).then(res=>{
+        this.postList2 = this.postList2.concat(res.data.leaseList);
+      })
+    }
   },
   created(){
     this.pas.q = this.$route.query.word;
-    this.getListData()
+    this.getListData();
+    this.onGetLeaseList();
+    this.onGetPostInfo();
   }
 };
 
@@ -161,5 +170,20 @@ export default {
   margin-top: 30px;
   font-size: 28px;
   font-weight: bold;
+}
+.post_box{
+  margin-bottom: 40px;
+  min-height: 200px;
+}
+.post_other .from{
+  margin-left: 0;
+}
+.post_title{
+  max-width: 900px;
+}
+.post_detail{
+  .moreHide{
+    width: 760px;
+  }
 }
 </style>

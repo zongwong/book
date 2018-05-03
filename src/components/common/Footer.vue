@@ -12,8 +12,10 @@
               <el-input
                 class="footer-search"
                 size="mini"
-                placeholder="请输入内容"
+                v-model="word"
+                :placeholder="$t('tips.search')"
                 suffix-icon="el-icon-search"
+                @keyup.enter.native="searchEvent"
                >
               </el-input>
             </div>
@@ -35,10 +37,20 @@ export default {
   name: 'Footer',
   data() {
     return {
-      
+      word:''
     };
   },
-  
+  methods:{
+    searchEvent(){
+      this.$router.push({
+        path:'/search',
+        query:{
+          word:this.word
+        }
+      })
+      this.word = '';
+    }
+  }
 };
 </script>
 

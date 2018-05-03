@@ -21,26 +21,26 @@
     </div>
     <div class="box1000">
         <div class="address">
-            <p>收件人：{{defaultAddress.recipients}}</p>
-            <p>手机：{{defaultAddress.mobilephone}}</p>
-            <p>详细地址：{{defaultAddress.detail}} / {{defaultAddress.city}} / {{defaultAddress.province}} / {{defaultAddress.country}}</p>
+            <p>{{$t('form.recipients')}}：{{defaultAddress.recipients}}</p>
+            <p>{{$t('form.phone')}}：{{defaultAddress.mobilephone}}</p>
+            <p>{{$t('form.address')}}：{{defaultAddress.detail}} / {{defaultAddress.city}} / {{defaultAddress.province}} / {{defaultAddress.country}}</p>
         </div>
-        <p class="pay_title" v-if="(cat==2 && orderInfo.order_status==='order_create')">付款方式</p>
+        <p class="pay_title" v-if="(cat==2 && orderInfo.order_status==='order_create')">{{$t('show.payType')}}</p>
         <div class="pay_box" v-if="(cat==2 && orderInfo.order_status==='order_create')">
-            <span @click="selectPayType('zfb')" :class="{on:payType=='zfb'}"><i class="icon icon_zfb"></i>支付宝</span>
-            <span @click="selectPayType('wx')" :class="{on:payType=='wx'}"><i class="icon icon_wx"></i>微信</span>
+            <!-- <span @click="selectPayType('zfb')" :class="{on:payType=='zfb'}"><i class="icon icon_zfb"></i>支付宝</span> -->
+            <!-- <span @click="selectPayType('wx')" :class="{on:payType=='wx'}"><i class="icon icon_wx"></i>微信</span> -->
             <span @click="selectPayType('paypal')" :class="{on:payType=='paypal'}"><i class="icon icon_card"></i>PayPal</span>
         </div>
-        <p class="pay_title" v-if="cat==2">订单状态</p>
+        <p class="pay_title" v-if="cat==2">{{$t('show.orderState')}}</p>
         <div class="address" v-if="cat==2">
-            <p>{{orderInfo.order_status}}</p>
+            <p>{{orderStatus(orderInfo.order_status)}}</p>
         </div>
         <div class="btns">
-            <p v-if="cat==1 && goodsInfo.status>0">已售罄</p>
-            <el-button v-if="cat==1 && goodsInfo.status==0" size="small" type="success" round @click="makeOrder">立即下单</el-button>
-            <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" round @click="onCancelOrderl(orderInfo.order_id,goodsInfo.goods_id)">取消订单</el-button>
-            <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" type="success" round @click="makePay(order_id)">立即付款</el-button>
-            <el-button v-if="cat==2 && orderInfo.order_status=='order_payed'" size="small" type="success" round @click="onCancelOrderl(order_id)">申请退款</el-button>
+            <p v-if="cat==1 && goodsInfo.status>0">{{$t('show.saleOut')}}</p>
+            <el-button v-if="cat==1 && goodsInfo.status==0" size="small" type="success" round @click="makeOrder">{{$t('btn.buy')}}</el-button>
+            <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" round @click="onCancelOrderl(orderInfo.order_id,goodsInfo.goods_id)">{{$t('btn.cancelOrder')}}</el-button>
+            <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" type="success" round @click="makePay(order_id)">{{$t('btn.payNow')}}</el-button>
+            <el-button v-if="cat==2 && orderInfo.order_status=='order_payed'" size="small" type="success" round @click="onCancelOrderl(order_id)">{{$t('btn.refund')}}</el-button>
         </div>
     </div>
   </div>
@@ -48,17 +48,17 @@
       <my-address></my-address>
   </el-dialog> -->
   <el-dialog
-    title="提示"
+    :title="$t('show.tips')"
     :visible.sync="dialogVisible"
     @close="onPayEvent"
     :close-on-click-modal="showClose"
     :close-on-press-escape="showClose"
     :show-close="showClose"
     width="30%">
-    <span>请在新打开的窗口完成支付操作</span>
+    <span>{{$t('msg.pay')}}</span>
     <span slot="footer" class="dialog-footer">
-        <el-button @click="onPayEvent">完成支付</el-button>
-        <el-button type="primary" @click="onPayEvent">遇到问题</el-button>
+        <el-button @click="onPayEvent">{{$t('btn.payed')}}</el-button>
+        <el-button type="primary" @click="onPayEvent">{{$t('btn.obstacle')}}</el-button>
     </span>
  </el-dialog>
 
@@ -99,14 +99,41 @@ export default {
     }
   },
   filters:{
-      headfilter
+      headfilter,
   },
   computed:{
     ...mapState([
         'host'
-    ])
+    ]),
+
   },
   methods:{
+    orderStatus(status){
+        switch(status){
+            case 'order_payed':
+            return this.$t('order.order_payed');
+                case 'order_create':
+            return this.$t('order.order_create');
+                case 'refund_apply':
+            return this.$t('order.refund_apply');
+                case 'order_refund':
+            return this.$t('order.order_refund');
+                case 'order_canceled':
+            return this.$t('order.order_canceled');
+                case 'goods_delivered':
+            return this.$t('order.goods_delivered');
+                case 'goods_received':
+            return this.$t('order.goods_received');
+                case 'buyer_evaluated':
+            return this.$t('order.buyer_evaluated');
+            case 'seller_evaluated':
+            return this.$t('order.seller_evaluated');
+                case 'both_evaluated':
+            return this.$t('order.both_evaluated');
+                case 'outoftime':
+            return this.$t('order.outoftime');
+        }
+      },
       selectPayType(type){
           this.payType = type;
       },

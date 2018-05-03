@@ -3,10 +3,10 @@
     <div class="userInfoBox">
         <div class="avatar">
             <img v-if="userInfo.headimgurl" :src="headimgurl" alt="头像">
-            <i class="icon_sex"></i>
+            <i class="icon_sex" :class="{'icon_man':userInfo.sex==1}"></i>
         </div>
         <p class="name">{{userInfo.nickname}}</p>
-        <p>毕业于：{{userInfo.graduate_school}}</p>
+        <p>{{$t('show.graduated')}}：{{userInfo.graduate_school}}</p>
     </div>
     <div class="aside_nav">
         <el-menu
@@ -47,10 +47,6 @@
                 <i class="el-icon-tickets"></i>
                 <span slot="title">{{$t("navs.history")}}</span>
             </el-menu-item>
-            <!-- <el-menu-item index="/center/order">
-                <i class="el-icon-goods"></i>
-                <span slot="title">交易记录</span>
-            </el-menu-item> -->
             <el-submenu index="/center/order">
                 <template slot="title">
                     <i class="el-icon-goods"></i>
@@ -63,15 +59,6 @@
                 </el-submenu>
             </el-submenu>
         </el-menu>
-
-
-
-        <!-- <router-link to="/center/"><p>个人资料</p></router-link>
-        <router-link to="/center/"><p>我的发布</p></router-link>
-        <router-link to="/center/"><p>我的消息</p></router-link>
-        <router-link to="/center/history"><p>历史评价</p></router-link>
-        <router-link to="/center/order"><p>交易记录</p></router-link> -->
-        <!-- <span></span> -->
     </div>
   </div>
 </template>

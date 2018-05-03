@@ -1,46 +1,46 @@
 <template>
 <div class="publish nopadding" v-loading="loading">
-    <div class="pbbtn_box"><span @click="addressFormOpen">新增地址</span></div>
+    <div class="pbbtn_box"><span @click="addressFormOpen">{{$t('form.addAddress')}}</span></div>
     <div class="history_item" v-for="(item,index) in list" :key="item.address_id">
         <div class="goods_info" >
             <div class="goods_data">
-                <p class="desc">收件人：{{item.recipients}} - {{item.mobilephone}}</p>
-                <p class="desc">详细地址：{{item.detail}} / {{item.city}} / {{item.province}} / {{item.country}}</p>
+                <p class="desc">{{$t('form.recipients')}}：{{item.recipients}} - {{item.mobilephone}}</p>
+                <p class="desc">{{$t('form.address')}}：{{item.detail}} / {{item.city}} / {{item.province}} / {{item.country}}</p>
             </div>
             <!-- <div class="close"></div> -->
         </div>
         <div class="btnsBox">
-            <span class="defaultAdr" @click="setDefault(item)"><i v-if="item.is_default==1" class="el-icon-success"></i>设置默认</span><span @click="editAdr(item.address_id,index)" class="btn_edit">编辑</span>
+            <span class="defaultAdr" @click="setDefault(item)"><i v-if="item.is_default==1" class="el-icon-success"></i>{{item.is_default==1?$t('form.isdefault'):$t('form.setdefault')}}</span><span @click="editAdr(item.address_id,index)" class="btn_edit">{{$t('btn.edit')}}</span>
         </div>
     </div>
 
-    <el-dialog title="收货地址" :modal="modal" :visible.sync="dialogVisible" width="500px">
+    <el-dialog :title="$t('show.readr')" :modal="modal" :visible.sync="dialogVisible" width="500px">
         <el-form ref="addressForm" :rules="addressRule" :model="addressForm" label-width="80px">
-            <el-form-item label="收件人" prop="name">
+            <el-form-item :label="$t('form.recipients')" prop="name">
                 <el-input v-model="addressForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="手机号" prop="phone">
+            <el-form-item :label="$t('form.phone')" prop="phone">
                 <el-input v-model="addressForm.phone"></el-input>
             </el-form-item>
-            <el-form-item label="city" prop="city">
+            <el-form-item :label="$t('form.city')" prop="city">
                 <el-input v-model="addressForm.city"></el-input>
             </el-form-item>
-            <el-form-item label="state/省" prop="state">
+            <el-form-item :label="$t('form.state')" prop="state">
                 <el-input v-model="addressForm.state"></el-input>
             </el-form-item>
-            <el-form-item label="country" prop="country">
+            <el-form-item :label="$t('form.country')" prop="country">
                 <el-input v-model="addressForm.country"></el-input>
             </el-form-item>
-            <el-form-item label="收货地址" prop="address">
+            <el-form-item :label="$t('form.address')" prop="address">
                 <el-input v-model="addressForm.address"></el-input>
             </el-form-item>
-            <el-form-item label="default" prop="isdefault">
+            <el-form-item :label="$t('form.setdefault')" prop="isdefault">
                 <el-switch v-model="addressForm.isdefault"></el-switch>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="closeModal('addressForm')">取 消</el-button>
-            <el-button type="primary" @click="onSubmit('addressForm')">确 定</el-button>
+            <el-button @click="closeModal('addressForm')">{{$t('btn.cancel')}}</el-button>
+            <el-button type="primary" @click="onSubmit('addressForm')">{{$t('btn.sure')}}</el-button>
         </span>
     </el-dialog>
 

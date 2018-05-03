@@ -1,6 +1,6 @@
 <template>
 <div class="publish" v-loading="loading">
-    <div class="pbbtn_box"><router-link to="/center/publishhouse"><span>发布租赁</span></router-link></div>
+    <div class="pbbtn_box"><router-link to="/center/publishhouse"><span>{{$t('btn.publishlease')}}</span></router-link></div>
     <div class="history_item" v-for="(item,index) in list" :key="item.lease_id">
         <div class="post_item">
           <router-link :to="'/house/'+item.lease_id">
@@ -18,7 +18,7 @@
               <span class="from"></span>
               <!-- <span class="zan">点赞 {{item.thumbup}}</span> -->
               <!-- <span class="hr">丨</span> -->
-              <div class="btn_edit"><router-link :to="'/center/publishhouse/'+item.lease_id">编辑</router-link></div>
+              <div class="btn_edit"><router-link :to="'/center/publishhouse/'+item.lease_id">{{$t('btn.edit')}}</router-link></div>
             </div>
           </div>
           <div class="close" @click="onDelGoods(item.lease_id,index)"></div>

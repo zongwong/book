@@ -484,6 +484,10 @@ p {
   background: url(../icon/sex_woman.png) center/100% no-repeat;
 }
 
+.saler_info .avatar_wrap i.icon_man {
+  background-image: url(../icon/sex_man.png);
+}
+
 .goods_intro {
   color: #7cd958;
   font-weight: bold;
@@ -544,11 +548,15 @@ p {
 }
 
 .topic_header .icon_sex {
-  background: url(../icon/sex_w.png) center/100% no-repeat;
+  background: url(../icon/sex_woman.png) center/100% no-repeat;
   display: inline-block;
   vertical-align: middle;
   width: 11px;
   height: 16px;
+}
+
+.topic_header .icon_sex.icon_man {
+  background-image: url(../icon/sex_man.png);
 }
 
 .topic_header .school {
@@ -687,6 +695,10 @@ p {
   width: 20px;
   height: 20px;
   background: url(../icon/sex_woman.png) center/100% no-repeat;
+}
+
+.userInfoBox .avatar .icon_sex.icon_man {
+  background-image: url(../icon/sex_man.png);
 }
 
 .history_item {

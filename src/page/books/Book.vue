@@ -3,14 +3,14 @@
       <my-search></my-search>
       <div class="sort_box">
         <div class="sort_type" :class="{on:pas.orderby=='click'}" @click="onOrderByChange('click')">
-          按热度排序
+          {{$t('show.sortHot')}}
           <div class="caret-wrapper">
             <i class="sort-caret ascending" :class="{on:pas.orderby=='click'&&pas.sort=='desc'}" @click.stop="onSortChange('desc')"></i>
             <i class="sort-caret descending" :class="{on:pas.orderby=='click'&&pas.sort=='asc'}" @click.stop="onSortChange('asc')"></i>
           </div>
         </div>
         <div class="sort_type" :class="{on:pas.orderby=='price'}" @click="onOrderByChange('price')">
-          按价格排序
+          {{$t('show.sortPrice')}}
           <div class="caret-wrapper">
             <i class="sort-caret ascending" :class="{on:pas.orderby=='price'&&pas.sort=='desc'}" @click.stop="onSortChange('desc')"></i>
             <i class="sort-caret descending" :class="{on:pas.orderby=='price'&&pas.sort=='asc'}" @click.stop="onSortChange('asc')"></i>
@@ -26,7 +26,7 @@
                 <img :src="host+item.images[0]" alt="商品封面">
               </div>
               <p class="good_card-title oneHide">{{item.title}}</p>
-              <p class="good_card-price">￥{{item.shop_price}}</p>
+              <p class="good_card-price">{{item.currency_symbol}} {{item.shop_price}}</p>
             </router-link>
           </div>
 

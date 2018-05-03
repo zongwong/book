@@ -10,18 +10,18 @@
           @command="handleCommand"
         >
           <span class="el-dropdown-link select">
-            {{$t("navs.school")}}: {{nowCampu.campus_name}}<i class="el-icon-arrow-down el-icon--right green_arrow"></i>
+            {{$t("navs.school")}}: {{lang=='zh'?nowCampu.campus_name:nowCampu.eng_name}}<i class="el-icon-arrow-down el-icon--right green_arrow"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <template v-for="item in campuList" >
-              <el-dropdown-item :command="item" :key="item.campus_id">{{item.campus_name}}</el-dropdown-item>
+              <el-dropdown-item :command="item" :key="item.campus_id">{{lang=='zh'?item.campus_name:item.eng_name}}</el-dropdown-item>
             </template>
           </el-dropdown-menu>
         </el-dropdown>
         <span>丨</span>
         <router-link v-if="token" to="/center"><span class="user name">{{userInfo.nickname}}</span></router-link>
         <router-link v-if="!token" to="/login"><span class="user">{{$t("navs.login")}}</span></router-link>
-        <span v-if="token" class="user" @click="LoginOut_MUTATION">退出</span>
+        <span v-if="token" class="user" @click="LoginOut_MUTATION">{{$t('show.out')}}</span>
         <span>丨</span>
         <el-dropdown @command="changeLanguage">
           <span class="el-dropdown-link select">
@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       isLogin:false,
-      lang:'中'
+      lang:''
     };
   },
   // watch:{

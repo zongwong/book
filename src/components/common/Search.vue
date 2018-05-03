@@ -2,10 +2,10 @@
   <div class="search_bar" :class="className">
     <div class="search_wrap clearfix">
       <div class="search_left">
-        <el-input placeholder="请输入内容" v-model="word" @keyup.enter.native="searchEvent"></el-input>
+        <el-input :placeholder="$t('tips.search')" v-model="word" @keyup.enter.native="searchEvent"></el-input>
       </div>
       <div class="search_right">
-        <el-button class="auto-width" type="success" icon="el-icon-search"  @click="searchEvent">搜索</el-button>
+        <el-button class="auto-width" type="success" icon="el-icon-search"  @click="searchEvent">{{$t('show.search')}}</el-button>
       </div>
     </div>
   </div>

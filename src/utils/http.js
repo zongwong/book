@@ -32,7 +32,7 @@ Axios.interceptors.response.use(
   res => {
     // token 失效处理
     console.log(res.data)
-    if( (res.data.code == 400 && res.data.message == '未提交token') || (res.data.code == 400 &&res.data.message=='token已过期，请重新登录')){
+    if( (res.data.code == 400 && res.data.message == '当前账号已在其他终端登录') ||(res.data.code == 400 && res.data.message == '未提交token') || (res.data.code == 400 &&res.data.message=='token已过期，请重新登录') ){
       store.commit('LoginOut_MUTATION');
       router.push({
         path: '/login',

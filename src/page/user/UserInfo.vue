@@ -4,11 +4,11 @@
         <div class="form_title flex_row">
             <span class="text">{{$t('navs.userinfo')}}</span>
             <span class="hr row_bd"></span>
-            <span v-if="editUserMode" class="btn_save" @click="userFromSubmit('userInfoForm')">保存</span>
-            <span v-if="!editUserMode" class="btn_save" @click="modeChange('editUserMode')">编辑</span>
+            <span v-if="editUserMode" class="btn_save" @click="userFromSubmit('userInfoForm')">{{$t('btn.save')}}</span>
+            <span v-if="!editUserMode" class="btn_save" @click="modeChange('editUserMode')">{{$t('btn.edit')}}</span>
         </div>
     
-        <el-form-item label="头像" prop="headimgurl">
+        <el-form-item :label="$t('form.avatar')" prop="headimgurl">
             <!-- <el-input v-model="userInfoForm.headimgurl"></el-input> -->
             <img v-if="!editUserMode && imageUrl" :src="imageUrl | headfilter" class="uavatar">
             <el-upload
@@ -29,12 +29,12 @@
         </el-form-item>
         <el-form-item :label="$t('form.sex')" prop="sex">
             <el-radio-group v-if="editUserMode" v-model="userInfoForm.sex">
-                <el-radio label="1">男</el-radio>
-                <el-radio label="2">女</el-radio>
+                <el-radio label="1">{{$t('form.man')}}</el-radio>
+                <el-radio label="2">{{$t('form.woman')}}</el-radio>
             </el-radio-group>
-            <p class="formShowP" v-if="!editUserMode">{{userInfoForm.sex==1?'男':''}}{{userInfoForm.sex==2?'女':''}}</p>
+            <p class="formShowP" v-if="!editUserMode">{{userInfoForm.sex==1?$t('form.man'):''}}{{userInfoForm.sex==2?$t('form.woman'):''}}</p>
         </el-form-item>
-        <el-form-item :label="$t('form.contory')" prop="country">
+        <el-form-item :label="$t('form.country')" prop="country">
             <el-input v-if="editUserMode" v-model="userInfoForm.country"></el-input>
             <p class="formShowP" v-if="!editUserMode">{{userInfoForm.country}}</p>
         </el-form-item>
@@ -51,8 +51,8 @@
         <div class="form_title flex_row">
             <span class="text">{{$t('navs.cardinfo')}}</span>
             <span class="hr row_bd"></span>
-            <span v-if="editCardMode" class="btn_save" @click="userFromSubmit('cardForm')">保存</span>
-            <span v-if="!editCardMode" class="btn_save" @click="modeChange('editCardMode')">编辑</span>
+            <span v-if="editCardMode" class="btn_save" @click="userFromSubmit('cardForm')">{{$t('btn.save')}}</span>
+            <span v-if="!editCardMode" class="btn_save" @click="modeChange('editCardMode')">{{$t('btn.edit')}}</span>
         </div>
         <el-form-item :label="$t('form.cardholder')" prop="cardholder">
             <el-input v-if="editCardMode" v-model="cardForm.cardholder"></el-input>
@@ -71,8 +71,8 @@
         <div class="form_title flex_row">
             <span class="text">{{$t('navs.communityinfo')}}</span>
             <span class="hr row_bd"></span>
-            <span v-if="editGroupMode" class="btn_save" @click="userFromSubmit('groupForm')">保存</span>
-            <span v-if="!editGroupMode" class="btn_save" @click="modeChange('editGroupMode')">编辑</span>
+            <span v-if="editGroupMode" class="btn_save" @click="userFromSubmit('groupForm')">{{$t('btn.save')}}</span>
+            <span v-if="!editGroupMode" class="btn_save" @click="modeChange('editGroupMode')">{{$t('btn.edit')}}</span>
         </div>
         <el-form-item :label="$t('form.cpost')" prop="headimgurl">
             <!-- <el-input  v-if="editGroupMode" v-model="groupForm.headimgurl"></el-input> -->

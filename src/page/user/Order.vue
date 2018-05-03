@@ -84,8 +84,8 @@
                                     </div>
                                 </div>
                                 <div class="flex_row evaluate_word_row">
-                                    <textarea class="pjtextarea"></textarea>
-                                    <el-button size="mini" round>提交</el-button>
+                                    <textarea class="pjtextarea" v-model="pjtextarea"></textarea>
+                                    <el-button size="mini" round @click="onOrderEvaluate(item.order_id,item.goods_id)">提交</el-button>
                                 </div>
                             </div>
                         </div>
@@ -158,8 +158,9 @@ export default {
       list: [],
       total: 1,
       pageno:1,
-      value1:1,
       loading:false,
+      value1:1,
+      pjtextarea:'',
     };
   },
   watch: {
@@ -298,9 +299,13 @@ export default {
       },
       // 评价
       onOrderEvaluate(id,goods_id){
+        if(!this.value1) return;
+        if(!this.pjtextarea) return;
         orderEvaluate({
             order_id:id,
-            goods_id:goods_id
+            goods_id:goods_id,
+            star:this.value1, 
+            words:this.pjtextarea,
         }).then(res=>{
             if(res.code==200){
 

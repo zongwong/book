@@ -10,21 +10,21 @@
                   <p class="title">{{goodsInfo.title}}</p>
                   <p class="price">{{goodsInfo.currency_symbol}} {{goodsInfo.shop_price}}</p>
                   <div class="buyBtn_wrap">
-                      <router-link :to="'/buy/1/'+goodsInfo.goods_id"><el-button size="small" type="success" round>立即购买</el-button></router-link>
+                      <router-link :to="'/buy/1/'+goodsInfo.goods_id"><el-button size="small" type="success" round>{{$t('btn.buy')}}</el-button></router-link>
                   </div>
               </div>
               <div class="saler_info">
                   <div class="avatar_wrap">
                       <router-link :to="'/user/'+userinfo.user_id">
                         <img v-if="userinfo.headimgurl" :src="userinfo.headimgurl | headfilter" alt="用户头像">
-                        <i class="saler_sex"></i>
+                        <i class="saler_sex" :class="{'icon_man':userinfo.sex==1}"></i>
                       </router-link>
                   </div>
-                  <p>发布者:{{userinfo.nickname}}</p>
-                  <p>毕业于:{{userinfo.graduate_school}}</p>
+                  <p>{{$t('show.publisher')}}:{{userinfo.nickname}}</p>
+                  <p>{{$t('show.graduated')}}:{{userinfo.graduate_school}}</p>
               </div>
           </div>
-          <p class="goods_intro">简介</p>
+          <p class="goods_intro">{{$t('show.abstract')}}</p>
           <div class="goods_content">
               {{goodsInfo.summary}}
           </div>

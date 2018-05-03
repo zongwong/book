@@ -32,7 +32,7 @@ export default {
         
     },
     [types.CampuList](state, payload){
-        state.campuList = payload.list
+        state.campuList = state.campuList.concat(payload.list);
     },
     [types.NowCampu](state, payload){
         state.nowCampu = payload.nowCampu

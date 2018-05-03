@@ -3,14 +3,14 @@
     <my-header></my-header>
     <div class="login_box">
       <div class="center_box">
-        <p class="login_title" style="color:#7cd958;">- 请为自己设置一个昵称  -</p>
+        <p class="login_title" style="color:#7cd958;">- {{$t('msg.nickname')}}  -</p>
         <div class="form">
           <el-form :model="regForm" :rules="rules" ref="regForm" label-width="0" class="demo-ruleForm" @submit.native.prevent>
             <el-form-item label="" prop="nickname">
-                <el-input v-model="regForm.nickname" class="bordercolor"  placeholder="请输入昵称"></el-input>  
+                <el-input v-model="regForm.nickname" class="bordercolor"  :placeholder="$t('msg.nicktips')"></el-input>  
             </el-form-item>
             <div class="form_row" style="justify-content: center;">
-              <el-button class="login_btn" style="width: 150px;" type="success"  @click="submitForm('regForm')">立即进入</el-button>
+              <el-button class="login_btn" style="width: 150px;" type="success"  @click="submitForm('regForm')">{{$t('btn.yes')}}</el-button>
             </div>
           </el-form>
         </div>

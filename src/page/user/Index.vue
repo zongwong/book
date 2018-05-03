@@ -4,23 +4,23 @@
     <div class="userInfoBox">
         <div class="avatar">
             <img v-if="userinfo.headimgurl" :src="userinfo.headimgurl | headfilter" alt="avatar">
-            <i class="icon_sex"></i>
+            <i class="icon_sex" :class="{'icon_man':userinfo.sex==1}"></i>
         </div>
         <p class="name">{{userinfo.nickname}}</p>
         <p>{{userinfo.graduate_school}}</p>
         <div class="tabBar">
             <div class="box1000 flex_row tabs_wrap">
-                <div class="tab_item" :class="{on:type==1}" @click="changeType(1)">TA的发布</div>
-                <div class="tab_item" :class="{on:type==2}" @click="changeType(2)">TA的卖出</div>
+                <div class="tab_item" :class="{on:type==1}" @click="changeType(1)">{{$t('show.hispublish')}}</div>
+                <div class="tab_item" :class="{on:type==2}" @click="changeType(2)">{{$t('show.hisSale')}}</div>
             </div>
         </div>
     </div>
     <div class="box1000">
         <div class="select_box">
             <el-select v-model="category" placeholder="请选择" @change="categoryChange">
-                <el-option label="二手书籍" value="1"></el-option>
-                <el-option label="二手笔记" value="2"></el-option>
-                <el-option v-if="type==1" label="房屋租赁" value="3"></el-option>
+                <el-option :label="$t('navs.book')" value="1"></el-option>
+                <el-option :label="$t('navs.notes')" value="2"></el-option>
+                <el-option v-if="type==1" :label="$t('navs.house')" value="3"></el-option>
             </el-select>
         </div>
         <!-- <div class="list">
@@ -95,6 +95,7 @@ import { getUserInfo,getLeaseList,salelist } from '../../api/api';
 import pagination from '../../components/pagination';
 import { mapState,mapActions } from 'vuex';
 import headfilter from '../../utils/tools';
+import config from '../../utils/global';
 export default {
   name: 'UserIndex',
   components: {
@@ -164,7 +165,7 @@ export default {
                 })
             }
         }else if(this.type==2){ // 他的卖出
-            this.$http.get('/api/mall/order/salelist',{
+            this.$http.get(config.host+'/mall/order/salelist',{
                 params:{
                     user_id:this.user_id,
                     category_id:this.category,

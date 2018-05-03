@@ -2,28 +2,28 @@
 <div class="publish">
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
 
-    <el-form-item label="书名" prop="title">
+    <el-form-item :label="$t('form.bookname')" prop="title">
       <el-input v-model="ruleForm.title"></el-input>
     </el-form-item>
 
-    <el-form-item label="图片" prop="images">
+    <el-form-item :label="$t('form.images')" prop="images">
       <my-upload
         v-on:uploadfile="uploadFileEvent"
         :fileList="fileList"
       ></my-upload>
     </el-form-item>
 
-    <el-form-item label="书的简介" prop="summary">
+    <el-form-item :label="$t('form.abstract')" prop="summary">
       <el-input type="textarea" v-model="ruleForm.summary"></el-input>
     </el-form-item>
-    <el-form-item label="所在校区" prop="campus_id">
-      <el-select v-model="ruleForm.campus_id" placeholder="请选择所在校区">
+    <el-form-item :label="$t('form.area')" prop="campus_id">
+      <el-select v-model="ruleForm.campus_id" :placeholder="$t('form.areatips')">
         <template v-for="item in campuList">
           <el-option :key="item.campus_id" :label="item.campus_name" :value="item.campus_id"></el-option>
         </template>
       </el-select>
     </el-form-item>
-    <el-form-item label="价格">
+    <el-form-item :label="$t('form.price')" prop="currency_code">
       <el-row :gutter="10"> 
         <el-col :span="4">
           <el-form-item prop="currency_code">
@@ -44,7 +44,7 @@
     </el-form-item>
 
     <el-form-item>
-      <el-button type="primary" @click="submitForm('ruleForm')">立即发布</el-button>
+      <el-button type="primary" @click="submitForm('ruleForm')">{{$t('btn.publish')}}</el-button>
     </el-form-item>
 
   </el-form>
@@ -96,7 +96,7 @@ export default {
             required: true, message: '请选择货币种类', trigger: 'change'
           }],
           images:[{
-            validator:checkImg, message: '请上传图片', trigger: 'change'
+            validator:checkImg,required: true, message: '请上传图片', trigger: 'change'
           }]
         },
         files:[],

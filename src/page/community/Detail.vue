@@ -19,8 +19,8 @@
                                     <img v-if="userinfo.headimgurl" :src="userinfo.headimgurl | headfilter" alt="头像">
                                 </div>
                                 <div class="">
-                                    <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
-                                    <p class="manger">管理员</p>
+                                    <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex" :class="{'icon_man':userinfo.sex==1}"></i></p>
+                                    <p class="manger">{{$t('show.manager')}}</p>
                                 </div>
                             </div>
                         </router-link>
@@ -48,9 +48,9 @@
                             <div class="post_other">
                             <span class="from" style="margin-left:0;">{{item.created_at}}</span>
                             <!-- <span class="from">来自 陈琳达</span> -->
-                            <span class="zan">点赞 {{item.thumbup}}</span>
+                            <span class="zan">{{$t('show.zan')}} {{item.thumbup}}</span>
                             <span class="hr">丨</span>
-                            <span class="comment">评论 {{item.comment}}</span>
+                            <span class="comment">{{$t('show.comment')}} {{item.comment}}</span>
                             </div>
                         </router-link>
                     </div>

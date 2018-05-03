@@ -1,21 +1,21 @@
 <template>
 <div class="publish">
 <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-  <el-form-item label="标题" prop="title">
+  <el-form-item :label="$t('form.title')" prop="title">
     <el-input v-model="form.title"></el-input>
   </el-form-item>
-  <el-form-item label="封面" prop="images">
+  <el-form-item :label="$t('form.images')" prop="images">
     <my-upload
       v-on:uploadfile="uploadFileEvent"
       :fileList="fileList"
     ></my-upload>
   </el-form-item>
-  <el-form-item label="内容" prop="content">
+  <el-form-item :label="$t('form.content')" prop="content">
     <el-input type="textarea" v-model="form.content"></el-input>
   </el-form-item>
 
   <el-form-item>
-    <el-button type="primary" @click="onSubmit('form')">立即发布</el-button>
+    <el-button type="primary" @click="onSubmit('form')">{{$t('btn.publish')}}</el-button>
   </el-form-item>
 </el-form>
 </div>

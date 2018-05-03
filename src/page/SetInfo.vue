@@ -3,11 +3,11 @@
     <my-header></my-header>
     <div class="login_box" v-loading="loading">
       <div class="center_box">
-        <p class="login_title" style="color:#7cd958;">- 请填写详细资料  -</p>
+        <p class="login_title" style="color:#7cd958;">- {{$t('msg.info')}}  -</p>
         <div class="form">
           <el-form ref="userInfoForm"  :model="userInfoForm" :rules="userInfoRules" label-width="80px">
               
-              <el-form-item label="头像" prop="headimgurl">
+              <el-form-item :label="$t('form.avatar')" prop="headimgurl">
                   <el-upload
                     class="avatar-uploader"
                     :action="action"
@@ -19,26 +19,26 @@
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
-              <el-form-item label="姓名" prop="name">
+              <el-form-item :label="$t('form.name')" prop="name">
                   <el-input v-model="userInfoForm.name"></el-input>
               </el-form-item>
-              <el-form-item label="性别" prop="sex">
+              <el-form-item :label="$t('form.sex')" prop="sex">
                   <el-radio-group v-model="userInfoForm.sex">
-                      <el-radio label="1">男</el-radio>
-                      <el-radio label="2">女</el-radio>
+                      <el-radio label="1">{{$t('form.man')}}</el-radio>
+                      <el-radio label="2">{{$t('form.woman')}}</el-radio>
                   </el-radio-group>
               </el-form-item>
-              <el-form-item label="国籍" prop="country">
+              <el-form-item :label="$t('form.country')" prop="country">
                   <el-input v-model="userInfoForm.country"></el-input>
               </el-form-item>
-              <el-form-item label="电话" prop="mobilephone">
+              <el-form-item :label="$t('form.phone')" prop="mobilephone">
                   <el-input v-model="userInfoForm.mobilephone"></el-input>
               </el-form-item>
-              <el-form-item label="所在学校" prop="graduate_school">
+              <el-form-item :label="$t('form.school')" prop="graduate_school">
                   <el-input v-model="userInfoForm.graduate_school"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button class="login_btn" style="width: 150px;" type="success"  @click="submitForm('userInfoForm')">确定</el-button>
+                <el-button class="login_btn" style="width: 150px;" type="success"  @click="submitForm('userInfoForm')">{{$t('btn.sure')}}</el-button>
               </el-form-item>
               
           </el-form>

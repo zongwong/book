@@ -25,7 +25,12 @@ const state = {
     associationInfo:{
 
     },
-    campuList:[],
+    campuList:[{
+        campus_id:"",
+        campus_name:"全部",
+        eng_name:"All",
+        summary:"",
+    }],
     nowCampu:JSON.parse(localStorage.getItem('nowCampu'))||'',
     Currency:[]
 }

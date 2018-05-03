@@ -1,6 +1,6 @@
 <template>
 <div class="publish nopadding" v-loading="loading">
-    <div class="pbbtn_box"><router-link to="/center/publish/2"><span>发布二手笔记</span></router-link></div>
+    <div class="pbbtn_box"><router-link to="/center/publish/2"><span>{{$t('btn.publishnote')}}</span></router-link></div>
     <div class="history_item" v-for="(item,index) in list" :key="item.goods_id">
         <div class="goods_info">
             <div class="goods_imgs">
@@ -12,7 +12,7 @@
                 <p class="price">{{item.currency_symbol}} {{item.shop_price}}</p>
             </div>
             <div class="close" @click="onDelGoods(item.goods_id,index)"></div>
-            <div class="btn_edit"><router-link :to="'/center/publish/2/'+item.goods_id">编辑</router-link></div>
+            <div class="btn_edit"><router-link :to="'/center/publish/2/'+item.goods_id">{{$t('btn.edit')}}</router-link></div>
         </div>
     </div>
     <my-pagination

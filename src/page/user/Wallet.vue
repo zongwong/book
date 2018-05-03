@@ -1,6 +1,6 @@
 <template>
 <div class="publish" v-loading="loading">
-    <div class="pbbtn_box" @click="applyMoney"><span>提现</span></div>
+    <div class="pbbtn_box" @click="applyMoney"><span>{{$t('btn.withdraw')}}</span></div>
 
     <p v-for="item in balancelist" :key="item.code">{{item.code}} {{item.amount}}</p>
     <hr>

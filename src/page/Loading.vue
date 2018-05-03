@@ -1,7 +1,7 @@
 <template>
 <div class="body" 
   v-loading.fullscreen.lock="fullscreenLoading"
-  element-loading-text="正在跳转到支付页面,请稍等..."
+  :element-loading-text="$t('msg.loading')"
 >
 </div>
 </template>

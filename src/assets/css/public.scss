@@ -443,6 +443,9 @@ p {
       width: 20px;
       height: 20px;
       background: url(../icon/sex_woman.png) center / 100% no-repeat;
+      &.icon_man{
+        background-image: url(../icon/sex_man.png);
+      }
     }
   }
 }
@@ -498,11 +501,14 @@ p {
     }
   }
   .icon_sex{
-    background:url(../icon/sex_w.png) center / 100% no-repeat;
+    background:url(../icon/sex_woman.png) center / 100% no-repeat;
     display: inline-block;
     vertical-align: middle;
     width: 11px;
     height: 16px;
+    &.icon_man{
+      background-image: url(../icon/sex_man.png);
+    }
   }
   .school{
     color: #7d7d7d;
@@ -623,6 +629,9 @@ p {
           width: 20px;
           height: 20px;
           background: url(../icon/sex_woman.png) center / 100% no-repeat;
+          &.icon_man{
+            background-image: url(../icon/sex_man.png);
+          }
       }
   }
 }

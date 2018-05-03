@@ -14,7 +14,7 @@
                             <img :src="userinfo.headimgurl | headfilter" alt="头像">
                         </div>
                         <div class="row_bd">
-                            <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex"></i></p>
+                            <p class="nickname"><span>{{userinfo.nickname}}</span><i class="icon_sex" :class="{'icon_man':userinfo.sex==1}"></i></p>
                             <p class="school">{{userinfo.nickname}}</p>
                         </div>
                     </div>
@@ -25,9 +25,9 @@
                   <img class="images"  v-for="(url,index) in leaseInfo.images"  :key="index" :src="url | headfilter" alt="图片">
               </div>
               <div class="topic_btn">
-                  <span class="zan" @click="onZanEvent">点赞 {{leaseInfo.thumbup}}</span>
+                  <span class="zan" @click="onZanEvent">{{$t('show.zan')}} {{leaseInfo.thumbup}}</span>
                   <span class="hr">丨</span>
-                  <span class="comment">评论 {{leaseInfo.comment}}</span>
+                  <span class="comment">{{$t('show.comment')}} {{leaseInfo.comment}}</span>
               </div>
               <div class="topic_comment"  v-loading="loading2">
                   <div class="comment_item flex_box" v-for="item in commentList" :key="item.comment_id">
@@ -42,7 +42,7 @@
                               <span class="time">{{item.created_at}}</span>
                           </div>
                           <div class="comment_data">
-                              <span class="reply_btn" @click="replyTo(item.comment_id,item.nickname)">回复</span>
+                              <span class="reply_btn" @click="replyTo(item.comment_id,item.nickname)">{{$t('show.reply')}}</span>
                               {{item.content}}
                           </div>
                           <div class="reply_comment">
@@ -53,7 +53,7 @@
               </div>
               <div class="reply_box">
                   <textarea class="reply_textarea" ref="focus" v-model="comment" :placeholder="placeholder"></textarea>
-                  <el-button size="mini" type="success" @click="toReply">发送</el-button>
+                  <el-button size="mini" type="success" @click="toReply">{{$t('show.send')}}</el-button>
               </div>
           </div>
       </div>
@@ -78,7 +78,7 @@ export default {
       last_id:'',
       comment:'',
       commentList:[],
-      placeholder:'评论',
+      placeholder:this.$t('form.commenttips'),
       comment_id:'',
       hasThumbuped:'',
       isPublisher:'',
@@ -107,7 +107,7 @@ export default {
                   this.last_id = '';
                   this.getComment();
                   this.comment = '';
-                  this.placeholder = '评论';
+                  this.placeholder = this.$t('form.commenttips');
                   this.$message.success(res.message);
               }
           })
@@ -115,7 +115,7 @@ export default {
       replyTo(id,name){
         this.comment = '';
         this.comment_id = id;
-        this.placeholder = `回复 ${name}：`;
+        this.placeholder = this.$t('form.replytips') + ' '+ name;
         document.documentElement.scrollTop = document.body.offsetHeight - window.innerHeight;
         this.$refs['focus'].focus()
       },

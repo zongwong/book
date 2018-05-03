@@ -3,7 +3,7 @@
     <my-header></my-header>
     <div class="login_box">
       <div class="center_box">
-        <p class="login_title">- 请选择登录方式 -</p>
+        <p class="login_title">- {{$t('msg.login')}} -</p>
         <div class="login_type" v-if="!phoneType">
           <div class="login_item login_wx">
             <i></i>
@@ -33,10 +33,10 @@
         </div>
         <div class="form" v-if="phoneType">
           <el-form :model="regForm" :rules="rules" ref="regForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="手机号" prop="phone">
+            <el-form-item :label="$t('form.phone')" prop="phone">
                 <el-input v-model="regForm.phone" class="bordercolor"  placeholder="请输入内容"></el-input>
             </el-form-item>
-            <el-form-item label="验证码" prop="captcha">
+            <el-form-item :label="$t('form.verification')" prop="captcha">
               <el-row>
                 <el-col :span="14">
                   <el-input v-model="regForm.captcha" class="bordercolor"  placeholder="请输入内容"></el-input>
@@ -46,7 +46,7 @@
                 </el-col>
               </el-row>
             </el-form-item>
-            <el-form-item label="短信验证码" prop="code">
+            <el-form-item :label="$t('form.smsverification')" prop="code">
               <el-row>
                 <el-col :span="14">
                   <el-input v-model="regForm.code" class="bordercolor"  placeholder="请输入内容"></el-input>
@@ -57,14 +57,8 @@
               </el-row>
             </el-form-item>
             <el-form-item label="" >
-              <el-button class="login_btn" type="success"  @click="submitForm('regForm')">登录</el-button>
+              <el-button class="login_btn" type="success"  @click="submitForm('regForm')">{{$t('btn.login')}}</el-button>
             </el-form-item>
-            <!-- <div class="form_row">
-              <span class="row_ft" style="opacity:0;">去登录：</span>
-              <div class="row_bd">
-                <el-button class="login_btn" type="success"  @click="submitForm('regForm')">登录</el-button>
-              </div>
-            </div> -->
           </el-form>
         </div>
       </div>
@@ -139,8 +133,8 @@ export default {
         this.Login_MUTATION(res.data);
         
         localStorage.setItem('token',res.data.token);
-        localStorage.setItem('nickname',res.data.userinfo.nickname);
-        localStorage.setItem('graduate_school',res.data.userinfo.name);
+        localStorage.setItem('nickname',res.data.userinfo.nickname||'');
+        localStorage.setItem('graduate_school',res.data.userinfo.graduate_school||'');
 
         this.$message.success(res.message);
 

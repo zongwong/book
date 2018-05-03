@@ -18,9 +18,9 @@
               </div>
               <div class="post_other">
                 <span class="from">{{item.updated_at}}</span>
-                <span class="zan">点赞 {{item.thumbup}}</span>
+                <span class="zan">{{$t('show.zan')}} {{item.thumbup}}</span>
                 <span class="hr">丨</span>
-                <span class="comment">评论 {{item.comment}}</span>
+                <span class="comment">{{$t('show.comment')}} {{item.comment}}</span>
               </div>
             </router-link>
           </div>
