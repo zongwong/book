@@ -9,7 +9,6 @@
         </div>
     
         <el-form-item :label="$t('form.avatar')" prop="headimgurl">
-            <!-- <el-input v-model="userInfoForm.headimgurl"></el-input> -->
             <img v-if="!editUserMode && imageUrl" :src="imageUrl | headfilter" class="uavatar">
             <el-upload
                 v-if="editUserMode"
@@ -124,33 +123,15 @@ export default {
           headimgurl:'',
           graduate_school:'',
         },
-        userInfoRules:{
-            name:[{ required:true,trigger:'change',message:"请填写姓名" }],
-            mobilephone:[{ required:true,trigger:'change',message:"请填写电话" }],
-            sex:[{ required:true,trigger:'change',message:"请选择性别" }],
-            country:[{ required:true,trigger:'change',message:"请填写国籍" }],
-            headimgurl:[{ required:true,trigger:'change',message:"请上传头像" }],
-            graduate_school:[{ required:true,trigger:'change',message:"请填写所在学校" }]
-        },
         cardForm:{
             cardholder:'',
             cardno:'',
             safeno:'',
         },
-        cardRules:{
-            cardholder:[{required:true,trigger:'change',message:"请填写持卡人姓名"}],
-            cardno:[{required:true,trigger:'change',message:"请填写银行卡号"}],
-            safeno:[{required:true,trigger:'change',message:"请填写安全码"}],
-        },
         groupForm:{
             headimgurl:'',
             title:'',
             summary:'',
-        },
-        groupRules:{
-            headimgurl:[{required:true,trigger:'change',message:"请上传社团图片"}],
-            title:[{required:true,trigger:'change',message:"请填写社团名称"}],
-            summary:[{required:true,trigger:'change',message:"请填写社团简介"}],
         },
         imageUrl:'',
         imageUrl2:'',
@@ -167,10 +148,31 @@ export default {
       ...mapState([
         'host',
         'token',
-        // 'userInfo',
-        // 'cardInfo',
-        // 'associationInfo'
-      ])
+      ]),
+    userInfoRules(){
+        return {
+            name:[{ required:true,trigger:'change',message: this.$t('valid.name') }],
+            mobilephone:[{ required:true,trigger:'change',message: this.$t('valid.phone') }],
+            sex:[{ required:true,trigger:'change',message: this.$t('valid.sex') }],
+            country:[{ required:true,trigger:'change',message: this.$t('valid.country') }],
+            headimgurl:[{ required:true,trigger:'change',message: this.$t('valid.avatar') }],
+            graduate_school:[{ required:true,trigger:'change',message: this.$t('valid.school') }]
+        }
+    },
+    cardRules(){
+        return {
+            cardholder:[{required:true,trigger:'change',message: this.$t('valid.cardname')}],
+            cardno:[{required:true,trigger:'change',message: this.$t('valid.cardno')}],
+            safeno:[{required:true,trigger:'change',message: this.$t('valid.safeno')}],
+        }
+    },
+    groupRules(){
+        return {
+            headimgurl:[{required:true,trigger:'change',message: this.$t('valid.cimages')}],
+            title:[{required:true,trigger:'change',message: this.$t('valid.cname')}],
+            summary:[{required:true,trigger:'change',message: this.$t('valid.cdesc')}],
+        }
+    },
   },
   methods:{
       ...mapActions([

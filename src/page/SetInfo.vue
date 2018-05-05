@@ -20,7 +20,7 @@
                 </el-upload>
               </el-form-item>
               <el-form-item :label="$t('form.name')" prop="name">
-                  <el-input v-model="userInfoForm.name"></el-input>
+                  <el-input v-model="userInfoForm.name" :placeholder="$t('valid.name')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('form.sex')" prop="sex">
                   <el-radio-group v-model="userInfoForm.sex">
@@ -29,13 +29,13 @@
                   </el-radio-group>
               </el-form-item>
               <el-form-item :label="$t('form.country')" prop="country">
-                  <el-input v-model="userInfoForm.country"></el-input>
+                  <el-input v-model="userInfoForm.country" :placeholder="$t('valid.country')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('form.phone')" prop="mobilephone">
-                  <el-input v-model="userInfoForm.mobilephone"></el-input>
+                  <el-input v-model="userInfoForm.mobilephone" :placeholder="$t('valid.phone')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('form.school')" prop="graduate_school">
-                  <el-input v-model="userInfoForm.graduate_school"></el-input>
+                  <el-input v-model="userInfoForm.graduate_school" :placeholder="$t('valid.school')"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button class="login_btn" style="width: 150px;" type="success"  @click="submitForm('userInfoForm')">{{$t('btn.sure')}}</el-button>
@@ -82,14 +82,6 @@ export default {
           headimgurl:'',
           graduate_school:'',
         },
-      userInfoRules:{
-          name:[{ required:true,trigger:'change',message:"请填写姓名" }],
-          mobilephone:[{ required:true,trigger:'change',message:"请填写电话" }],
-          sex:[{ required:true,trigger:'change',message:"请选择性别" }],
-          country:[{ required:true,trigger:'change',message:"请填写国籍" }],
-          headimgurl:[{ required:true,trigger:'change',message:"请上传头像" }],
-          graduate_school:[{ required:true,trigger:'change',message:"请填写所在学校" }]
-      },
       loading:false,
       imageUrl:'',
       action:config.host+'/uploader/image'
@@ -98,7 +90,17 @@ export default {
   computed:{
       ...mapState([
           'token'
-      ])
+      ]),
+      userInfoRules(){
+        return {
+          name:[{ required:true,trigger:'change',message:this.$t('valid.name') }],
+          mobilephone:[{ required:true,trigger:'change',message:this.$t('valid.phone') }],
+          sex:[{ required:true,trigger:'change',message:this.$t('valid.sex') }],
+          country:[{ required:true,trigger:'change',message:this.$t('valid.country') }],
+          headimgurl:[{ required:true,trigger:'change',message:this.$t('valid.avatar') }],
+          graduate_school:[{ required:true,trigger:'change',message:this.$t('valid.school') }]
+        }
+      }
   },
   methods: {
     ...mapActions([

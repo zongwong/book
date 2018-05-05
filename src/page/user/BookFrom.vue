@@ -3,7 +3,7 @@
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
 
     <el-form-item :label="$t('form.bookname')" prop="title">
-      <el-input v-model="ruleForm.title"></el-input>
+      <el-input v-model="ruleForm.title" :placeholder="$t('placeholder.title')"></el-input>
     </el-form-item>
 
     <el-form-item :label="$t('form.images')" prop="images">
@@ -14,20 +14,20 @@
     </el-form-item>
 
     <el-form-item :label="$t('form.abstract')" prop="summary">
-      <el-input type="textarea" v-model="ruleForm.summary"></el-input>
+      <el-input type="textarea" v-model="ruleForm.summary" :placeholder="$t('placeholder.desc')"></el-input>
     </el-form-item>
     <el-form-item :label="$t('form.area')" prop="campus_id">
-      <el-select v-model="ruleForm.campus_id" :placeholder="$t('form.areatips')">
+      <el-select v-model="ruleForm.campus_id" :placeholder="$t('placeholder.campus')">
         <template v-for="item in campuList">
-          <el-option :key="item.campus_id" :label="item.campus_name" :value="item.campus_id"></el-option>
+          <el-option :key="item.campus_id" :label="lang=='zh'?item.campus_name:item.eng_name" :value="item.campus_id"></el-option>
         </template>
       </el-select>
     </el-form-item>
     <el-form-item :label="$t('form.price')" prop="currency_code">
       <el-row :gutter="10"> 
         <el-col :span="4">
-          <el-form-item prop="currency_code">
-            <el-select v-model="ruleForm.currency_code" placeholder="货币" @change="currencyChange">
+          <el-form-item >
+            <el-select v-model="ruleForm.currency_code" :placeholder="$t('placeholder.currency')" @change="currencyChange">
               <template v-for="item in currency">
                 <el-option :key="item.currency_id" :label="item.currency_symbol" :value="item.currency_code"></el-option>
               </template>
@@ -36,7 +36,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item prop="shop_price">
-            <el-input type="number" v-model="ruleForm.shop_price"></el-input>
+            <el-input type="number" v-model="ruleForm.shop_price" :placeholder="$t('placeholder.price')"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -54,20 +54,14 @@
 <script>
 import Upload from '../../components/upload';
 import { publishGoods,getGoodsInfo } from '../../api/api';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
   name: 'BookFrom',
   components: {
     'my-upload':Upload
   },
   data() {
-    let checkImg = (rule, value, callback) => {
-      if(this.files.length){
-        callback()
-      }else{
-        callback(new Error('请上传图片'));
-      }
-    }
+
     return {
         category_id:1,
         goods_id:'',
@@ -79,36 +73,48 @@ export default {
           currency_symbol: '',
           campus_id:'',
         },
-        rules: {
-          title: [
-            { required: true, message: '请输入标题', trigger: 'change' },
-          ],
-          summary: [
-            { required: true, message: '请输入简介', trigger: 'change' }
-          ],
-          shop_price: [
-            { required: true, message: '请输入售价', trigger: 'change' }
-          ],
-          campus_id:[{
-            required: true, message: '请选择校区', trigger: 'change'
-          }],
-          currency_code:[{
-            required: true, message: '请选择货币种类', trigger: 'change'
-          }],
-          images:[{
-            validator:checkImg,required: true, message: '请上传图片', trigger: 'change'
-          }]
-        },
         files:[],
         fileList:[]
       };
   },
   computed: {
+    ...mapGetters([
+      'campuList'
+    ]),
     ...mapState({
-      campuList:'campuList',
       currency: 'Currency',
-      host:'host'
-    })
+      host:'host',
+      lang:'lang'
+    }),
+    rules(){
+      let checkImg = (rule, value, callback) => {
+        if(this.files.length){
+          callback()
+        }else{
+          callback(new Error(this.$t('valid.images')));
+        }
+      }
+      return {
+          title: [
+            { required: true, message: this.$t('valid.title'), trigger: 'change' },
+          ],
+          summary: [
+            { required: true, message: this.$t('valid.desc'), trigger: 'change' }
+          ],
+          shop_price: [
+            { required: true, message: this.$t('valid.price'), trigger: 'change' }
+          ],
+          campus_id:[{
+            required: true, message: this.$t('valid.campus'), trigger: 'change'
+          }],
+          currency_code:[{
+            required: true, message: this.$t('valid.currency'), trigger: 'change'
+          }],
+          images:[{
+            validator:checkImg,required: true, message: this.$t('valid.images'), trigger: 'change'
+          }]
+      }
+    }
   },
   methods: {
     uploadFileEvent(ret) {

@@ -40,7 +40,7 @@
             <el-button v-if="cat==1 && goodsInfo.status==0" size="small" type="success" round @click="makeOrder">{{$t('btn.buy')}}</el-button>
             <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" round @click="onCancelOrderl(orderInfo.order_id,goodsInfo.goods_id)">{{$t('btn.cancelOrder')}}</el-button>
             <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" type="success" round @click="makePay(order_id)">{{$t('btn.payNow')}}</el-button>
-            <el-button v-if="cat==2 && orderInfo.order_status=='order_payed'" size="small" type="success" round @click="onCancelOrderl(order_id)">{{$t('btn.refund')}}</el-button>
+            <el-button v-if="cat==2 && orderInfo.order_status=='order_payed'" size="small" type="success" round @click="onApplyRefund(order_id)">{{$t('btn.refund')}}</el-button>
         </div>
     </div>
   </div>
@@ -68,7 +68,7 @@
 <script>
 // 商品状态0待售1下单锁定2支付3发货4收货5评价
 import Search from '../components/common/Search';
-import { getGoodsInfo,createOrder,orderInfo,delOrder,payPal,addressList } from '../api/api';
+import { getGoodsInfo,createOrder,orderInfo,delOrder,payPal,addressList,applyRefund } from '../api/api';
 import address from '../page/address/address';
 import { mapState } from 'vuex';
 import headfilter from '../utils/tools';
@@ -116,7 +116,7 @@ export default {
             return this.$t('order.order_create');
                 case 'refund_apply':
             return this.$t('order.refund_apply');
-                case 'order_refund':
+                case 'order_refunded':
             return this.$t('order.order_refund');
                 case 'order_canceled':
             return this.$t('order.order_canceled');
@@ -164,9 +164,9 @@ export default {
       },
       // 取消订单
       onCancelOrderl(id,goods_id){
-        this.$confirm('此操作将永久删除该订单, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+        this.$confirm(this.$t('msg.delOrder'), this.$t('btn.tips'), {
+            confirmButtonText: this.$t('btn.sure'),
+            cancelButtonText: this.$t('btn.cancel'),
             type: 'warning'
         }).then(() => {
             delOrder({
@@ -175,9 +175,12 @@ export default {
                 if(res.code==200){
                     this.$message({
                         type: 'success',
-                        message: '删除成功!'
+                        message: 'success!'
                     });
-                    this.onPageChange(1);
+                    // this.$set(orderInfo,'order_status','order_canceled');
+                    this.$router.replace({
+                        path:'/home'
+                    })
                 }
             })
         }).catch(() => {
@@ -186,9 +189,9 @@ export default {
       },
       // 申请退款
       onApplyRefund(id,goods_id){
-        this.$confirm('您确定要申请退款吗?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+        this.$confirm(this.$t('msg.reOrder'), this.$t('btn.tips'), {
+            confirmButtonText: this.$t('btn.sure'),
+            cancelButtonText: this.$t('btn.cancel'),
             type: 'warning'
         }).then(() => {
             applyRefund({
@@ -197,11 +200,12 @@ export default {
                 if(res.code==200){
                     this.$message({
                         type: 'success',
-                        message: '申请成功!'
+                        message: 'success!'
                     });
-                    this.$router.push({
-                        path:'/home'
-                    })
+                    window.location = window.location.href;
+                    // this.$router.push({
+                    //     path:'/home'
+                    // })
                 }
             })
         })

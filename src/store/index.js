@@ -32,12 +32,16 @@ const state = {
         summary:"",
     }],
     nowCampu:JSON.parse(localStorage.getItem('nowCampu'))||'',
-    Currency:[]
+    Currency:[],
+    lang:localStorage.getItem('lang')||'zh'
 }
 
 const getters = {
     headimgurl(state, getters){
         return headfilter(state.userInfo.headimgurl);
+    },
+    campuList(state, getters){
+        return state.campuList.slice(1);
     }
 }
 

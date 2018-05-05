@@ -37,12 +37,16 @@ export default {
       regForm: {
         nickname:'',
       },
-      rules: {
-          nickname: [
-            { required: true, message: '请填写昵称', trigger: 'blur' },
-          ]
-      },
     };
+  },
+  computed:{
+    rules(){
+      return {
+          nickname: [
+            { required: true, message: this.$t('valid.nickname'), trigger: 'blur' },
+          ]
+      }
+    }
   },
   methods: {
     ...mapMutations([

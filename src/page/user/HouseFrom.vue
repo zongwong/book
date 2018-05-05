@@ -2,7 +2,7 @@
 <div class="publish">
 <el-form ref="form" :model="form" :rules="rules" label-width="80px">
   <el-form-item :label="$t('form.title')" prop="title">
-    <el-input v-model="form.title"></el-input>
+    <el-input v-model="form.title" :placeholder="$t('placeholder.title')"></el-input>
   </el-form-item>
   <el-form-item :label="$t('form.images')" prop="images">
     <my-upload
@@ -11,7 +11,7 @@
     ></my-upload>
   </el-form-item>
   <el-form-item :label="$t('form.content')" prop="content">
-    <el-input type="textarea" v-model="form.content"></el-input>
+    <el-input type="textarea" v-model="form.content" :placeholder="$t('placeholder.content')"></el-input>
   </el-form-item>
 
   <el-form-item>
@@ -32,25 +32,11 @@ export default {
     'my-upload':upload
   },
   data() {
-    let checkImg = (rule, value, callback) => {
-      if(this.files.length){
-        callback()
-      }else{
-        callback(new Error('请上传图片'));
-      }
-    };
     return {
         lease_id:'',
         form: {
           title: '',
           content: ''
-        },
-        rules:{
-          title:[{ required:true,trigger:'change',message:'请填写标题' }],
-          content:[{ required:true,trigger:'change',message:'请填写内容' }],
-          images:[{
-            validator:checkImg, message: '请上传图片', trigger: 'change'
-          }]
         },
         fileList:[],
         files:[],
@@ -59,7 +45,23 @@ export default {
   computed: {
     ...mapState([
       'host'
-    ])
+    ]),
+    rules(){
+      let checkImg = (rule, value, callback) => {
+      if(this.files.length){
+          callback()
+        }else{
+          callback(new Error(this.$t('valid.images')));
+        }
+      };
+      return {
+          title:[{ required:true,trigger:'change',message:this.$t('valid.title') }],
+          content:[{ required:true,trigger:'change',message:this.$t('valid.content') }],
+          images:[{
+            required:true,validator:checkImg, message: this.$t('valid.images'), trigger: 'change'
+          }]
+      }
+    }
   },
   methods: {
       onSubmit(fromName) {

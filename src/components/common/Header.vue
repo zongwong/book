@@ -73,13 +73,17 @@ export default {
       Vue.config.lang = lang;
       this.lang = lang;
       localStorage.setItem('lang',lang);
+      this.Lang({
+        lang:lang
+      })
     },
     ...mapActions([
       'campusAction'
     ]),
     ...mapMutations([
       'NowCampu_MUTATION',
-      'LoginOut_MUTATION'
+      'LoginOut_MUTATION',
+      'Lang'
     ]),
     handleCommand(command){
       this.NowCampu_MUTATION({

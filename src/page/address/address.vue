@@ -14,8 +14,8 @@
         </div>
     </div>
 
-    <el-dialog :title="$t('show.readr')" :modal="modal" :visible.sync="dialogVisible" width="500px">
-        <el-form ref="addressForm" :rules="addressRule" :model="addressForm" label-width="80px">
+    <el-dialog :title="$t('show.readr')" :modal="modal" :visible.sync="dialogVisible" width="600px">
+        <el-form ref="addressForm" :rules="addressRule" :model="addressForm" label-width="120px">
             <el-form-item :label="$t('form.recipients')" prop="name">
                 <el-input v-model="addressForm.name"></el-input>
             </el-form-item>
@@ -75,25 +75,29 @@ export default {
             state:'',
             country:'',
             isdefault:true,
-        },
-        addressRule:{
+        }
+    }
+  },
+  computed: {
+    addressRule(){
+        return {
             name: [
-                { required: true, message: '请输入收件人姓名', trigger: 'change' },
+                { required: true, message: this.$t('valid.adrname'), trigger: 'change' },
             ],
             phone: [
-                { required: true, message: '请输入收件人手机号', trigger: 'change' }
+                { required: true, message: this.$t('valid.adrphone'), trigger: 'change' }
             ],
             address: [
-                { required: true, message: '请输入详细地址', trigger: 'change' }
+                { required: true, message: this.$t('valid.adraddress'), trigger: 'change' }
             ],
             city: [
-                { required: true, message: '请输入city', trigger: 'change' }
+                { required: true, message: this.$t('valid.adrcity'), trigger: 'change' }
             ],
             state: [
-                { required: true, message: '请输入state', trigger: 'change' }
+                { required: true, message: this.$t('valid.adrstate'), trigger: 'change' }
             ],
             country: [
-                { required: true, message: '请输入country', trigger: 'change' }
+                { required: true, message: this.$t('valid.adrcountry'), trigger: 'change' }
             ]
         }
     }
@@ -131,7 +135,7 @@ export default {
                 addressAdd(params).then(res=>{
                     if(res.code==200){           
                         this.closeModal();
-                        this.$message.success('添加成功');
+                        this.$message.success('success');
                         if(this.$route.query.redirect){
                             this.$router.push({
                                 path:this.$route.query.redirect

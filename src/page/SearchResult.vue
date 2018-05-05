@@ -107,6 +107,8 @@ export default {
       this.pas.q = to.query.word;
       this.pas.pageno = 1;
       this.getListData();
+      this.onGetLeaseList();
+      this.onGetPostInfo();
     }
   },
   methods:{
@@ -130,12 +132,12 @@ export default {
     },
     onGetLeaseList(){
       getLeaseList(this.pas).then(res=>{
-        this.postList = this.postList.concat(res.data.leaseList);
+        this.postList = res.data.leaseList;
       })
     },
     onGetPostInfo(){
       groupPostList(this.pas).then(res=>{
-        this.postList2 = this.postList2.concat(res.data.leaseList);
+        this.postList2 = res.data.leaseList;
       })
     }
   },
@@ -152,7 +154,7 @@ export default {
 <style lang="scss" scoped>
 .container1000{
   width: 1000px;
-  margin: 60px auto;
+  margin: 0 auto;
 }
 .good_card{
   width: 196px;
@@ -168,6 +170,7 @@ export default {
   text-align: center;
   color: #7cd958;
   margin-top: 30px;
+  margin-bottom: 60px;
   font-size: 28px;
   font-weight: bold;
 }

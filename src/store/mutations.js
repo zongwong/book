@@ -41,7 +41,9 @@ export default {
     [types.Currency](state, payload){
         state.Currency = payload.list
     },
-
+    [types.Lang](state, payload){
+        state.lang = payload.lang
+    }
 
 
 }

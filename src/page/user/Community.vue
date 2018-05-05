@@ -1,6 +1,6 @@
 <template>
 <div class="publish" v-loading="loading">
-    <div class="pbbtn_box"><router-link to="/center/publishpost"><span>{{$t('btn.publishpost')}}</span></router-link></div>
+    <div class="pbbtn_box" v-if="status==1"><router-link to="/center/publishpost"><span>{{$t('btn.publishpost')}}</span></router-link></div>
     <div class="history_item" v-for="(item,index) in list" :key="item.post_id">
         <div class="post_item">
           <router-link :to="'/community/post/'+item.post_id">
@@ -25,10 +25,11 @@
           <!-- <div class="btn_edit">编辑</div> -->
         </div>
     </div>
-    <div v-if="noCreate">
-      <span>请先填写社团信息</span>
+    <div class="groupStatus" v-if="noCreate||status==0">
+      <router-link v-if="noCreate" to="/center/info"><span>{{$t('msg.noGroup')}}</span></router-link>
+      <span  v-if="status==0">{{$t('msg.groupAwait')}}</span>
     </div>
-    <div v-if="!noCreate">
+    <div v-if="status==1">
       <my-pagination
           :total="total"
           :current-page.sync="pageno"
@@ -55,7 +56,8 @@ export default {
         pageno:1,
         loading:false,
         noCreate:false,
-        mygroup_id:''
+        mygroup_id:'',
+        status:44
       };
   },
   // beforeRouteEnter (to, from, next) {
@@ -95,9 +97,9 @@ export default {
       this.getListData()
     },
     onDelGoods(id,index){
-          this.$confirm('此操作将删除该发布, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
+          this.$confirm(this.$t('msg.delPost'), this.$t('btn.tips'), {
+              confirmButtonText: this.$t('btn.sure'),
+              cancelButtonText: this.$t('btn.cancel'),
               type: 'warning'
           }).then(() => {
               delgroupPost({
@@ -120,13 +122,18 @@ export default {
       if(res.code==200){
         if(res.data.associations.length){
           this.mygroup_id = res.data.associations[0].association_id;
-          this.getListData()
+          this.status = res.data.associations[0].status;
+          if(this.status==1){
+            this.getListData()
+          }
+          
         }else{
           this.noCreate = true;
-          this.$message.error('请先填写社团资料,才能发帖');
-          this.$router.push({
-            path:'/center/info'
-          })
+          // this.$message.error(this.$t('msg.noGroup'));
+
+          // this.$router.push({
+          //   path:'/center/info'
+          // })
         }
       }
     })
@@ -154,5 +161,13 @@ export default {
         line-height: 30px;
         padding: 0 20px;
     }
+}
+.groupStatus{
+  text-align: center;
+  margin: 250px auto;
+  color: #7cd958;
+  a{
+    color: #7cd958;
+  }
 }
 </style>

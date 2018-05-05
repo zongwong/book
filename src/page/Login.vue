@@ -34,12 +34,12 @@
         <div class="form" v-if="phoneType">
           <el-form :model="regForm" :rules="rules" ref="regForm" label-width="100px" class="demo-ruleForm">
             <el-form-item :label="$t('form.phone')" prop="phone">
-                <el-input v-model="regForm.phone" class="bordercolor"  placeholder="请输入内容"></el-input>
+                <el-input v-model="regForm.phone" class="bordercolor"  :placeholder="$t('valid.phone')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('form.verification')" prop="captcha">
               <el-row>
                 <el-col :span="14">
-                  <el-input v-model="regForm.captcha" class="bordercolor"  placeholder="请输入内容"></el-input>
+                  <el-input v-model="regForm.captcha" class="bordercolor"  :placeholder="$t('valid.smscode')"></el-input>
                 </el-col>
                 <el-col :span="10">
                   <img class="captchaImg" @click="reflash" :src="src" alt="图形验证码">
@@ -49,7 +49,7 @@
             <el-form-item :label="$t('form.smsverification')" prop="code">
               <el-row>
                 <el-col :span="14">
-                  <el-input v-model="regForm.code" class="bordercolor"  placeholder="请输入内容"></el-input>
+                  <el-input v-model="regForm.code" class="bordercolor"  :placeholder="$t('valid.code')"></el-input>
                 </el-col>
                 <el-col :span="10" style="text-align:right;">
                   <el-button :disabled="isDjs" type="success" plain @click="sendSmsCode">{{smsText}}</el-button>
@@ -91,30 +91,37 @@ export default {
         code:'',
         captcha: '',
       },
-      rules: {
-          phone: [
-            { required: true, message: '请输入手机号', trigger: 'blur' },
-          ],
-          code: [
-            { required: true, message: '请输入短信验证码', trigger: 'blur' },
-          ],
-          captcha: [
-            { required: true, message: '请输入图形验证码', trigger: 'blur' },
-          ],
-      },
       phoneType:false,
       isDjs:false,
-      smsText:'发送验证码',
-      // idImage, 
-      // loginImage, 
-      // mailImage, 
-      // faceImage,
       isConnected: false,
       name: '',
       email: '',
       personalID: '',
-      FB: undefined
+      FB: undefined,
+      await:''
     };
+  },
+  computed:{
+    smsText(){
+      if(this.await){
+        return this.await
+      }else{
+        return this.$t('btn.smsText');
+      }
+    },
+    rules(){
+      return {
+          phone: [
+            { required: true, message: this.$t('valid.phone'), trigger: 'blur' },
+          ],
+          code: [
+            { required: true, message: this.$t('valid.smscode'), trigger: 'blur' },
+          ],
+          captcha: [
+            { required: true, message: this.$t('valid.code'), trigger: 'blur' },
+          ],
+      }
+    } 
   },
   methods: {
     ...mapMutations([
@@ -184,11 +191,11 @@ export default {
           let timer = setInterval(()=>{
             if(s>0){
               s=s-1;
-              this.smsText = `${s}s后重新获取`;
+              this.await = this.$t('btn.await') + ` ${s}s`;
             }else{
               clearInterval(timer);
               this.isDjs = false;
-              this.smsText = `获取验证码`;
+              this.await = " ";
             }
           },1000)
           this.$message.success(res.message);
@@ -206,7 +213,6 @@ export default {
         Vue.googleAuth().directAccess();
         Vue.googleAuth().signIn(function (googleUser) {
           // things to do when sign-in succeeds
-          console.log('成功')
           console.log(googleUser)
           console.log(googleUser.Zi.id_token)
           // 姓名
@@ -214,7 +220,6 @@ export default {
           // 头像
           console.log(googleUser.w3.Paa)
           //邮箱 googleUser.w3.U3
-
           googleToken({
             openid:googleUser.El,
             headimgurl:googleUser.w3.Paa,

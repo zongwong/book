@@ -79,9 +79,9 @@ export default {
       this.getListData()
     },
     onDelGoods(id,index){
-          this.$confirm('此操作将删除该发布, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
+          this.$confirm(this.$t('msg.delPost'), this.$t('btn.tips'), {
+              confirmButtonText: this.$t('btn.sure'),
+              cancelButtonText: this.$t('btn.cancel'),
               type: 'warning'
           }).then(() => {
               delLease({

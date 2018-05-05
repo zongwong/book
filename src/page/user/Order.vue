@@ -1,12 +1,12 @@
 <template>
 <div class="my_order" v-loading="loading">
-    <template v-for="item in list">    
+    <template v-for="(item,index) in list">    
         <div class="order_item" :class="{'yellow':cat==='buy','green':cat==='sale'}" :key="item.order_id">
             <div class="order_header">
                 <div class="flex_row order_header-th">
-                    <span>发布时间</span>
-                    <span>交易时间</span>
-                    <span>价格</span>
+                    <span>{{$t('order.pbtime')}}</span>
+                    <span>{{$t('order.ordertime')}}</span>
+                    <span>{{$t('order.price')}}</span>
                 </div>
                 <div class="flex_row order_header-td">
                     <span>{{item.created_at}}</span>
@@ -17,7 +17,7 @@
             <div class="order_detail">
                 <el-tabs tab-position="right">
                     <el-tab-pane label="商品信息">
-                        <div slot="label"><span class="order_tabNav">订单信息</span></div>
+                        <div slot="label"><span class="order_tabNav">{{$t('order.orderinfo')}}</span></div>
                         <div class="order_tabContent">
                             <router-link :to="'/buy/2/'+item.order_id">
                                 <div class="flex_row orderGoodInfo">
@@ -26,66 +26,95 @@
                                     </div>
                                     <div class="row_bd">
                                         <p class="title">{{item.goods_info.title}}</p>
-                                        <div class="content">简介:{{item.goods_info.summary}}</div>
+                                        <div class="content">{{$t('order.desc')}}:{{item.goods_info.summary}}</div>
                                     
-                                        <div class="content adr">收货人:{{item.address_info.recipients}}</div>
-                                        <div class="content adr">手机号:{{item.address_info.mobilephone}}</div>
-                                        <div class="content adr">收货地址:{{item.address_info.detail}} / {{item.address_info.city}} / {{item.address_info.province}} / {{item.address_info.country}}</div>
+                                        <div class="content adr">{{$t('form.recipients')}}:{{item.address_info.recipients}}</div>
+                                        <div class="content adr">{{$t('form.phone')}}:{{item.address_info.mobilephone}}</div>
+                                        <div class="content adr">{{$t('form.address')}}:{{item.address_info.detail}} / {{item.address_info.city}} / {{item.address_info.province}} / {{item.address_info.country}}</div>
                                     </div>
                                 </div>
                             </router-link>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="交易状况">
-                        <div slot="label"><span class="order_tabNav">交易状况</span></div>
+                        <div slot="label"><span class="order_tabNav">{{$t('order.orderstatus')}}</span></div>
                         <div class="order_tabContent">
-                            <p class="title">交易状况：</p>
-                            <p class="content">{{item.show_order_status}}</p>
-                            <!-- onCancelOrderl
-                            onApplyRefund
-                            onSendDeliver
-                            onConfirmDeliver
-                            onOrderEvaluate -->
-                            <el-button v-if="cat=='buy' && item.order_status=='order_create'" size="mini" round>立即付款</el-button>
-                            <el-button v-if="cat=='buy' && item.order_status=='order_create'" size="mini" round  @click="onCancelOrderl(item.order_id,item.goods_id)">取消订单</el-button>
-                            <el-button v-if="cat=='buy' && item.order_status=='order_payed'" size="mini" round  @click="onApplyRefund(item.order_id,item.goods_id)">申请退款</el-button>
-                            <el-button v-if="cat=='buy' && item.order_status=='goods_delivered'" size="mini" round  @click="onConfirmDeliver(item.order_id,item.goods_id)">确认收货</el-button>
+                            <p class="title">{{$t('order.orderstatus')}}：</p>
+                            <p class="content">{{changeSatus(item.order_status)}}</p>
 
-                            <el-button v-if="cat=='sale' && item.order_status=='order_payed'" size="mini" round  @click="onSendDeliver(item.order_id,item.goods_id)">立即发货</el-button>
+                            <el-button v-if="cat=='buy' && item.order_status=='order_create'" size="mini" round>{{$t('btn.payNow')}}</el-button>
+                            <el-button v-if="cat=='buy' && item.order_status=='order_create'" size="mini" round  @click="onCancelOrderl(item.order_id,item.goods_id)">{{$t('btn.cancelOrder')}}</el-button>
+                            <el-button v-if="cat=='buy' && item.order_status=='order_payed'" size="mini" round  @click="onApplyRefund(item.order_id,item.goods_id)">{{$t('btn.refund')}}</el-button>
+                            <el-button v-if="cat=='buy' && item.order_status=='goods_delivered'" size="mini" round  @click="onConfirmDeliver(item.order_id,item.goods_id)">{{$t('btn.receiving')}}</el-button>
+                            <el-button v-if="cat=='sale' && item.order_status=='order_payed'" size="mini" round  @click="onSendDeliver(item.order_id,item.goods_id)">{{$t('btn.shipments')}}</el-button>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="买家信息">
-                        <div slot="label"><span class="order_tabNav">{{cat==='sale'?'买家':'卖家'}}信息</span></div>
+                        <div slot="label"><span class="order_tabNav">{{cat==='sale'?$t('order.buyer'):$t('order.seller')}}</span></div>
                         <div class="order_tabContent">
                             <div class="flex_row">
                                 <div class="userInfoBox">
                                     <div class="avatar">
                                         <img :src="item.userinfo.headimgurl | headfilter" alt="头像"> 
-                                        <i class="icon_sex"></i>
+                                        <i class="icon_sex" :class="{'icon_man':item.userinfo.sex==1}"></i>
                                     </div> 
                                 </div>
                                 <div class="row_bd userInfoP">
                                     <p>{{item.userinfo.name}}</p>
                                     <p>{{item.userinfo.graduate_school}}</p>
-                                    <!-- <p>x请问请问亲我额</p> -->
-                                    <!-- <p>x请问请问亲我额</p> -->
                                 </div>
                             </div>
                         </div>
                     </el-tab-pane>
-                    <el-tab-pane label="评星评价" v-if="item.order_status=='goods_received'">
-                        <div slot="label"><span class="order_tabNav">评星评价</span></div>
+                    <el-tab-pane label="评星评价" v-if="evaluateStatus(item.order_status,index)==1||evaluateStatus(item.order_status,index)==3">
+                        <div slot="label"><span class="order_tabNav">{{$t('order.star')}}</span></div>
                         <div class="order_tabContent">
                             <div class="evaluate_box evaluate_top">      
                                 <div class="flex_row">
-                                    <div class="evaluate_label evaluate_rate">本次交易评分：</div>
+                                    <div class="evaluate_label evaluate_rate">{{$t('order.score')}}：</div>
                                     <div class="row_bd">
-                                        <el-rate :colors="['#7cd958','#7cd958','#7cd958']" v-model="value1"></el-rate>
+                                        <el-rate :colors="['#7cd958','#7cd958','#7cd958']" v-model="item.value1"></el-rate>
                                     </div>
                                 </div>
                                 <div class="flex_row evaluate_word_row">
                                     <textarea class="pjtextarea" v-model="pjtextarea"></textarea>
                                     <el-button size="mini" round @click="onOrderEvaluate(item.order_id,item.goods_id)">提交</el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+                    <!-- 卖家已评 -->
+                    <el-tab-pane label="评星评价" v-if="item.evalutelist.seller.length!=0">
+                        <div slot="label"><span class="order_tabNav">{{$t('order.salestar')}}</span></div>
+                        <div class="order_tabContent">
+                            <div class="evaluate_box evaluate_top">      
+                                <div class="flex_row">
+                                    <div class="evaluate_label evaluate_rate">{{$t('order.score')}}：</div>
+                                    <div class="row_bd">
+                                        <el-rate disabled :colors="['#7cd958','#7cd958','#7cd958']" v-model="item.evalutelist.seller.star"></el-rate>
+                                    </div>
+                                </div>
+                                <div class="flex_row evaluate_word_row">
+                                    <p>{{$t('order.star')}}：</p>
+                                    <p>{{item.evalutelist.seller.words}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </el-tab-pane>
+                    <!-- 买家已评 -->
+                    <el-tab-pane label="评星评价" v-if="item.evalutelist.buyer.length!=0">
+                        <div slot="label"><span class="order_tabNav">{{$t('order.buystar')}}</span></div>
+                        <div class="order_tabContent">
+                            <div class="evaluate_box evaluate_top">      
+                                <div class="flex_row">
+                                    <div class="evaluate_label evaluate_rate">{{$t('order.score')}}：</div>
+                                    <div class="row_bd">
+                                        <el-rate disabled :colors="['#7cd958','#7cd958','#7cd958']" v-model="item.evalutelist.buyer.star"></el-rate>
+                                    </div>
+                                </div>
+                                <div class="flex_row evaluate_word_row">
+                                    <p>{{$t('order.star')}}：</p>
+                                    <p>{{item.evalutelist.buyer.words}}</p>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +175,8 @@
 import { salelist,consumelist,applyRefund,sendDeliver,confirmDeliver,orderEvaluate,delOrder } from "../../api/api";
 import { mapState } from 'vuex';
 import pagination from '../../components/pagination';
-import headfilter from '../../utils/tools';
+import headfilter from  '../../utils/tools';
+import { orderStatus,isEmptyArr } from '../../utils/tools';
 export default {
   name: "Order",
   components: {
@@ -178,6 +208,34 @@ export default {
     ])
   },
   methods:{
+      evaluateStatus(status,index){
+          const obj = this.list[index].evalutelist;
+          const arr = ['seller_evaluated','buyer_evaluated','both_evaluated'];
+          if(arr.indexOf(status)!=-1){
+              if(obj.role == 'seller'){
+                  if(isEmptyArr(obj.seller)){
+                      // 我是卖家,未评
+                      return 1;
+                  }else{
+                      // 我是卖家,已评
+                      return 2;
+                  }
+              }else if(obj.role == 'buyer'){
+                  if(isEmptyArr(obj.buyer)){
+                       // 我是买家,未评
+                      return 3;
+                  }else{
+                      // 我是买家,已评
+                      return 4;
+                  }
+              }
+          }else{
+              return 5;
+          }
+      },
+      changeSatus(status){
+          return orderStatus(status,this);
+      },
       getListData(){
           this.loading = true;
           if(this.cat=='buy'){
@@ -208,9 +266,9 @@ export default {
       },
       // 取消订单
       onCancelOrderl(id,goods_id){
-        this.$confirm('此操作将永久删除该订单, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+        this.$confirm(this.$t('msg.delOrder'), this.$t('btn.tips'), {
+            confirmButtonText: this.$t('btn.sure'),
+            cancelButtonText: this.$t('btn.cancel'),
             type: 'warning'
         }).then(() => {
             delOrder({
@@ -219,7 +277,7 @@ export default {
                 if(res.code==200){
                     this.$message({
                         type: 'success',
-                        message: '删除成功!'
+                        message: this.$t('msg.delok')
                     });
                     this.onPageChange(1);
                 }
@@ -230,9 +288,9 @@ export default {
       },
       // 申请退款
       onApplyRefund(id,goods_id){
-        this.$confirm('您确定要申请退款吗?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+        this.$confirm(this.$t('msg.reOrder'), this.$t('btn.tips'), {
+            confirmButtonText: this.$t('btn.sure'),
+            cancelButtonText: this.$t('btn.cancel'),
             type: 'warning'
         }).then(() => {
             applyRefund({
@@ -241,20 +299,21 @@ export default {
                 if(res.code==200){
                     this.$message({
                         type: 'success',
-                        message: '申请成功!'
+                        message: this.$t('msg.success')
                     });
-                    this.$router.push({
-                        path:'/home'
-                    })
+                    // this.$router.push({
+                    //     path:'/home'
+                    // })
+                    this.onPageChange(1);
                 }
             })
         })
       },
       // 标记发货
       onSendDeliver(id,goods_id){
-        this.$confirm('您确认已经发货了?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+        this.$confirm(this.$t('msg.shipments'), this.$t('btn.tips'), {
+            confirmButtonText: this.$t('btn.sure'),
+            cancelButtonText: this.$t('btn.cancel'),
             type: 'warning'
         }).then(() => {
             sendDeliver({
@@ -264,7 +323,7 @@ export default {
                 if(res.code==200){
                     this.$message({
                         type: 'success',
-                        message: '发货成功!'
+                        message: this.$t('msg.shipmentsok')
                     });
                     this.onPageChange(1);
                 }
@@ -276,9 +335,9 @@ export default {
       },
       // 确认收货
       onConfirmDeliver(id,goods_id){
-        this.$confirm('您确认已经收到货了?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+        this.$confirm(this.$t('msg.receiving'), this.$t('btn.tips'), {
+            confirmButtonText: this.$t('btn.sure'),
+            cancelButtonText: this.$t('btn.cancel'),
             type: 'warning'
         }).then(() => {
             confirmDeliver({
@@ -288,7 +347,7 @@ export default {
                 if(res.code==200){
                     this.$message({
                         type: 'success',
-                        message: '确认成功!'
+                        message: this.$t('msg.receivingok')
                     });
                     this.onPageChange(1);
                 }
@@ -308,7 +367,8 @@ export default {
             words:this.pjtextarea,
         }).then(res=>{
             if(res.code==200){
-
+                this.$message.success('success');
+                this.onPageChange(1);
             }
         })
       },
@@ -338,7 +398,12 @@ export default {
   }
   .order_tabNav {
     border-radius: 50px;
-    padding: 4px 25px;
+    padding: 6px 20px;
+    text-align: center;
+    width: 130px;
+    display: block;
+    line-height: 1;
+    box-sizing: border-box;
   }
   .el-tabs__item.is-active .order_tabNav {
     color: #fff;
@@ -423,6 +488,8 @@ export default {
     img {
       display: block;
       width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 }

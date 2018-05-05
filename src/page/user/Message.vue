@@ -1,18 +1,23 @@
 <template>
 <div class="publish nopadding" v-loading="loading">
     <!-- <div class="pbbtn_box"><span @click="addressFormOpen">新增地址</span></div> -->
-    <div class="history_item" v-for="(item,index) in list" :key="item.address_id">
-        <div class="goods_info" >
-            <div class="goods_data">
-                <p class="desc">收件人：{{item.recipients}} - {{item.mobilephone}}</p>
-                <p class="desc">详细地址：{{item.detail}} / {{item.city}} / {{item.province}} / {{item.country}}</p>
+            <div class="topic_comment">
+                  <div class="comment_item flex_box" v-for="item in list" :key="item.message_id">
+                      <div class="comment_avatar">
+                          <img :src="item.fromuser.headimgurl | headfilter" alt="头像">
+                      </div>
+                      <div class="row_bd">
+                          <div class="comment_info">
+                              <span class="name">{{item.fromuser.nickname}}</span>
+                              <span class="time">{{item.created_at}}</span>
+                          </div>
+                          <div class="comment_data">
+                              <span class="reply_btn" @click="replyTo(item.comment_id,item.fromuser.nickname)">{{$t('show.reply')}}</span>
+                              {{item.commentinfo.content}}
+                          </div>
+                      </div>
+                  </div>
             </div>
-            <div class="close"></div>
-        </div>
-        <div class="btnsBox">
-            <span class="defaultAdr" @click="setDefault(item)"><i v-if="item.is_default==1" class="el-icon-success"></i>设置默认</span><span @click="editAdr(item.address_id,index)" class="btn_edit">编辑</span>
-        </div>
-    </div>
 
 </div>
 </template>
@@ -20,6 +25,7 @@
 <script>
 import { msgList,msgDel } from '../../api/api';
 import pagination from '../../components/pagination';
+import headfilter from '../../utils/tools';
 export default {
   name: 'Message',
   components: {
@@ -34,6 +40,9 @@ export default {
         dialogVisible:false,
         loading:false,
     }
+  },
+  filters: {
+      headfilter
   },
   methods: {
       getListData(){
@@ -50,6 +59,9 @@ export default {
             })
           })
       },
+      replyTo(){
+
+      }
   },
   created(){
      this.getListData();
