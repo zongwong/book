@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <div v-if="postList.length>0" class="post_box" v-loading="loading">
+      <div v-if="postList.length>0" class="post_box search_box" v-loading="loading">
         <div class="post_item" v-for="item in postList" :key="item.lease_id">
           <div class="post_user">
             <router-link :to="'/user/'+item.userinfo.user_id">
@@ -28,6 +28,32 @@
           </div>
           <div class="post_data">
             <router-link :to="'/house/'+item.lease_id">
+              <p class="post_title oneHide">{{item.title}}</p>
+              <div class="post_detail">
+                <img :src="item.images[0] | headfilter" alt="封面">
+                <p class="moreHide">{{item.content}}</p>
+              </div>
+              <div class="post_other">
+                <span class="from">{{item.updated_at}}</span>
+                <span class="zan">{{$t('show.zan')}} {{item.thumbup}}</span>
+                <span class="hr">丨</span>
+                <span class="comment">{{$t('show.comment')}} {{item.comment}}</span>
+              </div>
+            </router-link>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="postList2.length>0" class="post_box search_box" v-loading="loading">
+        <div class="post_item" v-for="item in postList2" :key="item.post_id">
+          <div class="post_user">
+            <router-link :to="'/user/'+item.userinfo.user_id">
+            <img :src="item.userinfo.headimgurl | headfilter" alt="用户头像">
+            <p class="name oneHide">{{item.userinfo.nickname}}</p>
+            </router-link>
+          </div>
+          <div class="post_data">
+            <router-link :to="'/community/post/'+item.post_id">
               <p class="post_title oneHide">{{item.title}}</p>
               <div class="post_detail">
                 <img :src="item.images[0] | headfilter" alt="封面">
@@ -125,19 +151,19 @@ export default {
     getListData() {
       this.loading = true;
       searchGoods(this.pas).then(res=>{
-        this.list = res.data.goodslist;
+        this.list = res.data.goodslist||[];
         this.total = res.data.maxpage;
         this.loading = false;
       })
     },
     onGetLeaseList(){
       getLeaseList(this.pas).then(res=>{
-        this.postList = res.data.leaseList;
+        this.postList = res.data.leaseList||[];
       })
     },
     onGetPostInfo(){
       groupPostList(this.pas).then(res=>{
-        this.postList2 = res.data.leaseList;
+        this.postList2 = res.data.postlist||[];
       })
     }
   },
@@ -170,13 +196,16 @@ export default {
   text-align: center;
   color: #7cd958;
   margin-top: 30px;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
   font-size: 28px;
   font-weight: bold;
 }
 .post_box{
   margin-bottom: 40px;
   min-height: 200px;
+}
+.search_box .post_item:first-child{
+  padding-top: 0;
 }
 .post_other .from{
   margin-left: 0;

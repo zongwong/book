@@ -65,6 +65,7 @@ export default {
         // campus_id:this.nowCampu.campus_id,
         category_id:1,
         pageno:1,
+        perpage:12
       }
     };
   },

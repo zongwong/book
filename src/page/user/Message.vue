@@ -12,10 +12,11 @@
                               <span class="time">{{item.created_at}}</span>
                           </div>
                           <div class="comment_data">
-                              <span class="reply_btn" @click="replyTo(item.comment_id,item.fromuser.nickname)">{{$t('show.reply')}}</span>
+                              <span class="reply_btn" @click="replyTo(item.module,item.commentinfo.post_id||item.commentinfo.lease_id,item.comment_id,item.commentinfo.to_id,item.fromuser.nickname)">{{$t('show.reply')}}</span>
                               {{item.commentinfo.content}}
                           </div>
                       </div>
+                      <div class="close" @click="delMsg(item.message_id)"></div>
                   </div>
             </div>
 
@@ -23,7 +24,7 @@
 </template>
 
 <script>
-import { msgList,msgDel } from '../../api/api';
+import { msgList,msgDel,groupCommentCreate,leaseCommentCreate } from '../../api/api';
 import pagination from '../../components/pagination';
 import headfilter from '../../utils/tools';
 export default {
@@ -59,8 +60,59 @@ export default {
             })
           })
       },
-      replyTo(){
+      replyTo(type,id,cid,tid,name){
 
+        
+
+        this.$prompt('Say Something', this.$t('form.replytips')+name, {
+          confirmButtonText: this.$t('btn.sure'),
+          cancelButtonText: this.$t('btn.cancel'),
+          inputPattern: /\S/,
+          inputErrorMessage: this.$t('valid.content')
+        }).then(({ value }) => {
+          let params = {
+            content:value,
+            comment_id:tid==0?cid:tid
+          }
+          params[type+'_id'] = id;
+          if(type=='post'){
+            groupCommentCreate(params).then(res=>{
+                if(res.code==200){
+                    this.$message.success(res.message);
+                }
+            })
+          }else{
+            leaseCommentCreate(params).then(res=>{
+                if(res.code==200){
+                    this.$message.success(res.message);
+                }
+            })
+          }
+
+        }).catch(() => {
+              
+        });
+      },
+      delMsg(id){
+        this.$confirm(this.$t('msg.delOrder'), this.$t('btn.tips'), {
+            confirmButtonText: this.$t('btn.sure'),
+            cancelButtonText: this.$t('btn.cancel'),
+            type: 'warning'
+        }).then(() => {
+            msgDel({
+                message_id:id,
+            }).then(res=>{
+                if(res.code==200){
+                    this.$message({
+                        type: 'success',
+                        message: 'success'
+                    });
+                    this.getListData();
+                }
+            })
+        }).catch(() => {
+        
+        });
       }
   },
   created(){
@@ -71,16 +123,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.publish .btn_edit{
+.comment_item{
+    background: none;
     position: relative;
-    margin-left: 20px;
-    cursor: pointer;
+    padding: 0 0 30px 0;
+    border-bottom:1px solid #e5e5e5;
+    margin-top: 30px;
+    &:first-child{
+        margin-top: 0;
+    }
 }
-.btnsBox{
-    text-align: right;
-}
-.defaultAdr{
-    color: #7cd958;
-    cursor: pointer;
+.comment_info{
+    margin-top: 0;
 }
 </style>

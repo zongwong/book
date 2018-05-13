@@ -25,9 +25,10 @@
           <!-- <div class="btn_edit">编辑</div> -->
         </div>
     </div>
-    <div class="groupStatus" v-if="noCreate||status==0">
+    <div class="groupStatus" v-if="noCreate||status!=1">
       <router-link v-if="noCreate" to="/center/info"><span>{{$t('msg.noGroup')}}</span></router-link>
       <span  v-if="status==0">{{$t('msg.groupAwait')}}</span>
+      <router-link v-if="status==2" to="/center/info"><span>{{$t('msg.groupReject')}}</span></router-link>
     </div>
     <div v-if="status==1">
       <my-pagination

@@ -13,7 +13,8 @@ export const getCampus = params => Axios.get('/campus/getlist', params);
 
 // 货币列表
 export const getCurrency = params => Axios.get('/currency/getlist', params);
-
+// 轮播
+export const swiperData = params => Axios.get('/slide/getlist',params);
 
 // 首页
 
@@ -104,5 +105,5 @@ export const walletApply= params => Axios.get('/wallet/withdraw', params);
 
 // 消息
 export const msgList = params => Axios.get('/message/getlist', params); 
-export const msgDel= params => Axios.post('/message/delete', params);
+export const msgDel= params => Axios.get('/message/delete', params);
 

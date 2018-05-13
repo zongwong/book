@@ -2,17 +2,22 @@
   <div class="banner">
     <div class="block">
         <el-carousel  trigger="click" height="500px">
-            <el-carousel-item v-for="item in 4" :key="item">
+            <el-carousel-item v-for="item in list" :key="item.slide_id">
+               <router-link :to="url(item)">
                 <div class="banner_info">
                     <div class="container banner_info-wrap">
-                        <p class="banner_title">WELCOME TO OUR STORE</p>
-                        <p class="banner_desc">Daily Subscription Agency is a newspaper outlet organizaaily Subscription Agency is a newspaper outlet organization. W</p>
+                        <p class="banner_title">{{item.title}}</p>
+                        <p class="banner_desc">{{item.content}}</p>
                         <p class="banner_btn">CHECK IT OUT</p>
                     </div>
                 </div>
-                <div>
-                    <img class="bannerImg" src="../../assets/image/banner.png" alt="幻灯片">
+                <div style="height:100%;">
+                 
+                    <img class="bannerImg" :src="item.path | headerfilter" alt="幻灯片">
+                 
+                    
                 </div>
+                 </router-link>
             </el-carousel-item>
         </el-carousel>
     </div>
@@ -20,10 +25,54 @@
 </template>
 
 <script>
+import { swiperData } from '../../api/api';
+import headerfilter from '../../utils/tools';
+import { mapGetters } from '../../../node_modules/_vuex@3.0.1@vuex';
 export default {
   name: "Banner",
   data() {
-    return {};
+    return {
+      list:[],
+      pas:{
+        // type:'goods',
+        // category_id:'1',
+        // num:''
+      }
+    };
+  },
+  filters : {
+    headerfilter
+  },
+  watch: {
+    '$route'(to, from){
+      // this.type = to.path;
+      console.log(to)
+      // if(1){
+
+      // }
+    }
+  },
+  methods: {
+    getListData(){
+      swiperData(this.pas).then(res=>{
+        if(res.code==200){
+          this.list = res.data.slides;
+        }
+      })
+    },
+    url(item){
+      switch(item.type){
+        case 'lease':
+          return '/house/'+item.lease_id;
+        case 'goods':
+          return '/goods/'+item.goods_id;
+        case 'post':
+          return '/community/post/'+item.post_id;
+      }
+    }
+  },
+  created(){
+    this.getListData()
   }
 };
 </script>
@@ -34,6 +83,8 @@ export default {
 }
 .bannerImg{
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .banner_info {
   position: absolute;

@@ -164,6 +164,7 @@ module.exports = {
     delPost:"此操作将删除该发布内容, 是否继续?",
     noGroup:"请先填写社团信息",
     groupAwait:"请等待管理员审核",
+    groupReject:"您的申请被拒绝,请修改社团信息"
   },
   valid:{
     title:"请输入标题",

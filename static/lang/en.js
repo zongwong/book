@@ -164,6 +164,7 @@ module.exports = {
     delPost:"This operation deletes the publish content, does it continue?",
     noGroup:"Please fill in the club information first.",
     groupAwait:"Please wait for the administrator to review.",
+    groupReject:"Your application has been rejected. Please amend the club information."
   },
   valid:{
     title:"nono",

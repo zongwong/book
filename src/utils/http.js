@@ -6,7 +6,7 @@ axios.defaults.headers.post['content-Type'] = 'application/x-www=form-urlencoded
 axios.defaults.withCredentials = true;
 const Axios = axios.create({
   baseURL: confg.host,
-  timeout: 20000,
+  timeout: 20000000,
 });
 
 

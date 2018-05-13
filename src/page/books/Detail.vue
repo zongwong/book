@@ -68,8 +68,13 @@ export default {
       getGoodsInfo({
           goods_id:this.goods_id,
       }).then(res=>{
-        this.goodsInfo = res.data.goodsInfo;
-        this.userinfo = res.data.goodsInfo.userinfo;
+          if(res.code==200){
+              this.goodsInfo = res.data.goodsInfo;
+              this.userinfo = res.data.goodsInfo.userinfo;
+          }else{
+              this.$message.error(res.message);
+              this.$router.back();
+          }
         this.loading = false;
       })
   }

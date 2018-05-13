@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {  // 需要 proxyTable 代理的接口（可跨域）
       '/api': {
-          target: 'http://api.risuntechs.com',
+          target: 'https://api.risuntechs.com',
           changeOrigin: true,
           pathRewrite: {
             '^/api': ''

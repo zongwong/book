@@ -3,10 +3,11 @@ import Vuex from 'vuex';
 import actions from './action';
 import mutations from './mutations';
 import headfilter from '../utils/tools';
+import config from '../utils/global';
 Vue.use(Vuex);
 
 const state = {
-    host:'http://api.risuntechs.com',
+    host: config.host,
     token: localStorage.getItem('token')||'',
     school:'',
     userInfo:{

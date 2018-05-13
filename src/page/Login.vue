@@ -12,7 +12,7 @@
           <div class="login_item login_fb">
             <div class="fbBtnBox">
               <facebook-login class="fbButton"
-                appId="165722567449098"
+                appId="1416467025119562"
                 @login="getUserData"
                 @logout="onLogout"
                 @sdk-loaded="sdkLoaded"
@@ -68,7 +68,8 @@
 </template>
 
 <script>
-
+// 165722567449098
+// 1416467025119562
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import facebookLogin from 'facebook-login-vuejs';
@@ -238,8 +239,9 @@ export default {
         })
     },
     getUserData() {
-      this.FB.api('/me', 'GET', { fields: 'id,name,email' },
+      this.FB.api('/me', 'GET',
         userInformation => {
+          console.log(userInformation)
           this.personalID = userInformation.id;
           this.email = userInformation.email;
           this.name = userInformation.name;
