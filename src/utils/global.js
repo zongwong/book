@@ -1,4 +1,4 @@
 export default {
-    // host:'https://api.risuntechs.com'
-    host:'/api',
+    host:'https://api.risuntechs.com'
+    // host:'/api',
 }

@@ -12,7 +12,7 @@
           <div class="login_item login_fb">
             <div class="fbBtnBox">
               <facebook-login class="fbButton"
-                appId="1416467025119562"
+                appId="227565908009108"
                 @login="getUserData"
                 @logout="onLogout"
                 @sdk-loaded="sdkLoaded"
@@ -239,14 +239,16 @@ export default {
         })
     },
     getUserData() {
-      this.FB.api('/me', 'GET',
+      this.FB.api('/me', 'GET',{ fields: 'id,name,email,picture' },
         userInformation => {
           console.log(userInformation)
           this.personalID = userInformation.id;
           this.email = userInformation.email;
           this.name = userInformation.name;
+          this.picture = userInformation.picture.data.url;
         }
       )
+
     },
     sdkLoaded(payload) {
       this.isConnected = payload.isConnected
