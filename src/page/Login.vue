@@ -75,7 +75,7 @@ import Footer from '../components/common/Footer';
 import facebookLogin from 'facebook-login-vuejs';
 import Vue from 'vue';
 import config from '../utils/global';
-import { getCaptcha,getCode,toLogin,googleToken } from '../api/api';
+import { getCaptcha,getCode,toLogin,googleToken,faceBookToken } from '../api/api';
 import { mapMutations } from 'vuex';
 export default {
   name: 'Login',
@@ -239,13 +239,19 @@ export default {
         })
     },
     getUserData() {
+      let that = this;
       this.FB.api('/me', 'GET',{ fields: 'id,name,email,picture' },
         userInformation => {
           console.log(userInformation)
-          this.personalID = userInformation.id;
-          this.email = userInformation.email;
-          this.name = userInformation.name;
-          this.picture = userInformation.picture.data.url;
+
+          faceBookToken({
+            id : userInformation.id,
+            email : userInformation.email,
+            name : userInformation.name,
+            picture : userInformation.picture.data.url,
+          }).then(res=>{
+            that.loginSuccess(res);
+          })
         }
       )
 

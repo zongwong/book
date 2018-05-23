@@ -8,6 +8,7 @@ export const getCode = params => Axios.get('/token/getcode', params);
 // 登录
 export const toLogin = params => Axios.post('/token/create', params);
 export const googleToken= params => Axios.post('/token/google', params);
+export const faceBookToken= params => Axios.post('/token/facebook', params);
 //校区列表
 export const getCampus = params => Axios.get('/campus/getlist', params);
 
