@@ -1,5 +1,5 @@
 import * as types from './mutation-types';
-// import Vue from 'vue';
+import Vue from 'vue';
 export default {
     [types.Login](state, payload){
         state.userInfo = payload.userinfo
@@ -8,6 +8,7 @@ export default {
     [types.LoginOut](state, payload){
         state.token = '';
         // localStorage.removeItem('token');
+
         localStorage.clear();
         window.location.href='/login';
     },

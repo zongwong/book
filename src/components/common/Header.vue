@@ -21,7 +21,7 @@
         <span>丨</span>
         <router-link v-if="token" to="/center"><span class="user name">{{userInfo.nickname}}</span></router-link>
         <router-link v-if="!token" to="/login"><span class="user">{{$t("navs.login")}}</span></router-link>
-        <span v-if="token" class="user" @click="LoginOut_MUTATION">{{$t('show.out')}}</span>
+        <span v-if="token" class="user" @click="loginOut">{{$t('show.out')}}</span>
         <span>丨</span>
         <el-dropdown @command="changeLanguage">
           <span class="el-dropdown-link select">
@@ -89,6 +89,32 @@ export default {
       this.NowCampu_MUTATION({
         nowCampu: command
       })
+    },
+    loginOut(){
+        let that = this;
+        const login_type = localStorage.getItem('login_type')||'';
+        if(login_type==='google'){
+            googleSignOut(function(){
+              that.LoginOut_MUTATION();
+            })
+        }else if(login_type==='facebook'){
+          logout(function(response) {
+            that.LoginOut_MUTATION();
+          });
+        }else{
+          that.LoginOut_MUTATION();
+        }
+
+        function googleSignOut(cb) { 
+          var auth2 = gapi.auth2.getAuthInstance(); 
+          auth2.signOut().then(function () { cb() ;}); 
+          auth2.disconnect(); 
+        }
+        function logout(cb){
+            FB.logout(function(response) {
+               cb()
+            });
+        }
     }
   },
   created() {

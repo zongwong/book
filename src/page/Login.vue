@@ -16,7 +16,7 @@
                 @login="getUserData"
                 @logout="onLogout"
                 @sdk-loaded="sdkLoaded"
-                @get-initial-status="getUserData">
+              >
               </facebook-login>
               <!-- <i></i> -->
             </div>
@@ -199,10 +199,10 @@ export default {
               this.await = " ";
             }
           },1000)
-          this.$message.success(res.message);
+          this.$message.success(`${res.message}`);
         }else{
           this.isDjs = false;
-          this.$message.error(res.message);
+          this.$message.error(`${res.message}`);
         }
       })
     },
@@ -211,6 +211,13 @@ export default {
     },
     googleLogin(){
         let that = this;
+        // console.log(Vue.googleAuth())
+        //  Vue.googleAuth().signOut(function(){
+        //    console.log(1223131)
+        //  },function(){
+        //    console.log(454545)
+        //  })
+        //  return;
         Vue.googleAuth().directAccess();
         Vue.googleAuth().signIn(function (googleUser) {
           // things to do when sign-in succeeds
@@ -229,6 +236,7 @@ export default {
             firstname:googleUser.w3.ofa,
             secondname:googleUser.w3.wea,
           }).then(res=>{
+            localStorage.setItem('login_type','google');
             that.loginSuccess(res);
           })
 
@@ -250,6 +258,7 @@ export default {
             name : userInformation.name,
             picture : userInformation.picture.data.url,
           }).then(res=>{
+            localStorage.setItem('login_type','facebook');
             that.loginSuccess(res);
           })
         }

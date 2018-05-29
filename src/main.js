@@ -31,9 +31,6 @@ Vue.config.productionTip = false;
 Vue.use(GoogleAuth, { client_id: '470375594267-g2ika962u05cat3m6a8v37k2o877gc0s.apps.googleusercontent.com' })
 Vue.googleAuth().load()
 
-// localStorage.setItem('token','94fa6d2e8d6cf3cb9f65012f33e67a10');
-// localStorage.setItem('token','c2cf19827f84348c3f65e75325f37ddc');
-
 function getStorage(key){
   return localStorage.getItem(key)||'';
 }
@@ -81,10 +78,39 @@ router.beforeEach((to, from, next) => {
         path: '/',
         query: { redirect: to.fullPath }  
       });
-    }else{
-      next();
+      return;
     }
+
+
+    if(getStorage('token')){
+      if(!getStorage('nickname')){
+        if(to.path=='/setnick'){
+          next()
+        }else{
+          next({
+            path: '/setnick' 
+          });
+        }
+  
+      }else if(!getStorage('graduate_school')){
+        if(to.path=='/setinfo'){
+          next()
+        }else{
+          next({
+            path: '/setinfo'
+          });
+        }
+        
+      }else{
+        next()
+      }
     
+    }else{
+      next()
+    }
+
+      // next();
+
   }
 
 });
