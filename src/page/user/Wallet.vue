@@ -1,14 +1,46 @@
 <template>
 <div class="publish" v-loading="loading">
-    <div class="pbbtn_box" @click="applyMoney"><span>{{$t('btn.withdraw')}}</span></div>
+    <!-- <div class="pbbtn_box" @click="applyMoney"><span>{{$t('btn.withdraw')}}</span></div> -->
 
-    <p v-for="item in balancelist" :key="item.code">{{item.code}} {{item.amount}}</p>
-    <hr>
-    <div class="history_item" v-for="item in list" :key="item.cashflow_id">
+    <!-- <p v-for="item in balancelist" :key="item.code" @click="applyMoney(item.code,item.amount)">{{item.code}} {{item.amount}}</p> -->
+    <p class="billtitle">我的余额</p>
+    <template v-for="item in balancelist">
+        <el-card class="box-card" :key="item.code">
+            <div class="clearfix">
+                <span>{{item.code}} {{item.amount}}</span>
+                <el-button @click="applyMoney(item.code,item.amount)" style="float: right; padding: 3px 0" type="text">提现</el-button>
+            </div>
+        </el-card>
+    </template>
+    <p class="billtitle">账单记录</p>
+    <el-table
+      :data="list"
+      style="width: 100%">
+      <el-table-column
+        prop="created_at"
+        label="交易日期"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="inorout"
+        label="类型"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="currency_code"
+        label="货币">
+      </el-table-column>
+      <el-table-column
+        prop="amount"
+        label="金额">
+      </el-table-column>
+    </el-table>
+
+    <!-- <div class="history_item" v-for="item in list" :key="item.cashflow_id">
         <div class="post_item">
           <p>{{item.inorout}}  /  {{item.currency_symbol}}{{item.amount}}   /  {{item.created_at}}</p>
         </div>
-    </div>
+    </div> -->
 
     <!-- <my-pagination
       :total="total"
@@ -65,6 +97,7 @@ export default {
         pageno:1,
         loading:false,
         balancelist:[],
+        tableData:[]
       };
   },
   computed:{
@@ -93,16 +126,37 @@ export default {
       this.pageno = pageno;
       this.getListData()
     },
-    applyMoney(){
-        // walletApply({
+    applyMoney(code,amount){
 
-        // }).then(res=>{
-        //     if(){
+        this.$prompt(`您即将申请提现${code}${amount}`, '提现申请', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          inputErrorMessage: '邮箱格式不正确',
+          inputPlaceholder:'请输入邮箱'
+        }).then(({ value }) => {
+            
+            walletApply({
+                amount:amount,
+                email:value,
+                currency_code:code
+            }).then(res=>{
+                if(res.code==200){
+                    this.$message({
+                        type: 'success',
+                        message: '申请成功'
+                    });   
+                }else{
+    
+                }
+            })
 
-        //     }else{
-
-        //     }
-        // })
+        }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '取消输入'
+        //   });       
+        });
     },
     onDelGoods(id,index){
           this.$confirm('此操作将删除该发布, 是否继续?', '提示', {
@@ -153,5 +207,11 @@ export default {
         line-height: 30px;
         padding: 0 20px;
     }
+}
+.billtitle{
+    color: #7cd958;
+    padding: 20px 10px;
+    font-weight: bold;
+    font-size: 18px;
 }
 </style>

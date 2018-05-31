@@ -9,15 +9,15 @@
             <i></i>
             <p>WeChat</p>
           </div>
-          <div class="login_item login_fb">
+          <div class="login_item login_fb" @click="getUserData">
             <div class="fbBtnBox">
-              <facebook-login class="fbButton"
+              <!-- <facebook-login class="fbButton"
                 appId="227565908009108"
                 @login="getUserData"
                 @logout="onLogout"
                 @sdk-loaded="sdkLoaded"
               >
-              </facebook-login>
+              </facebook-login> -->
               <!-- <i></i> -->
             </div>
             <p>FaceBook</p>
@@ -248,28 +248,34 @@ export default {
     },
     getUserData() {
       let that = this;
-      this.FB.api('/me', 'GET',{ fields: 'id,name,email,picture' },
-        userInformation => {
-          console.log(userInformation)
-
-          faceBookToken({
-            id : userInformation.id,
-            email : userInformation.email,
-            name : userInformation.name,
-            picture : userInformation.picture.data.url,
-          }).then(res=>{
-            localStorage.setItem('login_type','facebook');
-            that.loginSuccess(res);
-          })
+      window.FB.login(function(response) {
+        console.log(response);
+        if (response.status === 'connected') {
+          window.FB.api('/me', 'GET',{ fields: 'id,name,email,picture' },
+            userInformation => {
+              console.log(userInformation)
+              if(userInformation.id){
+                faceBookToken({
+                  id : userInformation.id,
+                  email : userInformation.email,
+                  name : userInformation.name,
+                  picture : userInformation.picture.data.url,
+                }).then(res=>{
+                  localStorage.setItem('login_type','facebook');
+                  that.loginSuccess(res);
+                })
+              }
+            }
+          )
+        } else {
         }
-      )
+      });
 
     },
     sdkLoaded(payload) {
-      this.isConnected = payload.isConnected;
-      this.FB = payload.FB
-      console.log(this.FB)
-      // if (this.isConnected) this.getUserData()
+      // this.isConnected = payload.isConnected;
+      // this.isConnected = true;
+      // this.FB = payload.FB;
     },
     onLogin() {
       this.isConnected = true

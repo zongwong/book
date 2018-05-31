@@ -43,7 +43,6 @@
     </div>
     <facebook-login class="fbButton" style="display:none;"
       appId="227565908009108"
-      @login="getUserData"
       @logout="onLogout"
       @sdk-loaded="sdkLoaded"
     >
@@ -109,9 +108,6 @@ export default {
               that.LoginOut_MUTATION();
             })
         }else if(login_type==='facebook'){
-          // this.FB.logout()
-          // this.isConnected = false;
-          // that.LoginOut_MUTATION();
           this.onLogout(function(response) {
             that.LoginOut_MUTATION();
           });
@@ -126,38 +122,17 @@ export default {
         }
 
     },
-    getUserData() {
-      let that = this;
-      this.FB.api('/me', 'GET',{ fields: 'id,name,email,picture' },
-        userInformation => {
-          console.log(userInformation)
-
-          faceBookToken({
-            id : userInformation.id,
-            email : userInformation.email,
-            name : userInformation.name,
-            picture : userInformation.picture.data.url,
-          }).then(res=>{
-            localStorage.setItem('login_type','facebook');
-            that.loginSuccess(res);
-          })
-        }
-      )
-
-    },
     sdkLoaded(payload) {
       this.isConnected = payload.isConnected;
-      this.FB = payload.FB
-      console.log(this.FB)
-      // if (this.isConnected) this.getUserData()
-    },
-    onLogin() {
-      // this.isConnected = true
-      // this.getUserData()
+      this.FB = payload.FB;
+      // Vue.prototype.FB = payload.FB;
     },
     onLogout(cb) {
-      this.isConnected = false;
-      cb()
+      // this.isConnected = false;
+      FB.logout(function(response) {
+        cb()
+      });
+      
     }
   },
   created() {
