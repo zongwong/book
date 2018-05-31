@@ -266,10 +266,10 @@ export default {
 
     },
     sdkLoaded(payload) {
-      this.isConnected = payload.isConnected
+      this.isConnected = payload.isConnected;
       this.FB = payload.FB
       console.log(this.FB)
-      if (this.isConnected) this.getUserData()
+      // if (this.isConnected) this.getUserData()
     },
     onLogin() {
       this.isConnected = true

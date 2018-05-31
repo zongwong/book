@@ -94,7 +94,15 @@ export default {
       this.getListData()
     },
     applyMoney(){
+        // walletApply({
 
+        // }).then(res=>{
+        //     if(){
+
+        //     }else{
+
+        //     }
+        // })
     },
     onDelGoods(id,index){
           this.$confirm('此操作将删除该发布, 是否继续?', '提示', {

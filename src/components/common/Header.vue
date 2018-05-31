@@ -41,14 +41,25 @@
         <router-link to="/community"><span class="nav_item">{{$t("navs.community")}}</span></router-link>
       </nav>
     </div>
+    <facebook-login class="fbButton" style="display:none;"
+      appId="227565908009108"
+      @login="getUserData"
+      @logout="onLogout"
+      @sdk-loaded="sdkLoaded"
+    >
+    </facebook-login>
   </div>
 </template>
 
 <script>
 import Vue from 'vue';
 import { mapState,mapActions,mapMutations  } from 'vuex';
+import facebookLogin from 'facebook-login-vuejs';
 export default {
   name: 'Header',
+  components: {
+    'facebookLogin':facebookLogin
+  },
   data() {
     return {
       isLogin:false,
@@ -98,7 +109,10 @@ export default {
               that.LoginOut_MUTATION();
             })
         }else if(login_type==='facebook'){
-          logout(function(response) {
+          // this.FB.logout()
+          // this.isConnected = false;
+          // that.LoginOut_MUTATION();
+          this.onLogout(function(response) {
             that.LoginOut_MUTATION();
           });
         }else{
@@ -110,11 +124,40 @@ export default {
           auth2.signOut().then(function () { cb() ;}); 
           auth2.disconnect(); 
         }
-        function logout(cb){
-            FB.logout(function(response) {
-               cb()
-            });
+
+    },
+    getUserData() {
+      let that = this;
+      this.FB.api('/me', 'GET',{ fields: 'id,name,email,picture' },
+        userInformation => {
+          console.log(userInformation)
+
+          faceBookToken({
+            id : userInformation.id,
+            email : userInformation.email,
+            name : userInformation.name,
+            picture : userInformation.picture.data.url,
+          }).then(res=>{
+            localStorage.setItem('login_type','facebook');
+            that.loginSuccess(res);
+          })
         }
+      )
+
+    },
+    sdkLoaded(payload) {
+      this.isConnected = payload.isConnected;
+      this.FB = payload.FB
+      console.log(this.FB)
+      // if (this.isConnected) this.getUserData()
+    },
+    onLogin() {
+      // this.isConnected = true
+      // this.getUserData()
+    },
+    onLogout(cb) {
+      this.isConnected = false;
+      cb()
     }
   },
   created() {
