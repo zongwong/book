@@ -194,7 +194,9 @@ module.exports = {
     adrcountry:"请输入国家",
     smscode:"请输入短信验证码",
     code:"请输入图形验证码",
-    nickname:"请填写昵称"
+    nickname:"请填写昵称",
+    place: '请填写交易地点',
+    time:'请选择交易日期',
   },
   placeholder:{
     title:"请输入标题",
@@ -203,6 +205,7 @@ module.exports = {
     campus:"请选择校区",
     currency:"请选择货币种类",
     images:"请上传图片",
-    content:'请输入内容'
+    content:'请输入内容',
+    place:'请输入期望交易地点'
   },
 }

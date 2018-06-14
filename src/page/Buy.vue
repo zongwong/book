@@ -1,9 +1,7 @@
 <template>
 <div>
   <my-search></my-search>
-  <div 
-    v-loading="loading"
-  >
+  <div v-loading="loading">
     <div class="buy">
         <div class="box1000">
             <div class="goods_info">
@@ -24,6 +22,25 @@
             <p>{{$t('form.recipients')}}：{{defaultAddress.recipients}}</p>
             <p>{{$t('form.phone')}}：{{defaultAddress.mobilephone}}</p>
             <p>{{$t('form.address')}}：{{defaultAddress.detail}} / {{defaultAddress.city}} / {{defaultAddress.province}} / {{defaultAddress.country}}</p>
+        </div>
+        <div v-if="cat==1">
+            <el-form :inline="true" :model="formInline" ref="formInline" class="formBox" :rules="rules">
+
+                <el-form-item label="期望交易区域" prop="place">
+                    <el-input v-model="formInline.place" placeholder="place" style="width: 300px;"></el-input>
+                </el-form-item>
+
+                <el-form-item label="期望交易时间" prop="time">
+                    <el-date-picker
+                        v-model="formInline.time"
+                        format="MM-dd-yyyy HH:mm"
+                        type="datetimerange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                    </el-date-picker>
+                </el-form-item>
+            </el-form>
         </div>
         <p class="pay_title" v-if="(cat==2 && orderInfo.order_status==='order_create')">{{$t('show.payType')}}</p>
         <div class="pay_box" v-if="(cat==2 && orderInfo.order_status==='order_create')">
@@ -95,7 +112,11 @@ export default {
       dialogVisible:false,
       newWin:'',
       cat:'',
-      showClose:false
+      showClose:false,
+      formInline: {
+        place: '',
+        time: ''
+      }
     }
   },
   filters:{
@@ -105,7 +126,16 @@ export default {
     ...mapState([
         'host'
     ]),
-
+    rules(){
+      return {
+          place: [
+            { required: true, message: this.$t('valid.place'), trigger: 'change' },
+          ],
+          time: [
+            { required: true, message: this.$t('valid.time'), trigger: 'change' }
+          ],
+      }
+    }
   },
   methods:{
     orderStatus(status){
@@ -138,29 +168,46 @@ export default {
           this.payType = type;
       },
       makeOrder(){
-          this.loading = true;
-          this.newWin = window.open('/loading');
-          createOrder({
-              address_id:this.defaultAddress.address_id,
-              goods_id:this.goodsInfo.goods_id
-          }).then(res=>{
-              if(res.code==200){
-                    return res.data.order_id; 
-              }else{
-                    window.close(this.newWin);
-                    this.$alert(res.message, {
-                        confirmButtonText: '确定',
-                        callback: action => {
-                        }
-                    });
-              }
-          }).then(res=>{
-              if(res){
-                  this.order_id = res;
-                  this.makePay(res);
-              }
-              this.loading = false;
-          })
+
+          this.$refs['formInline'].validate((valid) => {
+            if (valid) {
+
+                this.loading = true;
+                this.newWin = window.open('/loading');
+                createOrder({
+                    address_id:this.defaultAddress.address_id,
+                    goods_id:this.goodsInfo.goods_id,
+                    expect_exchange_place:this.formInline.place,
+                    expect_start_time:this.formInline.time[0],
+                    expect_end_time:this.formInline.time[1],
+                }).then(res=>{
+                    if(res.code==200){
+                          return res.data.order_id; 
+                    }else{
+                          window.close(this.newWin);
+                          this.$alert(res.message, {
+                              confirmButtonText: '确定',
+                              callback: action => {
+                              }
+                          });
+                    }
+                }).then(res=>{
+                    if(res){
+                        this.order_id = res;
+                        this.makePay(res);
+                    }
+                    this.loading = false;
+                })
+
+
+            } else {
+                console.log('error submit!!');
+                return false;
+            }
+          });
+        
+ 
+
       },
       // 取消订单
       onCancelOrderl(id,goods_id){

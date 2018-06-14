@@ -7,6 +7,7 @@ import ElementUI from 'element-ui';
 import VueI18n from 'vue-i18n';
 import './assets/css/el-variables.scss';
 import './assets/css/public.scss';
+import EleLangEn from 'element-ui/lib/locale/lang/en';
 import LangEn from "../static/lang/en";
 import LangZhCN from "../static/lang/zh";
 import GoogleAuth from 'vue-google-oauth';
@@ -16,12 +17,14 @@ Vue.prototype.$http = axios;
 import promise from 'es6-promise';
 promise.polyfill();
 
+
+// Vue.use(ElementUI, { EleLangEn })
 Vue.use(VueI18n);
 Vue.use(ElementUI);
 
 
 Vue.locale('zh', LangZhCN);
-Vue.locale('en', LangEn);
+Vue.locale('en', {...LangEn,...EleLangEn});
 
 Vue.config.lang = localStorage.getItem('lang') || 'zh';
 Vue.config.productionTip = false;

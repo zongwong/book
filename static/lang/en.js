@@ -194,7 +194,9 @@ module.exports = {
     adrcountry:"address country",
     smscode:"SMS verification code",
     code:"graphic verification code",
-    nickname:"nickname"
+    nickname:"nickname",
+    place: 'place',
+    time:'time',
   },
   placeholder:{
     title:"title",
@@ -203,6 +205,7 @@ module.exports = {
     campus:"campus",
     currency:"currency",
     images:"images",
-    content:'content'
+    content:'content',
+    place:'place'
   }
 }

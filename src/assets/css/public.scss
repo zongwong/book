@@ -759,3 +759,12 @@ p {
   text-align: center;
   margin-bottom: 40px;
 }
+
+.formBox{
+  margin-top: 40px;
+  .el-form-item__label{
+      color: #7cd958;
+      // font-weight: bold;
+      font-size: 18px;
+  }
+}

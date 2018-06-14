@@ -1,6 +1,6 @@
 <template>
 <div class="publish">
-  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
+  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
 
     <el-form-item :label="$t('form.bookname')" prop="title">
       <el-input v-model="ruleForm.title" :placeholder="$t('placeholder.title')"></el-input>
@@ -43,6 +43,24 @@
       
     </el-form-item>
 
+    <!-- <el-form-item label="数量" prop="summary">
+      <el-input-number size="small" v-model="ruleForm"></el-input-number>
+    </el-form-item> -->
+
+    <el-form-item label="期望交易地点" prop="place">
+      <el-input type="textarea" v-model="ruleForm.place" :placeholder="$t('placeholder.place')"></el-input>
+    </el-form-item>
+    <el-form-item label="期望交易时间" prop="time">
+      <el-date-picker
+        v-model="ruleForm.time"
+        format="MM-dd-yyyy HH:mm"
+        type="datetimerange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期">
+      </el-date-picker>
+    </el-form-item>
+
     <el-form-item>
       <el-button type="primary" @click="submitForm('ruleForm')">{{$t('btn.publish')}}</el-button>
     </el-form-item>
@@ -72,6 +90,8 @@ export default {
           currency_code:'',
           currency_symbol: '',
           campus_id:'',
+          place: '',
+          time: '',
         },
         files:[],
         fileList:[]
@@ -112,7 +132,13 @@ export default {
           }],
           images:[{
             validator:checkImg,required: true, message: this.$t('valid.images'), trigger: 'change'
-          }]
+          }],
+          place: [
+            { required: true, message: this.$t('valid.place'), trigger: 'change' },
+          ],
+          time: [
+            { required: true, message: this.$t('valid.time'), trigger: 'change' }
+          ],
       }
     }
   },
@@ -138,7 +164,10 @@ export default {
             currency_code:this.ruleForm.currency_code,
             currency_symbol:this.ruleForm.currency_symbol,
             campus_id:this.ruleForm.campus_id,
-            images:this.files
+            images:this.files,
+            expect_exchange_place:this.ruleForm.place,
+            expect_start_time:this.ruleForm.time[0],
+            expect_end_time:this.ruleForm.time[1],
           }
           if(this.goods_id){
             params.goods_id = this.goods_id;

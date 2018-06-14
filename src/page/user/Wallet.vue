@@ -147,7 +147,10 @@ export default {
                         message: '申请成功'
                     });   
                 }else{
-    
+                    this.$message({
+                        type: 'error',
+                        message: res.message
+                    });   
                 }
             })
 
