@@ -852,3 +852,7 @@ p {
   color: #7cd958;
   font-size: 18px;
 }
+
+.week-card .el-card__body {
+  padding: 0px 10px;
+}

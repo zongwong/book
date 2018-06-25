@@ -3,80 +3,38 @@
     <!-- <div class="pbbtn_box" @click="applyMoney"><span>{{$t('btn.withdraw')}}</span></div> -->
 
     <!-- <p v-for="item in balancelist" :key="item.code" @click="applyMoney(item.code,item.amount)">{{item.code}} {{item.amount}}</p> -->
-    <p class="billtitle">我的余额</p>
+    <p class="billtitle">{{$t('wallet.balance')}}</p>
     <template v-for="item in balancelist">
         <el-card class="box-card" :key="item.code">
             <div class="clearfix">
                 <span>{{item.code}} {{item.amount}}</span>
-                <el-button @click="applyMoney(item.code,item.amount)" style="float: right; padding: 3px 0" type="text">提现</el-button>
+                <el-button @click="applyMoney(item.code,item.amount)" style="float: right; padding: 3px 0" type="text">{{$t('wallet.withdraw')}}</el-button>
             </div>
         </el-card>
     </template>
-    <p class="billtitle">账单记录</p>
+    <p class="billtitle">{{$t('wallet.record')}}</p>
     <el-table
-      :data="list"
+      :data="listFilter.data"
       style="width: 100%">
       <el-table-column
         prop="created_at"
-        label="交易日期"
+        :label="$t('wallet.date')"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="inorout"
-        label="类型"
+        prop="type"
+        :label="$t('wallet.type')"
         width="180">
       </el-table-column>
       <el-table-column
         prop="currency_code"
-        label="货币">
+        :label="$t('wallet.currency')">
       </el-table-column>
       <el-table-column
         prop="amount"
-        label="金额">
+        :label="$t('wallet.money')">
       </el-table-column>
     </el-table>
-
-    <!-- <div class="history_item" v-for="item in list" :key="item.cashflow_id">
-        <div class="post_item">
-          <p>{{item.inorout}}  /  {{item.currency_symbol}}{{item.amount}}   /  {{item.created_at}}</p>
-        </div>
-    </div> -->
-
-    <!-- <my-pagination
-      :total="total"
-      :current-page.sync="pageno"
-      @page-change="onPageChange"
-    ></my-pagination> -->
-
-    <!-- <el-dialog title="提现申请" :modal="modal" :visible.sync="dialogVisible" width="500px">
-        <el-form ref="addressForm" :rules="addressRule" :model="addressForm" label-width="80px">
-            <el-form-item label="收件人" prop="name">
-                <el-input v-model="addressForm.name"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号" prop="phone">
-                <el-input v-model="addressForm.phone"></el-input>
-            </el-form-item>
-            <el-form-item label="city" prop="city">
-                <el-input v-model="addressForm.city"></el-input>
-            </el-form-item>
-            <el-form-item label="state/省" prop="state">
-                <el-input v-model="addressForm.state"></el-input>
-            </el-form-item>
-            <el-form-item label="country" prop="country">
-                <el-input v-model="addressForm.country"></el-input>
-            </el-form-item>
-            <el-form-item label="收货地址" prop="address">
-                <el-input v-model="addressForm.address"></el-input>
-            </el-form-item>
-            <el-form-item label="default" prop="default">
-                <el-switch v-model="addressForm.default"></el-switch>
-            </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="onSubmit('addressForm')">确 定</el-button>
-        </span>
-    </el-dialog> -->
 </div>
 </template>
 
@@ -103,7 +61,16 @@ export default {
   computed:{
     ...mapState([
       'host'
-    ])
+    ]),
+    listFilter(){
+        let list = this.list
+        list.forEach(item=>{
+            item.type = this.$t(`wallet.${item.inorout}`)
+        })
+        return {
+            data:list
+        };
+    }
   },
   methods:{
     getListData(){
@@ -127,25 +94,27 @@ export default {
       this.getListData()
     },
     applyMoney(code,amount){
-
-        this.$prompt(`您即将申请提现${code}${amount}`, '提现申请', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        if(amount==0) return;
+        this.$prompt(`${this.$t('wallet.applyMsg')}${code}${amount}`, this.$t('wallet.apply'), {
+          confirmButtonText: this.$t('btn.sure'),
+          cancelButtonText: this.$t('btn.cancel'),
           inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          inputErrorMessage: '邮箱格式不正确',
-          inputPlaceholder:'请输入邮箱'
+          inputErrorMessage: this.$t('wallet.emailerror'),
+          inputPlaceholder:this.$t('wallet.email')
         }).then(({ value }) => {
             
             walletApply({
                 amount:amount,
                 email:value,
-                currency_code:code
+                currency_code:code,
+                method:'paypal'
             }).then(res=>{
                 if(res.code==200){
                     this.$message({
                         type: 'success',
-                        message: '申请成功'
+                        message: this.$t('wallet.success')
                     });   
+                    window.location = window.location.href;
                 }else{
                     this.$message({
                         type: 'error',
@@ -161,25 +130,6 @@ export default {
         //   });       
         });
     },
-    onDelGoods(id,index){
-          this.$confirm('此操作将删除该发布, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-          }).then(() => {
-              delLease({
-                  lease_id:id
-              }).then(res=>{
-                  if(res.code==200){
-                      this.list.splice(index,1);
-                      this.$message.success(res.message);
-                  }else{
-                      this.$message.error(res.message);
-                  }
-              })
-          })
-
-    }
   },
   created(){
     this.getListData()

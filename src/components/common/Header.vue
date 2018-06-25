@@ -25,7 +25,7 @@
         <span>丨</span>
         <el-dropdown @command="changeLanguage">
           <span class="el-dropdown-link select">
-            {{lang=='zh'?'中':'EN'}}<i class="el-icon--right" :class="{'icon_china':lang=='zh','icon_english':lang=='en'}"></i>
+            {{lang=='zh'?'中':'EN'}}<i class="el-icon--right" style="vertical-align: middle;" :class="{'icon_china':lang=='zh','icon_english':lang=='en'}"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="zh">Chinese</el-dropdown-item>

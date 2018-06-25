@@ -18,34 +18,51 @@
         </div>
     </div>
     <div class="box1000">
-        <div class="address">
+        <!-- <div class="address">
             <p>{{$t('form.recipients')}}：{{defaultAddress.recipients}}</p>
             <p>{{$t('form.phone')}}：{{defaultAddress.mobilephone}}</p>
             <p>{{$t('form.address')}}：{{defaultAddress.detail}} / {{defaultAddress.city}} / {{defaultAddress.province}} / {{defaultAddress.country}}</p>
-        </div>
+        </div> -->
         <div v-if="cat==1">
             <el-form :inline="true" :model="formInline" ref="formInline" class="formBox" :rules="rules">
 
-                <el-form-item label="期望交易区域" prop="place">
-                    <el-input v-model="formInline.place" placeholder="place" style="width: 300px;"></el-input>
+                <!-- <el-form-item label="期望交易区域" prop="place">
+                    <el-input v-model="formInline.place"  style="width: 300px;"></el-input>
+                </el-form-item> -->
+                <el-form-item :label="$t('expect.place')" prop="place">
+                    <el-select v-model="formInline.place" :placeholder="$t('expect.select')"  style="width: 300px;">
+                        <el-option
+                        v-for="item in [ 'At bookstore Entrance', 'At Starbuck Entrance', 'At Langson Library Entrance']"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
-
-                <el-form-item label="期望交易时间" prop="time">
-                    <el-date-picker
+                <el-form-item :label="$t('expect.time')" prop="time" style="margin-left:40px;">
+                    <el-cascader
+                        :placeholder="$t('expect.select')"
+                        style="width: 300px;"
+                        expand-trigger="hover"
+                        :options="timeGroupLang.data"
+                        v-model="formInline.time"
+                        @change="handleChange">
+                    </el-cascader>
+                    <!-- <el-date-picker
                         v-model="formInline.time"
                         format="MM-dd-yyyy HH:mm"
                         type="datetimerange"
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
-                    </el-date-picker>
+                    </el-date-picker> -->
                 </el-form-item>
             </el-form>
         </div>
         <p class="pay_title" v-if="(cat==2 && orderInfo.order_status==='order_create')">{{$t('show.payType')}}</p>
-        <div class="pay_box" v-if="(cat==2 && orderInfo.order_status==='order_create')">
+        <div class="pay_box" v-if="(cat==1 || (cat==2 && orderInfo.order_status==='order_create'))" style="margin-top:50px;">
             <!-- <span @click="selectPayType('zfb')" :class="{on:payType=='zfb'}"><i class="icon icon_zfb"></i>支付宝</span> -->
-            <!-- <span @click="selectPayType('wx')" :class="{on:payType=='wx'}"><i class="icon icon_wx"></i>微信</span> -->
+            <span @click="selectPayType('wx')" :class="{on:payType=='wx'}"><i class="icon icon_visa"></i>VISA</span>
             <span @click="selectPayType('paypal')" :class="{on:payType=='paypal'}"><i class="icon icon_card"></i>PayPal</span>
         </div>
         <p class="pay_title" v-if="cat==2">{{$t('show.orderState')}}</p>
@@ -59,6 +76,19 @@
             <el-button v-if="cat==2 && orderInfo.order_status=='order_create'" size="small" type="success" round @click="makePay(order_id)">{{$t('btn.payNow')}}</el-button>
             <el-button v-if="cat==2 && orderInfo.order_status=='order_payed'" size="small" type="success" round @click="onApplyRefund(order_id)">{{$t('btn.refund')}}</el-button>
         </div>
+         <!-- <form action="https://www.risuntechs.com/visa/pay?order_id=1" method="POST" style="opacity:0;">
+            <input type="hidden" name="_token" value="1XHBPEUpBvssBgqUxoyigct7MaFAr5LTbc9n1mJP">
+            <script
+                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="pk_test_hHCR1t7CrgapGB4vqs1qLF4G"
+                    data-amount="1999"
+                    data-name="Wahcampus"
+                    data-description="Online course about integrating Stripe"
+                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                    data-locale="auto"
+                    data-currency="usd">
+            </script>
+        </form> -->
     </div>
   </div>
   <!-- <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
@@ -85,7 +115,7 @@
 <script>
 // 商品状态0待售1下单锁定2支付3发货4收货5评价
 import Search from '../components/common/Search';
-import { getGoodsInfo,createOrder,orderInfo,delOrder,payPal,addressList,applyRefund } from '../api/api';
+import { getGoodsInfo,createOrder,orderInfo,delOrder,payPal,addressList,applyRefund,visaPay } from '../api/api';
 import address from '../page/address/address';
 import { mapState } from 'vuex';
 import headfilter from '../utils/tools';
@@ -97,6 +127,7 @@ export default {
   },
   data() {
     return {
+      timeGroup:[],
       dialogTableVisible:true,
       fullscreenLoading:false,
       order_id:'',
@@ -115,14 +146,24 @@ export default {
       showClose:false,
       formInline: {
         place: '',
-        time: ''
+        time: []
       }
     }
   },
   filters:{
-      headfilter,
+      headfilter
   },
   computed:{
+    timeGroupLang(){
+        let timeGroup = this.timeGroup;
+        timeGroup.forEach(item=>{
+            item.label = this.$t(`week.${item.t}`);
+            item.value = this.$t(`week.${item.t}`);
+        })
+        return {
+            data:[...timeGroup]
+        }
+    },
     ...mapState([
         'host'
     ]),
@@ -138,6 +179,9 @@ export default {
     }
   },
   methods:{
+    handleChange(){
+
+    },
     orderStatus(status){
         switch(status){
             case 'order_payed':
@@ -168,37 +212,92 @@ export default {
           this.payType = type;
       },
       makeOrder(){
-
+          let that = this;
           this.$refs['formInline'].validate((valid) => {
             if (valid) {
 
                 this.loading = true;
-                this.newWin = window.open('/loading');
-                createOrder({
-                    address_id:this.defaultAddress.address_id,
-                    goods_id:this.goodsInfo.goods_id,
-                    expect_exchange_place:this.formInline.place,
-                    expect_start_time:this.formInline.time[0],
-                    expect_end_time:this.formInline.time[1],
-                }).then(res=>{
-                    if(res.code==200){
-                          return res.data.order_id; 
-                    }else{
-                          window.close(this.newWin);
-                          this.$alert(res.message, {
-                              confirmButtonText: '确定',
-                              callback: action => {
-                              }
-                          });
-                    }
-                }).then(res=>{
-                    if(res){
-                        this.order_id = res;
-                        this.makePay(res);
-                    }
-                    this.loading = false;
-                })
+                if(this.payType==='paypal'){
+                    this.newWin = window.open('/loading');
+                    createOrder({
+                        // address_id:this.defaultAddress.address_id,
+                        goods_id:this.goodsInfo.goods_id,
+                        expect_exchange_place:this.formInline.place,
+                        expect_start_time:this.formInline.time[0]+'-'+this.formInline.time[1],
+                        expect_end_time:0,
+                    }).then(res=>{
+                        if(res.code==200){
+                            return res.data.order_id; 
+                        }else{
+                            window.close(this.newWin);
+                            this.$alert(res.message, {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                }
+                            });
+                            this.loading = false;
+                        }
+                    }).then(res=>{
+                        if(res){
+                            this.order_id = res;
+                            this.makePay(res);
+                        }
+                        this.loading = false;
+                    })
+                }else{
+                    createOrder({
+                        // address_id:this.defaultAddress.address_id,
+                        goods_id:this.goodsInfo.goods_id,
+                        expect_exchange_place:this.formInline.place,
+                        expect_start_time:this.formInline.time[0]+'-'+this.formInline.time[1],
+                        expect_end_time:0,
+                    }).then(res=>{
+                        if(res.code==200){
+                            return res.data; 
+                        }else{
+                            this.loading = false;
+                            this.$alert(res.message, {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                }
+                            });
+                        }
+                    }).then(res=>{
+                        if(res){
+                            that.order_id = res.order_id;
+                            
+                            console.log(that.$checkout)
+                            that.$checkout.open({
+                                name: this.goodsInfo.title,
+                                currency: res.rescurrency_code,
+                                amount: res.shop_price,
+                                token: (token) => {
+                                    console.log(token)
+                                    token.stripeEmail = token.email;
+                                    token.stripeToken = token.id;
+                                    visaPay(token,res.order_id).then(res=>{
+                                        console.log(res)
+                                        this.loading = false;
+                                        if(res.code==200){
+                                            this.$message.success(res.message);
+                                            this.$router.replace({
+                                                path:'/center/order/buy'
+                                            })
+                                            // window.location = window.location.href;
+                                        }else{
+                                            this.$message.error(res.message);
+                                        }
+                                    })
 
+                                } 
+                            },()=>{
+                                this.loading = false;
+                            });
+                        }
+                        
+                    })
+
+                }
 
             } else {
                 console.log('error submit!!');
@@ -258,16 +357,44 @@ export default {
         })
       },
       makePay(id){
-        if(!this.newWin){
-            this.newWin = window.open('/loading');
-        }
-        this.dialogVisible = true;
-        payPal({
-            order_id:id
-        }).then(ret=>{
-            this.newWin.location.href = ret.data.approval_link;
-            this.newWin = '';
-        })
+     
+          if(this.payType === 'paypal'){
+              if(!this.newWin){
+                  this.newWin = window.open('/loading');
+              }
+              this.dialogVisible = true;
+              payPal({
+                  order_id:id
+              }).then(ret=>{
+                  this.newWin.location.href = ret.data.approval_link;
+                  this.newWin = '';
+              })
+          }else{
+                this.loading = true;
+                this.$checkout.open({
+                    name: this.goodsInfo.title,
+                    currency: this.orderInfo.currency_code,
+                    amount: this.orderInfo.price*100,
+                    token: (token) => {
+                        console.log(token)
+                        token.stripeEmail = token.email;
+                        token.stripeToken = token.id;
+                        visaPay(token,this.orderInfo.order_id).then(res=>{
+                            console.log(res)
+                            this.loading = false;
+                            if(res.code==200){
+                                this.$message.success(res.message);
+                                window.location = window.location.href;
+                            }else{
+                                this.$message.error(res.message);
+                            }
+                        })
+
+                    } 
+                },()=>{
+                    this.loading = false;
+                });
+          }
       },
       onPayEvent(){
         // this.$router.push({
@@ -277,6 +404,25 @@ export default {
       },
       handleClose(){
 
+      },
+      dataTrans(obj){
+        //   value: 'zhinan',
+        //   label: '指南',
+        //   children: [{
+        let arr = []
+        for(let key in obj){
+            if(obj[key].length){
+                let time = {label:key,value:key,children:[],t:key}
+                obj[key].forEach(item=>{
+                    const rangTime = `${item.startTime}-${item.endTime}`;
+                    time.children.push(
+                        {label:rangTime,value:rangTime}
+                    )
+                })
+                arr.push(time);
+            }
+        }
+        return arr;
       }
   },
   created(){
@@ -291,28 +437,30 @@ export default {
         }).then(res=>{
             this.goodsInfo = res.data.goodsInfo;
             this.userinfo = res.data.goodsInfo.userinfo;
+            this.timeGroup = this.dataTrans(JSON.parse(res.data.goodsInfo.expect_start_time));
             this.$set(this.goodsInfo,'post',this.host+res.data.goodsInfo.images[0]);
+            this.loading = false;
         });
         // 默认地址
-        addressList(this.pas).then(res=>{
-            if(res.code==200){
-                const defaddr = res.data.addresslist.filter(item=>{
-                    return item.is_default == 1
-                });
-                if(defaddr.length){
-                    this.defaultAddress = defaddr[0]
-                }else{
-                    this.$message.error('请先填写收货地址');
-                    this.$router.push({
-                        path:'/center/address',
-                        query:{
-                            redirect: this.$route.fullPath
-                        }
-                    })
-                }
-                this.loading = false;
-            }
-        })
+        // addressList(this.pas).then(res=>{
+        //     if(res.code==200){
+        //         const defaddr = res.data.addresslist.filter(item=>{
+        //             return item.is_default == 1
+        //         });
+        //         if(defaddr.length){
+        //             this.defaultAddress = defaddr[0]
+        //         }else{
+        //             this.$message.error('请先填写收货地址');
+        //             this.$router.push({
+        //                 path:'/center/address',
+        //                 query:{
+        //                     redirect: this.$route.fullPath
+        //                 }
+        //             })
+        //         }
+        //         this.loading = false;
+        //     }
+        // })
       }else{
             // 已下单
             this.order_id = this.$route.params.id
@@ -383,6 +531,9 @@ export default {
         }
         &.icon_card{
             background-image: url(../assets/icon/bank.png);
+        }
+        &.icon_visa{
+            background-image: url(../assets/icon/visa.jpg);
         }
     }
 }

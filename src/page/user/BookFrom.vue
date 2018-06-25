@@ -47,18 +47,64 @@
       <el-input-number size="small" v-model="ruleForm"></el-input-number>
     </el-form-item> -->
 
-    <el-form-item label="期望交易地点" prop="place">
-      <el-input type="textarea" v-model="ruleForm.place" :placeholder="$t('placeholder.place')"></el-input>
+    <el-form-item :label="$t('expect.place')" prop="place">
+      <!-- <el-input type="textarea" v-model="ruleForm.place" :placeholder="$t('placeholder.place')"></el-input> -->
+      <el-select v-model="ruleForm.place" :placeholder="$t('expect.select')">
+        <el-option
+          v-for="item in [ 'At bookstore Entrance', 'At Starbuck Entrance', 'At Langson Library Entrance']"
+          :key="item"
+          :label="item"
+          :value="item">
+        </el-option>
+      </el-select>
     </el-form-item>
-    <el-form-item label="期望交易时间" prop="time">
-      <el-date-picker
+    <el-form-item :label="$t('expect.time')">
+        <div v-for="(val, key) in timeGroup" :key="key">
+            <el-card class="box-card week-card" v-for="(item,index) in val" :key="index">
+              <div class="timerow"><span>{{$t(`week.${key}`)}}</span><span>{{item.startTime}} - {{item.endTime}}</span><span @click="delTime(key,index)"><i class="el-icon-delete"></i></span></div>
+            </el-card>
+        </div>
+      <!-- <el-date-picker
         v-model="ruleForm.time"
+      
         format="MM-dd-yyyy HH:mm"
         type="datetimerange"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期">
-      </el-date-picker>
+      </el-date-picker> -->
+        <el-select style="width:150px;" v-model="week" :placeholder="$t('expect.select')">
+          <el-option
+            v-for="item in weekDate.data"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-time-select
+          style="width:150px;"
+          :placeholder="$t('expect.startTime')"
+          v-model="startTime"
+          @change="startChange"
+          :picker-options="{
+            start: '00:00',
+            step: '01:00',
+            end: '24:00'
+          }">
+        </el-time-select>
+        <el-time-select
+          style="width:150px;"
+          :placeholder="$t('expect.endTime')"
+          v-model="endTime"
+          :picker-options="{
+            start: '00:00',
+            step: '01:00',
+            end: '24:00',
+            minTime: startTime
+          }">
+        </el-time-select>
+        <el-button @click="addTime">{{$t('expect.add')}}</el-button>
+
     </el-form-item>
 
     <el-form-item>
@@ -81,6 +127,18 @@ export default {
   data() {
 
     return {
+        timeGroup:{
+          week_1:[],
+          week_2:[],
+          week_3:[],
+          week_4:[],
+          week_5:[],
+          week_6:[],
+          week_7:[],
+        },
+        week:'',
+        startTime:'',
+        endTime:'',
         category_id:1,
         goods_id:'',
         ruleForm: {
@@ -91,10 +149,19 @@ export default {
           currency_symbol: '',
           campus_id:'',
           place: '',
-          time: '',
+          time: [],
         },
         files:[],
-        fileList:[]
+        fileList:[],
+        // weekDate:[
+        //   {label:this.$t('week.week_1'),value:1},
+        //   {label:this.$t('week.week_2'),value:2},
+        //   {label:this.$t('week.week_3'),value:3},
+        //   {label:this.$t('week.week_4'),value:4},
+        //   {label:this.$t('week.week_5'),value:5},
+        //   {label:this.$t('week.week_6'),value:6},
+        //   {label:this.$t('week.week_7'),value:7},
+        // ]
       };
   },
   computed: {
@@ -140,6 +207,17 @@ export default {
             { required: true, message: this.$t('valid.time'), trigger: 'change' }
           ],
       }
+    },
+    weekDate(){
+      return {
+        data:[ {label:this.$t('week.week_1'),value:1},
+          {label:this.$t('week.week_2'),value:2},
+          {label:this.$t('week.week_3'),value:3},
+          {label:this.$t('week.week_4'),value:4},
+          {label:this.$t('week.week_5'),value:5},
+          {label:this.$t('week.week_6'),value:6},
+          {label:this.$t('week.week_7'),value:7}]
+      }
     }
   },
   methods: {
@@ -156,6 +234,17 @@ export default {
     submitForm(formName){
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
+          
+          let count = 0;
+          for(let i=1;i<8;i++){
+            if(this.timeGroup[`week_${i}`].length){
+              count+=1;
+            }
+          }
+          if(!count){
+            this.$message.error('请添加期望交易时间段')
+            return false;
+          }
           let params ={
             category_id:this.category_id,
             title:this.ruleForm.title,
@@ -166,8 +255,8 @@ export default {
             campus_id:this.ruleForm.campus_id,
             images:this.files,
             expect_exchange_place:this.ruleForm.place,
-            expect_start_time:this.ruleForm.time[0],
-            expect_end_time:this.ruleForm.time[1],
+            expect_start_time:JSON.stringify(this.timeGroup),
+            expect_end_time:0,
           }
           if(this.goods_id){
             params.goods_id = this.goods_id;
@@ -190,6 +279,30 @@ export default {
     currencyChange(val){
       this.ruleForm.currency_symbol = this.currency.filter(item=>item.currency_code==val)[0].currency_symbol;
     },
+    startChange(){
+      this.endTime = '';
+    },
+    delTime(key,index){
+      console.log(key,index)
+      this.timeGroup[key].splice(index,1);
+    },
+    addTime(){
+      if(!this.week||!this.startTime||!this.endTime){
+        return;
+      }
+      const week = `week_${this.week}`;
+      // if(!this.timeGroup[week]){
+      //   this.timeGroup[week] = [];
+      // }
+      const time = {startTime:this.startTime,endTime:this.endTime};
+      let result = this.timeGroup[week].find((item)=>(
+        item.startTime === time.startTime && item.endTime === time.endTime
+      ))
+      if(result===undefined){
+        this.timeGroup[week].push(time)
+      }
+      console.log(this.timeGroup)
+    }
   },
   created(){
     this.category_id = this.$route.params.cat;
@@ -210,6 +323,8 @@ export default {
             this.ruleForm.campus_id = goodsInfo.campus_id;
             this.ruleForm.currency_code = goodsInfo.currency_code;
             this.ruleForm.currency_symbol = goodsInfo.currency_symbol;
+            this.ruleForm.place = goodsInfo.expect_exchange_place;
+            this.timeGroup = JSON.parse(goodsInfo.expect_start_time);
             this.files = goodsInfo.images;
             this.fileList = goodsInfo.images.map((item,index)=>{
               return {
@@ -222,7 +337,8 @@ export default {
         }
       })
     }
-  }
+  },
+
 };
 
 </script>
@@ -250,5 +366,19 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+  }
+  .week-card{
+    width: 300px;
+    margin-bottom: 10px;
+    .timerow{
+      display: flex;
+      span:nth-child(2){
+        flex: 1;
+        margin-left: 10px;
+      }
+      span:nth-child(3){
+        cursor: pointer;
+      }
+    }
   }
 </style>

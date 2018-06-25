@@ -7,7 +7,7 @@
         <div class="form">
           <el-form ref="userInfoForm"  :model="userInfoForm" :rules="userInfoRules" label-width="80px">
               
-              <el-form-item :label="$t('form.avatar')" prop="headimgurl">
+              <el-form-item :label="$t('form.avatar')" prop="headimgurl" >
                   <el-upload
                     class="avatar-uploader"
                     :action="action"
@@ -18,6 +18,9 @@
                     <img v-if="imageUrl" :src="imageUrl" class="uavatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
+              </el-form-item>
+              <el-form-item :label="$t('form.username')" prop="nickname">
+                <el-input v-model="userInfoForm.nickname" class="bordercolor"  :placeholder="$t('msg.nicktips')"></el-input>  
               </el-form-item>
               <el-form-item :label="$t('form.name')" prop="name">
                   <el-input v-model="userInfoForm.name" :placeholder="$t('valid.name')"></el-input>
@@ -30,6 +33,9 @@
               </el-form-item>
               <el-form-item :label="$t('form.country')" prop="country">
                   <el-input v-model="userInfoForm.country" :placeholder="$t('valid.country')"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('form.email')" prop="email">
+                  <el-input v-model="userInfoForm.email" :placeholder="$t('valid.email')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('form.phone')" prop="mobilephone">
                   <el-input v-model="userInfoForm.mobilephone" :placeholder="$t('valid.phone')"></el-input>
@@ -66,14 +72,6 @@ export default {
   },
   data() {
     return {
-      regForm: {
-        nickname:'',
-      },
-      rules: {
-          nickname: [
-            { required: true, message: '请填写昵称', trigger: 'blur' },
-          ]
-      },
       userInfoForm: {
           name: '',
           mobilephone: '',
@@ -81,6 +79,8 @@ export default {
           country:'',
           headimgurl:'',
           graduate_school:'',
+          nickname:'',
+          email:''
         },
       loading:false,
       imageUrl:'',
@@ -98,7 +98,9 @@ export default {
           sex:[{ required:true,trigger:'change',message:this.$t('valid.sex') }],
           country:[{ required:true,trigger:'change',message:this.$t('valid.country') }],
           headimgurl:[{ required:true,trigger:'change',message:this.$t('valid.avatar') }],
-          graduate_school:[{ required:true,trigger:'change',message:this.$t('valid.school') }]
+          graduate_school:[{ required:true,trigger:'change',message:this.$t('valid.school') }],
+          nickname: [{ required: true, message: this.$t('valid.nickname'), trigger: 'blur' }],
+          email:[{ type:'email',required: true, message: this.$t('valid.email'), trigger: 'blur' }],
         }
       }
   },
@@ -117,22 +119,41 @@ export default {
         this.$refs[formName].validate((valid) => {
             if (valid) {
                 this.loading = true;   
-                this.setUserInfo(this.userInfoForm)
-                .then(res=>{
-                    if(res.code==200){
-                        this.$message.success(res.message);
-                        this.$router.push({
-                          path:'/center/info'
-                        })
-                    }
+                setNickname({
+                  nickname:this.userInfoForm.nickname,
+                }).then(res=>{
+                  if(res.code==200){
+                    this.EditName_MUTATION({
+                      nickname:this.userInfoForm.nickname,
+                    })
+                    this.setUserInfo(this.userInfoForm).then(res=>{
+                        if(res.code==200){
+                            this.$message.success(res.message);
+                            this.$router.push({
+                              path:'/center/info'
+                            })
+                        }else{
+                          this.$message.error(res.message);
+                        }
+                        this.loading = false;
+                    }).catch(res=>{
+                      this.$message.error(res.message);
+                      this.loading = false;
+                    });
+                  }else{
                     this.loading = false;
-                });
+                    this.$message.error(res.message);
+                  }
+                })
 
             } else {
                 console.log('error submit!!');
                 return false;
             }
         });
+    },
+    submitNickname() {
+      
     }
   }
 };
@@ -226,7 +247,7 @@ export default {
     color: #8c939d;
     width: 60px;
     height: 60px;
-    line-height: 60px;
+    line-height: 60px!important;
     text-align: center;
     border: 1px solid #333;
     border-radius: 50%;

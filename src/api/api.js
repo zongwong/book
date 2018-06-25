@@ -108,3 +108,6 @@ export const walletApply= params => Axios.post('/wallet/withdraw', params);
 export const msgList = params => Axios.get('/message/getlist', params); 
 export const msgDel= params => Axios.get('/message/delete', params);
 
+// pay visa
+
+export const visaPay= (params,order_id) => Axios.post(`/visa/pay?order_id=${order_id}`, params);

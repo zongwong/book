@@ -28,9 +28,9 @@
                                         <p class="title">{{item.goods_info.title}}</p>
                                         <div class="content">{{$t('order.desc')}}:{{item.goods_info.summary}}</div>
                                     
-                                        <div class="content adr">{{$t('form.recipients')}}:{{item.address_info.recipients}}</div>
-                                        <div class="content adr">{{$t('form.phone')}}:{{item.address_info.mobilephone}}</div>
-                                        <div class="content adr">{{$t('form.address')}}:{{item.address_info.detail}} / {{item.address_info.city}} / {{item.address_info.province}} / {{item.address_info.country}}</div>
+                                        <div style="color:#7cd958;" class="content adr">{{$t('expect.place')}}:{{item.expect_exchange_place}}</div>
+                                        <div style="color:#7cd958;" class="content adr">{{$t('expect.time')}}:{{item.expect_start_time}}</div>
+                                        <!-- <div class="content adr">{{$t('form.address')}}:{{item.address_info.detail}} / {{item.address_info.city}} / {{item.address_info.province}} / {{item.address_info.country}}</div> -->
                                     </div>
                                 </div>
                             </router-link>
@@ -42,7 +42,7 @@
                             <p class="title">{{$t('order.orderstatus')}}：</p>
                             <p class="content">{{changeSatus(item.order_status)}}</p>
 
-                            <el-button v-if="cat=='buy' && item.order_status=='order_create'" size="mini" round>{{$t('btn.payNow')}}</el-button>
+                            <el-button v-if="cat=='buy' && item.order_status=='order_create'" size="mini" round><router-link :to="'/buy/2/'+item.order_id">{{$t('btn.payNow')}}</router-link></el-button>
                             <el-button v-if="cat=='buy' && item.order_status=='order_create'" size="mini" round  @click="onCancelOrderl(item.order_id,item.goods_id)">{{$t('btn.cancelOrder')}}</el-button>
                             <el-button v-if="cat=='buy' && item.order_status=='order_payed'" size="mini" round  @click="onApplyRefund(item.order_id,item.goods_id)">{{$t('btn.refund')}}</el-button>
                             <el-button v-if="cat=='buy' && item.order_status=='goods_delivered'" size="mini" round  @click="onConfirmDeliver(item.order_id,item.goods_id)">{{$t('btn.receiving')}}</el-button>
@@ -62,6 +62,7 @@
                                 <div class="row_bd userInfoP">
                                     <p>{{item.userinfo.name}}</p>
                                     <p>{{item.userinfo.graduate_school}}</p>
+                                    <p>{{item.userinfo.mobilephone}}</p>
                                 </div>
                             </div>
                         </div>
@@ -73,7 +74,7 @@
                                 <div class="flex_row">
                                     <div class="evaluate_label evaluate_rate">{{$t('order.score')}}：</div>
                                     <div class="row_bd">
-                                        <el-rate :colors="['#7cd958','#7cd958','#7cd958']" v-model="item.value1"></el-rate>
+                                        <el-rate :colors="['#7cd958','#7cd958','#7cd958']" v-model="value1"></el-rate>
                                     </div>
                                 </div>
                                 <div class="flex_row evaluate_word_row">
@@ -175,7 +176,7 @@
 import { salelist,consumelist,applyRefund,sendDeliver,confirmDeliver,orderEvaluate,delOrder } from "../../api/api";
 import { mapState } from 'vuex';
 import pagination from '../../components/pagination';
-import headfilter from  '../../utils/tools';
+import headfilter, { timeFormat } from  '../../utils/tools';
 import { orderStatus,isEmptyArr } from '../../utils/tools';
 export default {
   name: "Order",
@@ -189,7 +190,7 @@ export default {
       total: 1,
       pageno:1,
       loading:false,
-      value1:1,
+      value1:5,
       pjtextarea:'',
     };
   },
@@ -200,7 +201,8 @@ export default {
     }
   },
   filters:{
-      headfilter
+      headfilter,
+      timeFormat
   },
   computed:{
     ...mapState([
@@ -210,7 +212,7 @@ export default {
   methods:{
       evaluateStatus(status,index){
           const obj = this.list[index].evalutelist;
-          const arr = ['seller_evaluated','buyer_evaluated','both_evaluated'];
+          const arr = ['goods_received','seller_evaluated','buyer_evaluated','both_evaluated'];
           if(arr.indexOf(status)!=-1){
               if(obj.role == 'seller'){
                   if(isEmptyArr(obj.seller)){

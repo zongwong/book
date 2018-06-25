@@ -41,6 +41,10 @@
             <el-input v-if="editUserMode" v-model="userInfoForm.mobilephone"></el-input>
             <p  class="formShowP" v-if="!editUserMode">{{userInfoForm.mobilephone}}</p>
         </el-form-item>
+        <el-form-item :label="$t('form.email')" prop="email">
+            <el-input v-if="editUserMode" v-model="userInfoForm.email" :placeholder="$t('valid.email')"></el-input>
+            <p  class="formShowP" v-if="!editUserMode">{{userInfoForm.email}}</p>
+        </el-form-item>
         <el-form-item :label="$t('form.school')" prop="graduate_school">
             <el-input v-if="editUserMode" v-model="userInfoForm.graduate_school"></el-input>
             <p class="formShowP" v-if="!editUserMode">{{userInfoForm.graduate_school}}</p>
@@ -122,6 +126,7 @@ export default {
           country:'',
           headimgurl:'',
           graduate_school:'',
+          email:''
         },
         cardForm:{
             cardholder:'',
@@ -156,7 +161,8 @@ export default {
             sex:[{ required:true,trigger:'change',message: this.$t('valid.sex') }],
             country:[{ required:true,trigger:'change',message: this.$t('valid.country') }],
             headimgurl:[{ required:true,trigger:'change',message: this.$t('valid.avatar') }],
-            graduate_school:[{ required:true,trigger:'change',message: this.$t('valid.school') }]
+            graduate_school:[{ required:true,trigger:'change',message: this.$t('valid.school') }],
+            email:[{ type: 'email', required:true,trigger:'change',message: this.$t('valid.email') }]
         }
     },
     cardRules(){
@@ -256,6 +262,7 @@ export default {
                       country:userinfo.country,
                       headimgurl:userinfo.headimgurl,
                       graduate_school:userinfo.graduate_school,
+                      email:userinfo.email
                   }
                   if(userinfo.headimgurl){
                       this.imageUrl = userinfo.headimgurl;
@@ -321,7 +328,7 @@ export default {
     color: #8c939d;
     width: 60px;
     height: 60px;
-    line-height: 60px;
+    line-height: 60px!important;
     text-align: center;
     border: 1px solid #333;
     border-radius: 50%;

@@ -13,15 +13,23 @@ import LangZhCN from "../static/lang/zh";
 import GoogleAuth from 'vue-google-oauth';
 import store from "./store/index";
 import axios from 'axios';
+
 Vue.prototype.$http = axios;
 import promise from 'es6-promise';
 promise.polyfill();
 
+import VueStripeCheckout from "./utils/pay";
+Vue.use(VueStripeCheckout, {
+  key: 'pk_test_hHCR1t7CrgapGB4vqs1qLF4G',
+  image: 'https://www.wahcampus.com/static/visa.jpg',
+  locale: 'auto',
+  panelLabel: 'Subscribe {{amount}}'
+});
+ 
 
 // Vue.use(ElementUI, { EleLangEn })
 Vue.use(VueI18n);
 Vue.use(ElementUI);
-
 
 Vue.locale('zh', LangZhCN);
 Vue.locale('en', {...LangEn,...EleLangEn});
@@ -43,7 +51,6 @@ router.beforeEach((to, from, next) => {
   // }
   // 需要登录的路由
   if (to.matched.some(record => record.meta.requiresAuth)) { 
-    console.log(to.path=='/setnick')
     if(!getStorage('token')){
       // 不存在token
       next({
@@ -51,14 +58,14 @@ router.beforeEach((to, from, next) => {
         query: { redirect: to.fullPath }  
       });
     
-    }else if(!getStorage('nickname')){
-      if(to.path=='/setnick'){
-        next()
-      }else{
-        next({
-          path: '/setnick' 
-        });
-      }
+    // }else if(!getStorage('nickname')){
+      // if(to.path=='/setnick'){
+      //   next()
+      // }else{
+      //   next({
+      //     path: '/setnick' 
+      //   });
+      // }
 
     }else if(!getStorage('graduate_school')){
       if(to.path=='/setinfo'){
@@ -86,16 +93,17 @@ router.beforeEach((to, from, next) => {
 
 
     if(getStorage('token')){
-      if(!getStorage('nickname')){
-        if(to.path=='/setnick'){
-          next()
-        }else{
-          next({
-            path: '/setnick' 
-          });
-        }
+      // if(!getStorage('nickname')){
+      //   if(to.path=='/setnick'){
+      //     next()
+      //   }else{
+      //     next({
+      //       path: '/setnick' 
+      //     });
+      //   }
   
-      }else if(!getStorage('graduate_school')){
+      // }else 
+      if(!getStorage('graduate_school')){
         if(to.path=='/setinfo'){
           next()
         }else{

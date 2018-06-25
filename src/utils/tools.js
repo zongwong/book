@@ -39,3 +39,10 @@ export const orderStatus = (status,target)  =>  {
 export const isEmptyArr = (value) => {
     return Object.prototype.toString.call(value) === '[object Array]' && value.length === 0
 }
+export const timeFormat = (time) => {
+    let date = new Date(time);
+    return date.getFullYear()+'-'+addZero(date.getMonth()+1)+'-'+addZero(date.getDate())+' '+addZero(date.getHours())+':'+addZero(date.getMinutes())+':'+addZero(date.getSeconds());
+}
+function addZero(num) {
+    return num.toString()[1]?num:`0${num}`;
+}

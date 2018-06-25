@@ -34,7 +34,8 @@
         <div class="form" v-if="phoneType">
           <el-form :model="regForm" :rules="rules" ref="regForm" label-width="100px" class="demo-ruleForm">
             <el-form-item :label="$t('form.phone')" prop="phone">
-                <el-input v-model="regForm.phone" class="bordercolor"  :placeholder="$t('valid.phone')"></el-input>
+                <el-input style="width:58px;" v-model="regForm.phonepre" class="bordercolor"></el-input>
+                <el-input style="width:270px;" v-model="regForm.phone" class="bordercolor"  :placeholder="$t('valid.phone')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('form.verification')" prop="captcha">
               <el-row>
@@ -91,6 +92,7 @@ export default {
         phone:'',
         code:'',
         captcha: '',
+        phonepre:'+1'
       },
       phoneType:false,
       isDjs:false,
@@ -169,7 +171,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           toLogin({
-            mobilephone:this.regForm.phone,
+            mobilephone:this.getPhone(this.regForm.phone),
             code:this.regForm.code
           }).then(res=>{
             this.loginSuccess(res);
@@ -180,11 +182,19 @@ export default {
         }
       });
     },
+    getPhone(phone){
+      let phonepre = Number(this.regForm.phonepre.replace(/\+/g,''));
+      console.log(phonepre)
+      if(phonepre && phonepre!==NaN){
+          phone = `${phonepre}${phone}`;
+      }
+      return phone;
+    },
     sendSmsCode(){
       if (this.isDjs) return;
       this.isDjs = true;
       getCode({
-        mobilephone:this.regForm.phone,
+        mobilephone:this.getPhone(this.regForm.phone),
         captcha:this.regForm.captcha,
       }).then(res => {
         if(res.code==200){

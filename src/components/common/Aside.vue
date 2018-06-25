@@ -21,10 +21,10 @@
                 <i class="el-icon-info"></i>
                 <span slot="title">{{$t("navs.wallet")}}</span>
             </el-menu-item>
-            <el-menu-item index="/center/address">
+            <!-- <el-menu-item index="/center/address">
                 <i class="el-icon-info"></i>
                 <span slot="title">{{$t("navs.address")}}</span>
-            </el-menu-item>
+            </el-menu-item> -->
             <el-submenu index="/center/info">
                 <template slot="title">
                     <i class="el-icon-news"></i>
@@ -43,10 +43,10 @@
                 <i class="el-icon-message"></i>
                 <span slot="title">{{$t("navs.message")}}</span>
             </el-menu-item>
-            <el-menu-item index="/center/history">
+            <!-- <el-menu-item index="/center/history">
                 <i class="el-icon-tickets"></i>
                 <span slot="title">{{$t("navs.history")}}</span>
-            </el-menu-item>
+            </el-menu-item> -->
             <el-submenu index="/center/order">
                 <template slot="title">
                     <i class="el-icon-goods"></i>

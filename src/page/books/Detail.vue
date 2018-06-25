@@ -9,6 +9,12 @@
               <div class="goods_data">
                   <p class="title">{{goodsInfo.title}}</p>
                   <p class="price">{{goodsInfo.currency_symbol}} {{goodsInfo.shop_price}}</p>
+                  <!-- <p class="expect"> 
+                      期望交易地点: {{goodsInfo.expect_exchange_place}}
+                  </p>
+                  <p class="expect">
+                      期望交易时间: {{goodsInfo.expect_start_time|timeFormat}} - {{goodsInfo.expect_end_time|timeFormat}}
+                  </p> -->
                   <div class="buyBtn_wrap">
                       <router-link :to="'/buy/1/'+goodsInfo.goods_id"><el-button size="small" type="success" round>{{$t('btn.buy')}}</el-button></router-link>
                   </div>
@@ -36,7 +42,7 @@
 import Search from '../../components/common/Search';
 import { getGoodsInfo } from '../../api/api';
 import { mapState } from 'vuex';
-import headfilter from '../../utils/tools';
+import headfilter, { timeFormat }  from '../../utils/tools';
 export default {
   name: 'BookDetail',
   components: {
@@ -55,7 +61,8 @@ export default {
     };
   },
   filters:{
-      headfilter
+      headfilter,
+      timeFormat
   },
   computed:{
       ...mapState([
@@ -83,5 +90,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.expect{
+    font-size: 12px;
+    margin-top: 8px;
+}
 </style>
