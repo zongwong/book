@@ -2,7 +2,7 @@
 <div class="publish">
   <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
 
-    <el-form-item :label="$t('form.bookname')" prop="title">
+    <el-form-item :label="category_id==1?$t('form.bookname'):$t('form.notename')" prop="title">
       <el-input v-model="ruleForm.title" :placeholder="$t('placeholder.title')"></el-input>
     </el-form-item>
 
@@ -13,9 +13,10 @@
       ></my-upload>
     </el-form-item>
 
-    <el-form-item :label="$t('form.abstract')" prop="summary">
+    <el-form-item :label="category_id==1?$t('form.abstract'):$t('form.noteabstract')" prop="summary">
       <el-input type="textarea" v-model="ruleForm.summary" :placeholder="$t('placeholder.desc')"></el-input>
     </el-form-item>
+
     <el-form-item :label="$t('form.area')" prop="campus_id">
       <el-select v-model="ruleForm.campus_id" :placeholder="$t('placeholder.campus')">
         <template v-for="item in campuList">
@@ -23,9 +24,10 @@
         </template>
       </el-select>
     </el-form-item>
+
     <el-form-item :label="$t('form.price')" prop="currency_code">
-      <el-row :gutter="10"> 
-        <el-col :span="4">
+      <el-row > 
+        <el-col :span="4" style="margin-right:6px;">
           <el-form-item >
             <el-select v-model="ruleForm.currency_code" :placeholder="$t('placeholder.currency')" @change="currencyChange">
               <template v-for="item in currency">
@@ -43,13 +45,8 @@
       
     </el-form-item>
 
-    <!-- <el-form-item label="数量" prop="summary">
-      <el-input-number size="small" v-model="ruleForm"></el-input-number>
-    </el-form-item> -->
-
-    <el-form-item :label="$t('expect.place')" prop="place">
-      <!-- <el-input type="textarea" v-model="ruleForm.place" :placeholder="$t('placeholder.place')"></el-input> -->
-      <el-select v-model="ruleForm.place" :placeholder="$t('expect.select')">
+    <el-form-item  v-if="category_id==1" :label="$t('expect.place')" prop="place">
+      <el-select multiple v-model="ruleForm.place" :placeholder="$t('expect.select')" style="width:100%;">
         <el-option
           v-for="item in [ 'At bookstore Entrance', 'At Starbuck Entrance', 'At Langson Library Entrance']"
           :key="item"
@@ -58,7 +55,12 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item :label="$t('expect.time')">
+
+    <!-- <el-form-item  v-if="category_id==2" :label="$t('expect.email')" prop="email">
+      <el-input type="text" v-model="ruleForm.email" :placeholder="$t('placeholder.email')"></el-input>
+    </el-form-item> -->
+
+    <el-form-item :label="$t('expect.time')" v-if="category_id==1">
         <div v-for="(val, key) in timeGroup" :key="key">
             <el-card class="box-card week-card" v-for="(item,index) in val" :key="index">
               <div class="timerow"><span>{{$t(`week.${key}`)}}</span><span>{{item.startTime}} - {{item.endTime}}</span><span @click="delTime(key,index)"><i class="el-icon-delete"></i></span></div>
@@ -148,20 +150,12 @@ export default {
           currency_code:'',
           currency_symbol: '',
           campus_id:'',
-          place: '',
+          place: [],
+          email:'',
           time: [],
         },
         files:[],
         fileList:[],
-        // weekDate:[
-        //   {label:this.$t('week.week_1'),value:1},
-        //   {label:this.$t('week.week_2'),value:2},
-        //   {label:this.$t('week.week_3'),value:3},
-        //   {label:this.$t('week.week_4'),value:4},
-        //   {label:this.$t('week.week_5'),value:5},
-        //   {label:this.$t('week.week_6'),value:6},
-        //   {label:this.$t('week.week_7'),value:7},
-        // ]
       };
   },
   computed: {
@@ -206,6 +200,9 @@ export default {
           time: [
             { required: true, message: this.$t('valid.time'), trigger: 'change' }
           ],
+          // email: [
+          //    { type: 'email', required:true,trigger:'change',message: this.$t('valid.email') }
+          // ]
       }
     },
     weekDate(){
@@ -234,17 +231,19 @@ export default {
     submitForm(formName){
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          
-          let count = 0;
-          for(let i=1;i<8;i++){
-            if(this.timeGroup[`week_${i}`].length){
-              count+=1;
+          if(this.category_id==1){
+            let count = 0;
+            for(let i=1;i<8;i++){
+              if(this.timeGroup[`week_${i}`].length){
+                count+=1;
+              }
+            }
+            if(!count){
+              this.$message.error('请添加期望交易时间段')
+              return false;
             }
           }
-          if(!count){
-            this.$message.error('请添加期望交易时间段')
-            return false;
-          }
+
           let params ={
             category_id:this.category_id,
             title:this.ruleForm.title,
@@ -254,9 +253,11 @@ export default {
             currency_symbol:this.ruleForm.currency_symbol,
             campus_id:this.ruleForm.campus_id,
             images:this.files,
-            expect_exchange_place:this.ruleForm.place,
-            expect_start_time:JSON.stringify(this.timeGroup),
-            expect_end_time:0,
+          }
+          if(this.category_id==1){
+            params.expect_exchange_place = this.ruleForm.place.join('#');
+            params.expect_start_time = JSON.stringify(this.timeGroup);
+            params.expect_end_time = 0;
           }
           if(this.goods_id){
             params.goods_id = this.goods_id;
@@ -323,8 +324,11 @@ export default {
             this.ruleForm.campus_id = goodsInfo.campus_id;
             this.ruleForm.currency_code = goodsInfo.currency_code;
             this.ruleForm.currency_symbol = goodsInfo.currency_symbol;
-            this.ruleForm.place = goodsInfo.expect_exchange_place;
-            this.timeGroup = JSON.parse(goodsInfo.expect_start_time);
+            if(this.category_id==1){
+              this.ruleForm.place = goodsInfo.expect_exchange_place.split('#');
+              this.timeGroup = JSON.parse(goodsInfo.expect_start_time);
+            }
+
             this.files = goodsInfo.images;
             this.fileList = goodsInfo.images.map((item,index)=>{
               return {

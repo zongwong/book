@@ -28,8 +28,9 @@
                                         <p class="title">{{item.goods_info.title}}</p>
                                         <div class="content">{{$t('order.desc')}}:{{item.goods_info.summary}}</div>
                                     
-                                        <div style="color:#7cd958;" class="content adr">{{$t('expect.place')}}:{{item.expect_exchange_place}}</div>
-                                        <div style="color:#7cd958;" class="content adr">{{$t('expect.time')}}:{{item.expect_start_time}}</div>
+                                        <div v-if="item.goods_info.category_id==1" style="color:#7cd958;" class="content adr">{{$t('expect.place')}}:{{item.expect_exchange_place}}</div>
+                                        <div v-if="item.goods_info.category_id==1" style="color:#7cd958;" class="content adr">{{$t('expect.time')}}:{{item.expect_start_time}}</div>
+                                        <div v-if="item.goods_info.category_id==2" style="color:#7cd958;" class="content adr">{{$t('expect.email')}}:{{item.receiver_email}}</div>
                                         <!-- <div class="content adr">{{$t('form.address')}}:{{item.address_info.detail}} / {{item.address_info.city}} / {{item.address_info.province}} / {{item.address_info.country}}</div> -->
                                     </div>
                                 </div>

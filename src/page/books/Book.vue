@@ -16,6 +16,13 @@
             <i class="sort-caret descending" :class="{on:pas.orderby=='price'&&pas.sort=='asc'}" @click.stop="onSortChange('asc')"></i>
           </div>
         </div>
+        <div class="sort_type" :class="{on:pas.orderby=='time'}" @click="onOrderByChange('time')">
+          {{$t('show.sortTime')}}
+          <div class="caret-wrapper">
+            <i class="sort-caret ascending" :class="{on:pas.orderby=='time'&&pas.sort=='desc'}" @click.stop="onSortChange('desc')"></i>
+            <i class="sort-caret descending" :class="{on:pas.orderby=='time'&&pas.sort=='asc'}" @click.stop="onSortChange('asc')"></i>
+          </div>
+        </div>
       </div>
       <div class="container container1000" v-loading="loading">
         <div class="flex_box">

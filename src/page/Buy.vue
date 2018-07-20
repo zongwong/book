@@ -25,21 +25,17 @@
         </div> -->
         <div v-if="cat==1">
             <el-form :inline="true" :model="formInline" ref="formInline" class="formBox" :rules="rules">
-
-                <!-- <el-form-item label="期望交易区域" prop="place">
-                    <el-input v-model="formInline.place"  style="width: 300px;"></el-input>
-                </el-form-item> -->
-                <el-form-item :label="$t('expect.place')" prop="place">
+                <el-form-item v-if="goodsInfo.category_id==1" :label="$t('expect.place')" prop="place">
                     <el-select v-model="formInline.place" :placeholder="$t('expect.select')"  style="width: 300px;">
                         <el-option
-                        v-for="item in [ 'At bookstore Entrance', 'At Starbuck Entrance', 'At Langson Library Entrance']"
+                        v-for="item in goodsInfo.place"
                         :key="item"
                         :label="item"
                         :value="item">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item :label="$t('expect.time')" prop="time" style="margin-left:40px;">
+                <el-form-item v-if="goodsInfo.category_id==1" :label="$t('expect.time')" prop="time" style="margin-left:40px;">
                     <el-cascader
                         :placeholder="$t('expect.select')"
                         style="width: 300px;"
@@ -57,6 +53,11 @@
                         end-placeholder="结束日期">
                     </el-date-picker> -->
                 </el-form-item>
+
+                <el-form-item  v-if="goodsInfo.category_id==2" :label="$t('expect.email')" prop="email" >
+                    <el-input type="text" style="width: 500px" v-model="formInline.email" :placeholder="$t('placeholder.email')"></el-input>
+                </el-form-item> 
+
             </el-form>
         </div>
         <p class="pay_title" v-if="(cat==2 && orderInfo.order_status==='order_create')">{{$t('show.payType')}}</p>
@@ -146,7 +147,8 @@ export default {
       showClose:false,
       formInline: {
         place: '',
-        time: []
+        time: [],
+        email:''
       }
     }
   },
@@ -174,6 +176,9 @@ export default {
           ],
           time: [
             { required: true, message: this.$t('valid.time'), trigger: 'change' }
+          ],
+          email: [
+            {type:'email', required: true, message: this.$t('valid.email'), trigger: 'change' }
           ],
       }
     }
@@ -216,16 +221,20 @@ export default {
           this.$refs['formInline'].validate((valid) => {
             if (valid) {
 
+                let params = {
+                    goods_id:this.goodsInfo.goods_id
+                }
+                if(this.goodsInfo.category_id==1){
+                    params.expect_exchange_place = this.formInline.place;
+                    params.expect_start_time = this.formInline.time[0]+'-'+this.formInline.time[1];
+                    params.expect_end_time = 0;
+                }else{
+                    params.receiver_email = this.formInline.email;
+                }
                 this.loading = true;
                 if(this.payType==='paypal'){
                     this.newWin = window.open('/loading');
-                    createOrder({
-                        // address_id:this.defaultAddress.address_id,
-                        goods_id:this.goodsInfo.goods_id,
-                        expect_exchange_place:this.formInline.place,
-                        expect_start_time:this.formInline.time[0]+'-'+this.formInline.time[1],
-                        expect_end_time:0,
-                    }).then(res=>{
+                    createOrder(params).then(res=>{
                         if(res.code==200){
                             return res.data.order_id; 
                         }else{
@@ -245,13 +254,7 @@ export default {
                         this.loading = false;
                     })
                 }else{
-                    createOrder({
-                        // address_id:this.defaultAddress.address_id,
-                        goods_id:this.goodsInfo.goods_id,
-                        expect_exchange_place:this.formInline.place,
-                        expect_start_time:this.formInline.time[0]+'-'+this.formInline.time[1],
-                        expect_end_time:0,
-                    }).then(res=>{
+                    createOrder(params).then(res=>{
                         if(res.code==200){
                             return res.data; 
                         }else{
@@ -365,9 +368,13 @@ export default {
               this.dialogVisible = true;
               payPal({
                   order_id:id
-              }).then(ret=>{
-                  this.newWin.location.href = ret.data.approval_link;
-                  this.newWin = '';
+              }).then(res=>{
+                  if(res.code==200){
+                      this.newWin.location.href = res.data.approval_link;
+                      this.newWin = '';
+                  }else{
+                      this.$message.error(res.error_description);
+                  }
               })
           }else{
                 this.loading = true;
@@ -435,9 +442,12 @@ export default {
         getGoodsInfo({
             goods_id:this.$route.params.id,
         }).then(res=>{
+            if(res.data.goodsInfo.category_id==1){
+                res.data.goodsInfo.place = res.data.goodsInfo.expect_exchange_place.split('#');
+                this.timeGroup = this.dataTrans(JSON.parse(res.data.goodsInfo.expect_start_time));
+            }
             this.goodsInfo = res.data.goodsInfo;
             this.userinfo = res.data.goodsInfo.userinfo;
-            this.timeGroup = this.dataTrans(JSON.parse(res.data.goodsInfo.expect_start_time));
             this.$set(this.goodsInfo,'post',this.host+res.data.goodsInfo.images[0]);
             this.loading = false;
         });

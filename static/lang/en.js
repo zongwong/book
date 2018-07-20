@@ -68,7 +68,9 @@ module.exports = {
       smsverification:"sms code",
       sendCode:"Send Code",
       commenttips:'Say Something ...',
-      replytips:'Reply to'
+      replytips:'Reply to',
+      notename:'Note Name',
+      noteabstract:'Abstract',
   },
   btn:{
     edit:'edit',
@@ -105,6 +107,7 @@ module.exports = {
       send:"send",
       sortHot:'Sort by Hot',
       sortPrice:'Sort by Price',
+      sortTime:'Sort by Time',
       graduated: "graduated",
       publisher:"publisher",
       abstract:"abstract",
@@ -200,6 +203,8 @@ module.exports = {
     nickname:"userName",
     place: 'place',
     time:'time',
+          notename:'笔记名',
+      noteabstract:'笔记简介',
   },
   placeholder:{
     title:"title",
@@ -209,7 +214,8 @@ module.exports = {
     currency:"currency",
     images:"images",
     content:'content',
-    place:'place'
+    place:'place',
+    email:'email'
   },
   week:{
     week_1:'Mon',
@@ -226,7 +232,8 @@ module.exports = {
     select:'Please Select',
     startTime:'start time',
     endTime:'end time',
-    add:'Add'
+    add:'Add',
+    email:'Email'
   },
   wallet:{
     balance:'balance',

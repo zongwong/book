@@ -67,7 +67,9 @@ module.exports = {
       verification:"验证码",
       smsverification:"短信验证码",
       commenttips:'评论',
-      replytips:'回复'
+      replytips:'回复',
+      notename:'笔记名',
+      noteabstract:'笔记简介',
   },
   btn:{
     edit:'编辑',
@@ -105,6 +107,7 @@ module.exports = {
       send:"发送",
       sortHot:"按热度排序",
       sortPrice:"按价钱排序",
+      sortTime:"按时间排序",
       graduated: "毕业于",
       publisher:"发布者",
       abstract:"简介",
@@ -209,7 +212,8 @@ module.exports = {
     currency:"请选择货币种类",
     images:"请上传图片",
     content:'请输入内容',
-    place:'请输入期望交易地点'
+    place:'请输入期望交易地点',
+    email:'请输入接收笔记的邮箱'
   },
   week:{
     week_1:'周一',
@@ -226,7 +230,8 @@ module.exports = {
     select:'请选择',
     startTime:'起始时间',
     endTime:'结束时间',
-    add:'添加'
+    add:'添加',
+    email:'发送笔记邮箱'
   },
   wallet:{
     balance:'我的余额',
