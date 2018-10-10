@@ -158,6 +158,11 @@ export default {
         fileList:[],
       };
   },
+  watch:{
+    files:function(){
+      this.$refs.ruleForm.validateField('images');
+    }
+  },
   computed: {
     ...mapGetters([
       'campuList'

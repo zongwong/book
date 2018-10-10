@@ -248,7 +248,7 @@ module.exports = {
     applyMsg:'You are about to apply for a withdrawal of',
     apply:'application for withdrawal',
     emailerror:'The mailbox format is incorrect',
-    email:'Please enter your email address',
+    email:'Please enter your PayPal email address',
     success:'application approved'
   }
 }

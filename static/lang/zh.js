@@ -181,7 +181,7 @@ module.exports = {
     content:'请输入内容',
     name:"请填写昵称",
     phone:"请填写电话",
-    email:"请填写邮箱",
+    email:"请填写PayPal邮箱",
     sex:"请选择性别",
     country:"请填写国籍",
     avatar:"请上传头像",

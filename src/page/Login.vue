@@ -5,10 +5,10 @@
       <div class="center_box">
         <p class="login_title">- {{$t('msg.login')}} -</p>
         <div class="login_type" v-if="!phoneType">
-          <div class="login_item login_wx">
+          <!-- <div class="login_item login_wx">
             <i></i>
             <p>WeChat</p>
-          </div>
+          </div> -->
           <div class="login_item login_fb" @click="getUserData">
             <div class="fbBtnBox">
               <!-- <facebook-login class="fbButton"
@@ -183,7 +183,7 @@ export default {
       });
     },
     getPhone(phone){
-      let phonepre = Number(this.regForm.phonepre.replace(/\+/g,''));
+      let phonepre = Number(this.regForm.phonepre.replace(/\+|\s/g,''));
       console.log(phonepre)
       if(phonepre && phonepre!==NaN){
           phone = `${phonepre}${phone}`;
@@ -206,14 +206,18 @@ export default {
             }else{
               clearInterval(timer);
               this.isDjs = false;
-              this.await = " ";
+              this.await = this.$t('btn.smsText');
             }
           },1000)
           this.$message.success(`${res.message}`);
         }else{
+          this.reflash();
           this.isDjs = false;
           this.$message.error(`${res.message}`);
         }
+      }).catch(err=>{
+        this.reflash();
+        this.isDjs = false;
       })
     },
     phoneLogin(){

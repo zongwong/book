@@ -129,10 +129,19 @@ export default {
     },
     onLogout(cb) {
       // this.isConnected = false;
-      FB.logout(function(response) {
-        cb()
+      // FB.logout(function(response) {
+      //   cb()
+      // });
+      FB.getLoginStatus(function(response) {
+        console.log(response)
+        if (response && response.status === 'connected') {
+            FB.logout(function(response) {
+                cb()
+            });
+        }else{
+          cb()
+        }
       });
-      
     }
   },
   created() {
